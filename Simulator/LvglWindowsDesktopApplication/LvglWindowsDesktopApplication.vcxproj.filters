@@ -788,15 +788,6 @@
       <Filter>lvgl\src\widgets\win</Filter>
     </ClInclude>
     <ClInclude Include="lv_conf.h" />
-    <ClInclude Include="..\..\ESP32\src\ui.h">
-      <Filter>UI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ESP32\src\ui_events.h">
-      <Filter>UI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ESP32\src\ui_helpers.h">
-      <Filter>UI</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\ESP32\src\CommonData.h">
       <Filter>Library</Filter>
     </ClInclude>
@@ -805,6 +796,15 @@
     </ClInclude>
     <ClInclude Include="..\..\ESP32\src\CommonLibrary.h">
       <Filter>Library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ESP32\src\ui.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ESP32\src\ui_events.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ESP32\src\ui_helpers.h">
+      <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1421,11 +1421,19 @@
     <ClCompile Include="ui\screens\ui_Screen1.c" />
     <ClCompile Include="ui\screens\ui_Screen1.c" />
     <ClCompile Include="ui\screens\ui_Screen1.c" />
-    <ClCompile Include="ui\screens\ui_Screen1.c" />
+    <ClCompile Include="..\..\ESP32\src\CommonData.cpp">
+      <Filter>Library</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\CommonLibrary.cpp">
+      <Filter>Library</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\ESP32\src\ui.c">
       <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ESP32\src\ui_comp_hook.c">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\ui_events.cpp">
       <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ESP32\src\ui_helpers.c">
@@ -1433,15 +1441,6 @@
     </ClCompile>
     <ClCompile Include="..\..\ESP32\src\ui_Screen1.c">
       <Filter>UI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ESP32\src\ui_events.cpp">
-      <Filter>UI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ESP32\src\CommonData.cpp">
-      <Filter>Library</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ESP32\src\CommonLibrary.cpp">
-      <Filter>Library</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

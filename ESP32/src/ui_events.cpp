@@ -93,11 +93,11 @@ void OnRollerChange(lv_event_t * e)
 
 void OnButtonNormalClick(lv_event_t * e)
 {
-	SetNotify("MAKE_MSG(OnButtonNormalClick)");
+	SetNotify(MAKE_MSG(OnButtonNormalClick));
 }
 
 void OnButtonToggleClick(lv_event_t* e)
 {
 	Button2Value = lv_obj_get_state(ui_Button2);
-	SetNotify("MAKE_MSG(Button2Value)");
+	SetNotify(MAKE_MSG(Button2Value));
 }
