@@ -95,6 +95,8 @@ void setup ()
 
     ui_init();
 
+    Init();
+
     Serial.println( "Setup done" );
 }
 

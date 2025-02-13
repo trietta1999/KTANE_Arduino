@@ -1,3 +1,7 @@
+/**
+ * @brief Common data type
+ */
+
 #ifdef _WIN64 // STD data type
 #include <string>
 #define String_t std::string

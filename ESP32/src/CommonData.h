@@ -1,7 +1,15 @@
+/**
+ * @brief Common data
+ */
+
 #ifdef _WIN64
 #include <cstdint>
 #endif
 #include "CommonDataType.h"
+
+/* TODO: Declare shared data for the system
+         Use "extern" and do not declare initial values
+*/
 
 extern String_t Message;
 

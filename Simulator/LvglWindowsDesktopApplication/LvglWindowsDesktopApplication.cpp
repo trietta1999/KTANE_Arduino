@@ -1,4 +1,4 @@
-﻿#include <Windows.h>
+#include <Windows.h>
 
 #include <LvglWindowsIconResource.h>
 
@@ -75,6 +75,8 @@ int WINAPI wWinMain(
     }
 
     ui_init();
+
+    Init();
 
     while (1)
     {

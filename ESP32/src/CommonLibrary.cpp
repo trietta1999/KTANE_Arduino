@@ -1,20 +1,9 @@
+/**
+ * @brief Common library
+ */
+
 #include "CommonLibrary.h"
 #include "CommonData.h"
-
-void SetNotify(String_t msg)
-{
-    Message = msg;
-}
-
-String_t GetNotify()
-{
-    return Message;
-}
-
-void ClearNotify()
-{
-    Message = "";
-}
 
 String_t NumToString(uint64_t value)
 {

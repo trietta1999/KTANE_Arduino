@@ -1,4 +1,12 @@
+/**
+ * @brief Common data
+ */
+
 #include "CommonData.h"
+
+/* TODO: Declare shared data for the system
+         Do not use "extern", recommended to declare initial values
+*/
 
 String_t Message = "";
 
