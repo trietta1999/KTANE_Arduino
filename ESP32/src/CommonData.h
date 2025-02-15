@@ -2,6 +2,9 @@
  * @brief Common data
  */
 
+#ifndef _COMMON_DATA_H
+#define _COMMON_DATA_H
+
 #ifdef _WIN64
 #include <cstdint>
 #endif
@@ -19,3 +22,5 @@ extern CData<uint16_t> CheckboxValue;
 extern CData<String_t> DropdownValue;
 extern CData<uint16_t> SwitchValue;
 extern CData<String_t> RollerValue;
+
+#endif // !_COMMON_DATA_H

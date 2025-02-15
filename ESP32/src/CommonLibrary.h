@@ -2,10 +2,13 @@
  * @brief Common library
  */
 
+#ifndef _COMMON_LIBRARY_H
+#define _COMMON_LIBRARY_H
+
 #include "CommonDataType.h"
 
 // Do not modify
-#pragma region System_function
+#pragma endregion
 void Init();
 void AutoUpdate();
 #pragma endregion
@@ -13,4 +16,6 @@ void AutoUpdate();
 // Allow modification
 #pragma region Custom_function
 String_t NumToString(uint64_t);
-#pragma endregion
+#pragma region System_function
+
+#endif // !_COMMON_LIBRARY_H
