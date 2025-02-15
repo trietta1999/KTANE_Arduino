@@ -4,8 +4,6 @@
 
 #include "CommonDataType.h"
 
-#define MAKE_MSG(msg) String_t(#msg)
-
 // Do not modify
 #pragma region System_function
 void Init();

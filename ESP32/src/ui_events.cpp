@@ -4,9 +4,9 @@
 // Project name: SquareLine_Project
 
 #include "ui.h"
-#include "CommonDataType.h"
 #include "CommonData.h"
 #include "CommonLibrary.h"
+#include "CData.cpp"
 
 void Init()
 {
@@ -15,129 +15,110 @@ void Init()
 
 void AutoUpdate()
 {
-    /* TODO: Check message string value and perform screen update
+    /* TODO: Check state of shared data and perform screen update
+             Reset state function is recommended after screen updating
              This function is running continuously
     */
 
-    if (Message == MAKE_MSG(Button2Value))
+    if (Button2Value.GetState())
     {
-        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, NumToString(Button2Value).c_str());
+        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, NumToString(Button2Value.GetValue()).c_str());
+        Button2Value.ResetState();
     }
 
-    if (Message == MAKE_MSG(SliderValue))
+    if (SliderValue.GetState())
     {
-        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, NumToString(SliderValue).c_str());
+        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, NumToString(SliderValue.GetValue()).c_str());
+        SliderValue.ResetState();
     }
 
-    if (Message == MAKE_MSG(ArcValue))
+    if (ArcValue.GetState())
     {
-        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, NumToString(ArcValue).c_str());
+        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, NumToString(ArcValue.GetValue()).c_str());
+        ArcValue.ResetState();
     }
 
-    if (Message == MAKE_MSG(CheckboxValue))
+    if (CheckboxValue.GetState())
     {
-        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, NumToString(CheckboxValue).c_str());
+        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, NumToString(CheckboxValue.GetValue()).c_str());
+        CheckboxValue.ResetState();
     }
 
-    if (Message == MAKE_MSG(DropdownValue))
+    if (DropdownValue.GetState())
     {
-        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, DropdownValue);
+        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, DropdownValue.GetValue().c_str());
+        DropdownValue.ResetState();
     }
 
-    if (Message == MAKE_MSG(SwitchValue))
+    if (SwitchValue.GetState())
     {
-        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, NumToString(SwitchValue).c_str());
+        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, NumToString(SwitchValue.GetValue()).c_str());
+        SwitchValue.ResetState();
     }
 
-    if (Message == MAKE_MSG(RollerValue))
+    if (RollerValue.GetState())
     {
-        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, RollerValue);
+        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, RollerValue.GetValue().c_str());
+        RollerValue.ResetState();
     }
-
-    if (Message == MAKE_MSG(OnButtonNormalClick))
-    {
-        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, "Clicked");
-    }
-
-    // Clear message string value after screen updating
-    Message = "";
 }
 
 void OnSliderChange(lv_event_t* e)
 {
-    /* TODO: Perform logic processing related to the component
-             Setting the message string value after logic processing is required
-             Message string value is optional, recommended to use common data name for easy searching
-    */
-    SliderValue = lv_slider_get_value(ui_Slider1);
-    Message = MAKE_MSG(SliderValue);
+    // TODO: Perform logic processing related to the component
+
+    SliderValue.SetValue(lv_slider_get_value(ui_Slider1));
 }
 
 void OnArcChange(lv_event_t* e)
 {
-    /* TODO: Perform logic processing related to the component
-             Setting the message string value after logic processing is required
-             Message string value is optional, recommended to use common data name for easy searching
-    */
-    ArcValue = lv_arc_get_value(ui_Arc1);
-    Message = MAKE_MSG(ArcValue);
+    // TODO: Perform logic processing related to the component
+
+    ArcValue.SetValue(lv_arc_get_value(ui_Arc1));
 }
 
 void OnCheckboxClick(lv_event_t* e)
 {
-    /* TODO: Perform logic processing related to the component
-             Setting the message string value after logic processing is required
-             Message string value is optional, recommended to use common data name for easy searching
-    */
-    CheckboxValue = lv_obj_get_state(ui_Checkbox1);
-    Message = MAKE_MSG(CheckboxValue);
+    // TODO: Perform logic processing related to the component
+
+    CheckboxValue.SetValue(lv_obj_get_state(ui_Checkbox1));
 }
 
 void OnDropdownChange(lv_event_t* e)
 {
-    /* TODO: Perform logic processing related to the component
-             Setting the message string value after logic processing is required
-             Message string value is optional, recommended to use common data name for easy searching
-    */
-    lv_dropdown_get_selected_str(ui_Dropdown1, DropdownValue, sizeof(DropdownValue));
-    Message = MAKE_MSG(DropdownValue);
+    // TODO: Perform logic processing related to the component
+
+    char buf[100] = { 0 };
+    lv_dropdown_get_selected_str(ui_Dropdown1, buf, sizeof(buf));
+    DropdownValue.SetValue(buf);
 }
 
 void OnSwitchClick(lv_event_t* e)
 {
-    /* TODO: Perform logic processing related to the component
-             Setting the message string value after logic processing is required
-             Message string value is optional, recommended to use common data name for easy searching
-    */
-    SwitchValue = lv_obj_get_state(ui_Switch1);
-    Message = MAKE_MSG(SwitchValue);
+    // TODO: Perform logic processing related to the component
+
+    SwitchValue.SetValue(lv_obj_get_state(ui_Switch1));
 }
 
 void OnRollerChange(lv_event_t* e)
 {
-    /* TODO: Perform logic processing related to the component
-             Setting the message string value after logic processing is required
-             Message string value is optional, recommended to use common data name for easy searching
-    */
-    lv_roller_get_selected_str(ui_Roller1, RollerValue, sizeof(RollerValue));
-    Message = MAKE_MSG(RollerValue);
+    // TODO: Perform logic processing related to the component
+
+    char buf[100] = { 0 };
+    lv_roller_get_selected_str(ui_Roller1, buf, sizeof(buf));
+    RollerValue.SetValue(buf);
 }
 
 void OnButtonNormalClick(lv_event_t* e)
 {
-    /* TODO: Perform logic processing related to the component
-             Setting the message string value after logic processing is required
-             Message string value is optional, recommended to use common data name for easy searching
-    */
-    Message = MAKE_MSG(OnButtonNormalClick);
+    // TODO: Perform logic processing related to the component
+
+    Button2Value.SetValue(1);
 }
 
 void OnButtonToggleClick(lv_event_t* e)
 {
-    /* TODO: Perform logic processing related to the component
-             Setting the message string value after logic processing is required
-             Message string value is optional, recommended to use common data name for easy searching
-    */
-    Button2Value = lv_obj_get_state(ui_Button2);
-    Message = MAKE_MSG(Button2Value);
+    // TODO: Perform logic processing related to the component
+
+    Button2Value.SetValue(lv_obj_get_state(ui_Button2));
 }

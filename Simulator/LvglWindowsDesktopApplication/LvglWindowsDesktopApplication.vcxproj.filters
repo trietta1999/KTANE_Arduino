@@ -788,12 +788,6 @@
       <Filter>lvgl\src\widgets\win</Filter>
     </ClInclude>
     <ClInclude Include="lv_conf.h" />
-    <ClInclude Include="..\..\ESP32\src\CommonData.h">
-      <Filter>Library</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ESP32\src\CommonDataType.h">
-      <Filter>Library</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\ESP32\src\CommonLibrary.h">
       <Filter>Library</Filter>
     </ClInclude>
@@ -805,6 +799,15 @@
     </ClInclude>
     <ClInclude Include="..\..\ESP32\src\ui_helpers.h">
       <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ESP32\src\CommonData.h">
+      <Filter>Library\CommonData</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ESP32\src\CData.h">
+      <Filter>Library\CommonData</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ESP32\src\CommonDataType.h">
+      <Filter>Library\CommonData</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1416,14 +1419,13 @@
     <Filter Include="Library">
       <UniqueIdentifier>{b38474d3-3c85-47f5-8ae2-0d3a63ea4db7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Library\CommonData">
+      <UniqueIdentifier>{7f6f08a5-ed2c-4889-8bf2-1dc5ab66c3da}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ui\screens\ui_Screen1.c" />
     <ClCompile Include="ui\screens\ui_Screen1.c" />
-    <ClCompile Include="ui\screens\ui_Screen1.c" />
-    <ClCompile Include="..\..\ESP32\src\CommonData.cpp">
-      <Filter>Library</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ESP32\src\CommonLibrary.cpp">
       <Filter>Library</Filter>
     </ClCompile>
@@ -1441,6 +1443,12 @@
     </ClCompile>
     <ClCompile Include="..\..\ESP32\src\ui_Screen1.c">
       <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\CommonData.cpp">
+      <Filter>Library\CommonData</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\CData.cpp">
+      <Filter>Library\CommonData</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
