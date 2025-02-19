@@ -8,6 +8,28 @@
          Do not use "extern"
 */
 
+// Do not delete or rename
+#pragma region System_data
+#pragma region Read_only
+CData<LABEL_INDICATOR> LabelIndicator;
+CData<BATTERY_TYPE> BatteryType;
+CData<COMPORT_TYPE> ComPortType;
+CData<String_t> SerialNum;
+CData<uint8_t> BatteryNum;
+CData<String_t> TimeClock;
+CData<uint8_t> StrikeNum;
+CData<bool> StrikeState_GUI;
+CData<bool> StrikeState_HARD;
+#pragma endregion
+
+#pragma region Read_Write
+CData<bool> IsSuccess;
+#pragma endregion
+
+#pragma endregion
+
+// Allow modification
+#pragma region Custom_data
 CData<uint16_t> Button2Value;
 CData<int32_t> SliderValue;
 CData<int32_t> ArcValue;
@@ -15,3 +37,4 @@ CData<uint16_t> CheckboxValue;
 CData<String_t> DropdownValue;
 CData<uint16_t> SwitchValue;
 CData<String_t> RollerValue;
+#pragma endregion

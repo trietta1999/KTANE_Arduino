@@ -7,15 +7,17 @@
 
 #include "CommonDataType.h"
 
-// Do not modify
-#pragma endregion
+// Do not delete or rename
+#pragma region System_function
 void Init();
 void AutoUpdate();
+String_t NumToString(uint64_t);
+void SetStrike(bool);
 #pragma endregion
 
 // Allow modification
 #pragma region Custom_function
-String_t NumToString(uint64_t);
-#pragma region System_function
+
+#pragma endregion
 
 #endif // !_COMMON_LIBRARY_H
