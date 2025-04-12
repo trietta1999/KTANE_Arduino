@@ -4,19 +4,17 @@
 
 #include "CommonLibrary.h"
 #include "CommonData.h"
-#include "CData.cpp"
 
-String_t NumToString(uint64_t value)
-{
-#ifdef _WIN64
-    return std::to_string(value);
-#else
-    return String(value);
-#endif
-}
-
+ // Do not delete or rename
+#pragma region System_function
 void SetStrike(bool state)
 {
     StrikeState_GUI.SetValue(state);
-    StrikeState_HARD.SetValue(state);
+    StrikeState_HW.SetValue(state);
 }
+#pragma endregion
+
+// Allow modification
+#pragma region Custom_function
+
+#pragma endregion

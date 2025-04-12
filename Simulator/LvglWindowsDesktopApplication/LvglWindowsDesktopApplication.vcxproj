@@ -684,7 +684,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LvglPlatform\lvgl\src\widgets\textarea\lv_textarea.c" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LvglPlatform\lvgl\src\widgets\tileview\lv_tileview.c" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\LvglPlatform\lvgl\src\widgets\win\lv_win.c" />
-    <ClCompile Include="..\..\ESP32\src\CData.cpp" />
     <ClCompile Include="..\..\ESP32\src\CommonData.cpp" />
     <ClCompile Include="..\..\ESP32\src\CommonLibrary.cpp" />
     <ClCompile Include="..\..\ESP32\src\ui.c" />

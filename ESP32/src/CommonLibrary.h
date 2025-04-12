@@ -11,7 +11,6 @@
 #pragma region System_function
 void Init();
 void AutoUpdate();
-String_t NumToString(uint64_t);
 void SetStrike(bool);
 #pragma endregion
 

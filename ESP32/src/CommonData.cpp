@@ -14,16 +14,16 @@
 CData<LABEL_INDICATOR> LabelIndicator;
 CData<BATTERY_TYPE> BatteryType;
 CData<COMPORT_TYPE> ComPortType;
-CData<String_t> SerialNum;
+CData<std::string> SerialNum;
 CData<uint8_t> BatteryNum;
-CData<String_t> TimeClock;
+CData<std::string> TimeClock;
 CData<uint8_t> StrikeNum;
-CData<bool> StrikeState_GUI;
-CData<bool> StrikeState_HARD;
 #pragma endregion
 
 #pragma region Read_Write
 CData<bool> IsSuccess;
+CData<bool> StrikeState_GUI;
+CData<bool> StrikeState_HW;
 #pragma endregion
 
 #pragma endregion
@@ -34,7 +34,7 @@ CData<uint16_t> Button2Value;
 CData<int32_t> SliderValue;
 CData<int32_t> ArcValue;
 CData<uint16_t> CheckboxValue;
-CData<String_t> DropdownValue;
+CData<std::string> DropdownValue;
 CData<uint16_t> SwitchValue;
-CData<String_t> RollerValue;
+CData<std::string> RollerValue;
 #pragma endregion

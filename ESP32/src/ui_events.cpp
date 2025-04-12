@@ -6,7 +6,6 @@
 #include "ui.h"
 #include "CommonData.h"
 #include "CommonLibrary.h"
-#include "CData.cpp"
 
 void Init()
 {
@@ -22,25 +21,25 @@ void AutoUpdate()
 
     if (Button2Value.GetState())
     {
-        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, NumToString(Button2Value.GetValue()).c_str());
+        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, std::to_string(Button2Value.GetValue()).c_str());
         Button2Value.ResetState();
     }
 
     if (SliderValue.GetState())
     {
-        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, NumToString(SliderValue.GetValue()).c_str());
+        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, std::to_string(SliderValue.GetValue()).c_str());
         SliderValue.ResetState();
     }
 
     if (ArcValue.GetState())
     {
-        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, NumToString(ArcValue.GetValue()).c_str());
+        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, std::to_string(ArcValue.GetValue()).c_str());
         ArcValue.ResetState();
     }
 
     if (CheckboxValue.GetState())
     {
-        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, NumToString(CheckboxValue.GetValue()).c_str());
+        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, std::to_string(CheckboxValue.GetValue()).c_str());
         CheckboxValue.ResetState();
     }
 
@@ -52,7 +51,7 @@ void AutoUpdate()
 
     if (SwitchValue.GetState())
     {
-        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, NumToString(SwitchValue.GetValue()).c_str());
+        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, std::to_string(SwitchValue.GetValue()).c_str());
         SwitchValue.ResetState();
     }
 

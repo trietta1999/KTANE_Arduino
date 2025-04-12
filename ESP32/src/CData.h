@@ -14,13 +14,38 @@ private:
     bool state;
 
 public:
-    CData() = default;
+    CData()
+    {
+        state = false;
+    }
+
     ~CData() = default;
 
-    T GetValue();
-    void SetValue(T);
-    bool GetState();
-    void ResetState();
+    T GetValue()
+    {
+        return this->value;
+    }
+
+    void SetValue(T value)
+    {
+        if (value != this->value)
+        {
+            this->oldValue = this->value;
+            this->value = value;
+            this->state = true;
+        }
+    }
+
+    bool GetState()
+    {
+        return this->state;
+    }
+
+    void ResetState()
+    {
+        oldValue = value;
+        state = false;
+    }
 };
 
 #endif // !_CDATA_H
