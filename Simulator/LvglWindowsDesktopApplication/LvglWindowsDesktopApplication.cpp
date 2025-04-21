@@ -1,5 +1,7 @@
 ﻿#include <Windows.h>
 #include <thread>
+#include <iostream>
+#include <iomanip>
 #include <LvglWindowsIconResource.h>
 
 #include "lvgl/lvgl.h"
@@ -7,12 +9,47 @@
 #include "CommonData.h"
 #include "CommonLibrary.h"
 
-std::wstring Str2Wstr(const std::string& str)
+void AttachConsoleWindow()
 {
-    int size_needed = ::MultiByteToWideChar(CP_UTF8, 0, &str[0], (int)str.size(), NULL, 0);
-    std::wstring wstrTo(size_needed, 0);
-    ::MultiByteToWideChar(CP_UTF8, 0, &str[0], (int)str.size(), &wstrTo[0], size_needed);
-    return wstrTo;
+    AllocConsole();
+    FILE* fp;
+    freopen_s(&fp, "CONOUT$", "w", stdout);
+    freopen_s(&fp, "CONOUT$", "w", stderr);
+}
+
+void RunFakeTimer(int8_t minute)
+{
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    HANDLE hConsole = ::GetStdHandle(STD_OUTPUT_HANDLE);
+    int8_t second = 0;
+
+    if (GetConsoleScreenBufferInfo(hConsole, &csbi)) {
+        while ((minute >= 0) && (!sys_gui::IsSuccess.GetValue()) && (sys_gui::StrikeNum.GetValue() < 3))
+        {
+            while ((second >= 0) && (!sys_gui::IsSuccess.GetValue()) && (sys_gui::StrikeNum.GetValue() < 3))
+            {
+                ::Beep(BEEP_FRE, BEEP_INCREASE_DURATION);
+
+                SetConsoleCursorPosition(hConsole, csbi.dwCursorPosition);
+                std::cout << std::setfill('0') << std::setw(2) << std::to_string(minute) << ":"
+                    << std::setw(2) << std::to_string(second);
+
+                sys_gui::TimeClock.SetValue(std::make_pair(minute, second));
+
+                second--;
+
+                ::Sleep(sys_gui::TimeCycle.GetValue());
+            }
+
+            minute--;
+            second = 59;
+        }
+
+        if (!sys_gui::IsSuccess.GetValue())
+        {
+            ::Beep(BEEP_FRE, BEEP_TIMEOUT);
+        }
+    }
 }
 
 void InitCDataFromFakeTimer()
@@ -20,36 +57,81 @@ void InitCDataFromFakeTimer()
     uint8_t seed = time(0);
     srand(seed);
 
-    RandomSeed.SetValue(seed);
-    LabelIndicator.SetValue((LABEL_INDICATOR)RandomRange(0, (uint8_t)LABEL_INDICATOR::MAX));
-    BatteryType.SetValue((BATTERY_TYPE)RandomRange(0, (uint8_t)BATTERY_TYPE::MAX));
-    ComPortType.SetValue((COMPORT_TYPE)RandomRange(0, (uint8_t)COMPORT_TYPE::MAX));
-    BatteryNum.SetValue(RandomRange(1, 5));
-    SerialNum.SetValue(GenerateSerialNumber());
+    sys_host::RandomSeed.SetValue(seed);
+    sys_host::LabelIndicator.SetValue((LABEL_INDICATOR)RandomRange(0, (uint8_t)LABEL_INDICATOR::MAX));
+    sys_host::BatteryType.SetValue((BATTERY_TYPE)RandomRange(0, (uint8_t)BATTERY_TYPE::MAX));
+    sys_host::ComPortType.SetValue((COMPORT_TYPE)RandomRange(0, (uint8_t)COMPORT_TYPE::MAX));
+    sys_host::BatteryNum.SetValue(RandomRange(1, 5));
+    sys_host::SerialNum.SetValue(GenerateSerialNumber());
+
+    sys_gui::StrikeNum.SetValue(0);
+    sys_gui::TimeCycle.SetValue(TIMECYCLE_0);
+    sys_gui::TimeClock.SetValue(std::make_pair(2, 0));
+    sys_gui::StrikeNum.SetValue(0);
+    sys_gui::IsSuccess.SetValue(false);
+
+    AttachConsoleWindow();
 
     std::thread([]() {
-        wchar_t msg[1000];
-        wsprintfW(msg, L"\
-            LabelIndicator: %s\n\
-            BatteryType: %s\n\
-            ComPortType: %s\n\
-            BatteryNum: %d\n\
-            SerialNum: %s\n\
-        ",
-            Str2Wstr(map_LABEL_INDICATOR[LabelIndicator.GetValue()]).c_str(),
-            Str2Wstr(map_BATTERY_TYPE[BatteryType.GetValue()]).c_str(),
-            Str2Wstr(map_COMPORT_TYPE[ComPortType.GetValue()]).c_str(),
-            BatteryNum.GetValue(),
-            Str2Wstr(SerialNum.GetValue()).c_str()
-        );
+        std::cout << "===== Dummy Data Initialized =====\n";
+        std::cout << "LabelIndicator: " << map_LABEL_INDICATOR[sys_host::LabelIndicator.GetValue()] << "\n";
+        std::cout << "BatteryType: " << map_BATTERY_TYPE[sys_host::BatteryType.GetValue()] << "\n";
+        std::cout << "ComPortType: " << map_COMPORT_TYPE[sys_host::ComPortType.GetValue()] << "\n";
+        std::cout << "BatteryNum: " << std::to_string(sys_host::BatteryNum.GetValue()) << "\n";
+        std::cout << "SerialNum: " << sys_host::SerialNum.GetValue() << "\n";
+        std::cout << "==================================\n";
 
-        auto r = MessageBox(nullptr, msg, L"Dummy data", MB_OK);
+        RunFakeTimer(std::get<MINUTE_POS>(sys_gui::TimeClock.GetValue()));
+        }).detach();
 
-        if (r == IDOK)
+    std::thread([]() {
+        while (sys_gui::StrikeNum.GetValue() != 3)
         {
-            ::ExitProcess(0);
+            switch (sys_gui::StrikeNum.GetValue())
+            {
+            case 0:
+                sys_gui::TimeCycle.SetValue(TIMECYCLE_0);
+                break;
+            case 1:
+                sys_gui::TimeCycle.SetValue(TIMECYCLE_1);
+                break;
+            case 2:
+                sys_gui::TimeCycle.SetValue(TIMECYCLE_2);
+                break;
+            default:
+                break;
+            }
+            ::Sleep(100);
         }
-        }).detach(); // detach để nó tự chạy và tự thoát
+        }).detach();
+
+    std::thread([]() {
+        while (sys_gui::StrikeNum.GetValue() != 3)
+        {
+            if (sys_gui::StrikeState.GetValue())
+            {
+                sys_gui::StrikeNum.SetValue(sys_gui::StrikeNum.GetValue() + 1);
+
+                switch (sys_gui::StrikeNum.GetValue())
+                {
+                case 0:
+                    sys_gui::TimeCycle.SetValue(TIMECYCLE_0);
+                    break;
+                case 1:
+                    sys_gui::TimeCycle.SetValue(TIMECYCLE_1);
+                    break;
+                case 2:
+                    sys_gui::TimeCycle.SetValue(TIMECYCLE_2);
+                    break;
+                default:
+                    break;
+                }
+
+                sys_gui::StrikeState.SetValue(false);
+            }
+            ::Sleep(100);
+        }
+        }).detach();
 }
 
 int WINAPI wWinMain(
@@ -126,7 +208,7 @@ int WINAPI wWinMain(
 
     Init();
 
-    while (1)
+    while (true)
     {
         AutoUpdate();
         UpdateAll();
@@ -135,5 +217,8 @@ int WINAPI wWinMain(
     }
 
     lv_deinit();
+
+    ::FreeConsole();
+
     return 0;
 }

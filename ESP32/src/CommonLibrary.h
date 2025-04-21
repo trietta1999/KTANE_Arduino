@@ -7,14 +7,14 @@
 
 #include "CommonDataType.h"
 
-// Do not delete or rename
+ // Do not delete or rename
 #pragma region System_function
 void Init();
 void AutoUpdate();
-void SetStrike(bool);
 uint8_t RandomRange(uint8_t, uint8_t);
 std::string GenerateSerialNumber();
 bool VowelCheck(const std::string&);
+bool OddCheckAtLast(const std::string&);
 #pragma endregion
 
 // Allow modification

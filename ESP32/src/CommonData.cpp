@@ -10,22 +10,23 @@
 
  // Do not delete or rename
 #pragma region System_data
-#pragma region Read_only
-CData<LABEL_INDICATOR> LabelIndicator;
-CData<BATTERY_TYPE> BatteryType;
-CData<COMPORT_TYPE> ComPortType;
-CData<std::string> SerialNum;
-CData<uint8_t> BatteryNum;
-CData<std::string> TimeClock;
-CData<uint8_t> StrikeNum;
-CData<uint8_t> RandomSeed;
-#pragma endregion
+namespace sys_host {
+    CData<LABEL_INDICATOR> LabelIndicator;
+    CData<BATTERY_TYPE> BatteryType;
+    CData<COMPORT_TYPE> ComPortType;
+    CData<std::string> SerialNum;
+    CData<uint8_t> BatteryNum;
+    CData<uint8_t> RandomSeed;
+}
 
-#pragma region Read_Write
-CData<bool> IsSuccess;
-CData<bool> StrikeState_GUI;
-CData<bool> StrikeState_HW;
-#pragma endregion
+namespace sys_gui
+{
+    CData<std::pair<uint8_t, uint8_t>> TimeClock;
+    CData<bool> IsSuccess;
+    CData<uint8_t> StrikeNum;
+    CData<uint16_t> TimeCycle;
+    CData<bool> StrikeState;
+}
 #pragma endregion
 
 // Allow modification
@@ -39,24 +40,9 @@ CData<uint16_t> SwitchValue;
 CData<std::string> RollerValue;
 #pragma endregion
 
-// Add auto reset state for common data
+// Add auto reset state for custom data only
 void UpdateAll()
 {
-#pragma region System_data
-    LabelIndicator.ResetState();
-    BatteryType.ResetState();
-    ComPortType.ResetState();
-    SerialNum.ResetState();
-    BatteryNum.ResetState();
-    TimeClock.ResetState();
-    StrikeNum.ResetState();
-    RandomSeed.ResetState();
-    IsSuccess.ResetState();
-    StrikeState_GUI.ResetState();
-    StrikeState_HW.ResetState();
-#pragma endregion
-
-#pragma region Custom_data
     Button2Value.ResetState();
     SliderValue.ResetState();
     ArcValue.ResetState();

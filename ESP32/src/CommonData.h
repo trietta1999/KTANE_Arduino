@@ -17,22 +17,24 @@
 
  // Do not modify
 #pragma region System_data
-#pragma region Read_only
-extern CData<LABEL_INDICATOR> LabelIndicator;
-extern CData<BATTERY_TYPE> BatteryType;
-extern CData<COMPORT_TYPE> ComPortType;
-extern CData<std::string> SerialNum;
-extern CData<uint8_t> BatteryNum;
-extern CData<std::string> TimeClock;
-extern CData<uint8_t> StrikeNum;
-extern CData<uint8_t> RandomSeed;
-#pragma endregion
+namespace sys_host // GUI read only, received from HOST
+{
+    extern CData<LABEL_INDICATOR> LabelIndicator;
+    extern CData<BATTERY_TYPE> BatteryType;
+    extern CData<COMPORT_TYPE> ComPortType;
+    extern CData<std::string> SerialNum;
+    extern CData<uint8_t> BatteryNum;
+    extern CData<uint8_t> RandomSeed;
+}
 
-#pragma region Read_Write
-extern CData<bool> IsSuccess;
-extern CData<bool> StrikeState_GUI;
-extern CData<bool> StrikeState_HW;
-#pragma endregion
+namespace sys_gui // GUI read/write -> Send data to HOST
+{
+    extern CData<std::pair<uint8_t, uint8_t>> TimeClock;
+    extern CData<bool> IsSuccess;
+    extern CData<uint8_t> StrikeNum;
+    extern CData<uint16_t> TimeCycle;
+    extern CData<bool> StrikeState;
+}
 #pragma endregion
 
 // Allow modification

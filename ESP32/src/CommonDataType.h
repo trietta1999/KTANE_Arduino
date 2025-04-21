@@ -8,6 +8,20 @@
 #include <string>
 #include <unordered_map>
 
+#define MINUTE_POS 0
+#define SECOND_POS 1
+
+#define TIMECYCLE_0 1000
+#define TIMECYCLE_1 500
+#define TIMECYCLE_2 300
+
+#define BEEP_FRE 3000
+#define BEEP_INCREASE_DURATION 100
+#define BEEP_TIMEOUT 5000
+
+#define BOX_CHECKED 3
+#define BOX_UNCHECK 2
+
  // Do not modify
 #pragma region System_datatype
 enum class LABEL_INDICATOR

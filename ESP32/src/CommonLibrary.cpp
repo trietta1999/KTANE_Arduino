@@ -8,12 +8,6 @@
 
  // Do not delete or rename
 #pragma region System_function
-void SetStrike(bool state)
-{
-    StrikeState_GUI.SetValue(state);
-    StrikeState_HW.SetValue(state);
-}
-
 uint8_t RandomRange(uint8_t a, uint8_t b)
 {
     return a + rand() % (b - 1 - a + 1);
@@ -45,6 +39,16 @@ bool VowelCheck(const std::string& str)
         {
             return true;
         }
+    }
+
+    return false;
+}
+
+bool OddCheckAtLast(const std::string& str)
+{
+    if ((str.back() - '0') % 2 == 1)
+    {
+        return true;
     }
 
     return false;

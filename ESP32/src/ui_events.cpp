@@ -82,7 +82,9 @@ void OnDropdownChange(lv_event_t* e)
 
     char buf[100] = { 0 };
     lv_dropdown_get_selected_str(ui_Dropdown1, buf, sizeof(buf));
+    auto index = lv_dropdown_get_selected(ui_Dropdown1);
     DropdownValue.SetValue(buf);
+    sys_gui::StrikeNum.SetValue(index + 1);
 }
 
 void OnSwitchClick(lv_event_t* e)
@@ -106,6 +108,7 @@ void OnButtonNormalClick(lv_event_t* e)
     // TODO: Perform logic processing related to the component
 
     Button2Value.SetValue(1);
+    sys_gui::StrikeState.SetValue(true);
 }
 
 void OnButtonToggleClick(lv_event_t* e)
@@ -113,4 +116,5 @@ void OnButtonToggleClick(lv_event_t* e)
     // TODO: Perform logic processing related to the component
 
     Button2Value.SetValue(lv_obj_get_state(ui_Button2));
+    sys_gui::StrikeNum.SetValue(0);
 }
