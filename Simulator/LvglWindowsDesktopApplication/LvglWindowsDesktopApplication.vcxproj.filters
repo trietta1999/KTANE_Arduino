@@ -1424,7 +1424,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ui\screens\ui_Screen1.c" />
     <ClCompile Include="..\..\ESP32\src\CommonLibrary.cpp">
       <Filter>Library</Filter>
     </ClCompile>
@@ -1444,6 +1443,9 @@
       <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ESP32\src\CommonData.cpp">
+      <Filter>Library\CommonData</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\CommonDataType.cpp">
       <Filter>Library\CommonData</Filter>
     </ClCompile>
   </ItemGroup>

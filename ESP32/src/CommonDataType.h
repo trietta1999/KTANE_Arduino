@@ -6,6 +6,7 @@
 #define _COMMON_DATATYPE_H
 
 #include <string>
+#include <unordered_map>
 
  // Do not modify
 #pragma region System_datatype
@@ -24,6 +25,7 @@ enum class LABEL_INDICATOR
     FRK,
     MAX
 };
+extern std::unordered_map<LABEL_INDICATOR, std::string> map_LABEL_INDICATOR;
 
 enum class BATTERY_TYPE
 {
@@ -31,6 +33,7 @@ enum class BATTERY_TYPE
     D,
     MAX
 };
+extern std::unordered_map<BATTERY_TYPE, std::string> map_BATTERY_TYPE;
 
 enum class COMPORT_TYPE
 {
@@ -42,6 +45,7 @@ enum class COMPORT_TYPE
     Stereo_RCA,
     MAX
 };
+extern std::unordered_map<COMPORT_TYPE, std::string> map_COMPORT_TYPE;
 
 enum class LED_COLOR
 {
