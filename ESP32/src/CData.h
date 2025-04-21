@@ -16,7 +16,7 @@ private:
 public:
     CData()
     {
-        state = false;
+        this->state = false;
     }
 
     ~CData() = default;
@@ -43,8 +43,11 @@ public:
 
     void ResetState()
     {
-        oldValue = value;
-        state = false;
+        if (this->state)
+        {
+            this->oldValue = this->value;
+            this->state = false;
+        }
     }
 };
 

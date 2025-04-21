@@ -4,11 +4,11 @@
 
 #include "CommonData.h"
 
-/* TODO: Declare shared data for the system
-         Do not use "extern"
-*/
+ /* TODO: Declare shared data for the system
+          Do not use "extern"
+ */
 
-// Do not delete or rename
+ // Do not delete or rename
 #pragma region System_data
 #pragma region Read_only
 CData<LABEL_INDICATOR> LabelIndicator;
@@ -18,6 +18,7 @@ CData<std::string> SerialNum;
 CData<uint8_t> BatteryNum;
 CData<std::string> TimeClock;
 CData<uint8_t> StrikeNum;
+CData<uint8_t> RandomSeed;
 #pragma endregion
 
 #pragma region Read_Write
@@ -25,7 +26,6 @@ CData<bool> IsSuccess;
 CData<bool> StrikeState_GUI;
 CData<bool> StrikeState_HW;
 #pragma endregion
-
 #pragma endregion
 
 // Allow modification
@@ -38,3 +38,31 @@ CData<std::string> DropdownValue;
 CData<uint16_t> SwitchValue;
 CData<std::string> RollerValue;
 #pragma endregion
+
+// Add auto reset state for common data
+void UpdateAll()
+{
+#pragma region System_data
+    LabelIndicator.ResetState();
+    BatteryType.ResetState();
+    ComPortType.ResetState();
+    SerialNum.ResetState();
+    BatteryNum.ResetState();
+    TimeClock.ResetState();
+    StrikeNum.ResetState();
+    RandomSeed.ResetState();
+    IsSuccess.ResetState();
+    StrikeState_GUI.ResetState();
+    StrikeState_HW.ResetState();
+#pragma endregion
+
+#pragma region Custom_data
+    Button2Value.ResetState();
+    SliderValue.ResetState();
+    ArcValue.ResetState();
+    CheckboxValue.ResetState();
+    DropdownValue.ResetState();
+    SwitchValue.ResetState();
+    RollerValue.ResetState();
+#pragma endregion
+}

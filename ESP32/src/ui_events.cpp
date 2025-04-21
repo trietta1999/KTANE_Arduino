@@ -22,43 +22,36 @@ void AutoUpdate()
     if (Button2Value.GetState())
     {
         _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, std::to_string(Button2Value.GetValue()).c_str());
-        Button2Value.ResetState();
     }
 
     if (SliderValue.GetState())
     {
         _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, std::to_string(SliderValue.GetValue()).c_str());
-        SliderValue.ResetState();
     }
 
     if (ArcValue.GetState())
     {
         _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, std::to_string(ArcValue.GetValue()).c_str());
-        ArcValue.ResetState();
     }
 
     if (CheckboxValue.GetState())
     {
         _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, std::to_string(CheckboxValue.GetValue()).c_str());
-        CheckboxValue.ResetState();
     }
 
     if (DropdownValue.GetState())
     {
         _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, DropdownValue.GetValue().c_str());
-        DropdownValue.ResetState();
     }
 
     if (SwitchValue.GetState())
     {
         _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, std::to_string(SwitchValue.GetValue()).c_str());
-        SwitchValue.ResetState();
     }
 
     if (RollerValue.GetState())
     {
         _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, RollerValue.GetValue().c_str());
-        RollerValue.ResetState();
     }
 }
 

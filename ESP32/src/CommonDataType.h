@@ -22,12 +22,14 @@ enum class LABEL_INDICATOR
     TRN,
     BOB,
     FRK,
+    MAX
 };
 
 enum class BATTERY_TYPE
 {
     AA,
     D,
+    MAX
 };
 
 enum class COMPORT_TYPE
@@ -38,6 +40,7 @@ enum class COMPORT_TYPE
     RJ45,
     Serial,
     Stereo_RCA,
+    MAX
 };
 
 enum class LED_COLOR
