@@ -87,27 +87,6 @@ void InitCDataFromFakeTimer()
     std::thread([]() {
         while (sys_gui::StrikeNum.GetValue() != 3)
         {
-            switch (sys_gui::StrikeNum.GetValue())
-            {
-            case 0:
-                sys_gui::TimeCycle.SetValue(TIMECYCLE_0);
-                break;
-            case 1:
-                sys_gui::TimeCycle.SetValue(TIMECYCLE_1);
-                break;
-            case 2:
-                sys_gui::TimeCycle.SetValue(TIMECYCLE_2);
-                break;
-            default:
-                break;
-            }
-            ::Sleep(100);
-        }
-        }).detach();
-
-    std::thread([]() {
-        while (sys_gui::StrikeNum.GetValue() != 3)
-        {
             if (sys_gui::StrikeState.GetValue())
             {
                 sys_gui::StrikeNum.SetValue(sys_gui::StrikeNum.GetValue() + 1);

@@ -22,44 +22,60 @@
 #define BOX_CHECKED 3
 #define BOX_UNCHECK 2
 
+#define TO_ENUM(enum_name, item) item,
+#define TO_STRING(enum_name, item) { enum_name::item, #item },
+
+#define MAP_ENUM_STR(enum_name, enum_def) std::unordered_map<enum_name, std::string> map_##enum_name = { enum_def(enum_name,TO_STRING) };
+#define EXTERN_MAP_ENUM_STR(enum_name) extern std::unordered_map<enum_name, std::string> map_##enum_name;
+
  // Do not modify
 #pragma region System_datatype
+#define DEF_LABEL_INDICATOR(e, CREATE) \
+        CREATE(e, SND) \
+        CREATE(e, CLR) \
+        CREATE(e, CAR) \
+        CREATE(e, IND) \
+        CREATE(e, FRQ) \
+        CREATE(e, SIG) \
+        CREATE(e, NSA) \
+        CREATE(e, MSA) \
+        CREATE(e, TRN) \
+        CREATE(e, BOB) \
+        CREATE(e, FRK) \
+
+#define DEF_BATTERY_TYPE(e, CREATE) \
+        CREATE(e, AA) \
+        CREATE(e, D) \
+
+#define DEF_COMPORT_TYPE(e, CREATE) \
+        CREATE(e, DVID) \
+        CREATE(e, Parallel) \
+        CREATE(e, PS2) \
+        CREATE(e, RJ45) \
+        CREATE(e, Serial) \
+        CREATE(e, Stereo_RCA) \
+
 enum class LABEL_INDICATOR
 {
-    SND,
-    CLR,
-    CAR,
-    IND,
-    FRQ,
-    SIG,
-    NSA,
-    MSA,
-    TRN,
-    BOB,
-    FRK,
+    DEF_LABEL_INDICATOR(LABEL_INDICATOR, TO_ENUM)
     MAX
 };
-extern std::unordered_map<LABEL_INDICATOR, std::string> map_LABEL_INDICATOR;
 
 enum class BATTERY_TYPE
 {
-    AA,
-    D,
+    DEF_BATTERY_TYPE(BATTERY_TYPE, TO_ENUM)
     MAX
 };
-extern std::unordered_map<BATTERY_TYPE, std::string> map_BATTERY_TYPE;
 
 enum class COMPORT_TYPE
 {
-    DVID,
-    Parallel,
-    PS2,
-    RJ45,
-    Serial,
-    Stereo_RCA,
+    DEF_COMPORT_TYPE(COMPORT_TYPE, TO_ENUM)
     MAX
 };
-extern std::unordered_map<COMPORT_TYPE, std::string> map_COMPORT_TYPE;
+
+EXTERN_MAP_ENUM_STR(LABEL_INDICATOR)
+EXTERN_MAP_ENUM_STR(BATTERY_TYPE)
+EXTERN_MAP_ENUM_STR(COMPORT_TYPE)
 
 enum class LED_COLOR
 {
