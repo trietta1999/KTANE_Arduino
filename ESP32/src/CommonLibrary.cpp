@@ -10,7 +10,7 @@
 #pragma region System_function
 uint8_t RandomRange(uint8_t a, uint8_t b)
 {
-    return a + rand() % (b - 1 - a + 1);
+    return a + rand() % (b - a);
 }
 
 std::string GenerateSerialNumber() {
