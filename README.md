@@ -1,3 +1,6 @@
+
+[TOC]
+
 # 1. Tổng quan
 ## 1.1. Keep Talking and Nobody Explodes
 Keep Talking and Nobody Explodes (viết tắt là KTANE) là một tựa game giải đố hợp tác độc đáo và đầy kịch tính, thách thức khả năng giao tiếp và làm việc nhóm của bạn dưới áp lực cao. Trò chơi đặt người chơi vào một tình huống căng thẳng: một người bị nhốt trong phòng với một quả bom phức tạp đang đếm ngược, trong khi những người chơi còn lại là "chuyên gia" sở hữu một cuốn sách hướng dẫn dày đặc thông tin về cách gỡ bom – nhưng họ lại không thể nhìn thấy quả bom! Để thành công, người gỡ bom phải mô tả chính xác những gì họ thấy trên bom (các module, dây nhợ, nút bấm, màn hình...) cho các chuyên gia nghe qua giao tiếp bằng lời nói, và các chuyên gia phải nhanh chóng tìm thông tin trong cuốn sách "Cẩm nang Gỡ bom" để hướng dẫn lại từng bước vô hiệu hóa từng module trước khi hết giờ. Mỗi màn chơi là một cuộc đua nghẹt thở với thời gian, đòi hỏi sự lắng nghe cẩn thận, truyền đạt rõ ràng và phối hợp nhịp nhàng, biến những khoảnh khắc căng thẳng tột độ thành những tràng cười sảng khoái hoặc những tiếng hét đáng nhớ khi bom (có thể) phát nổ.
@@ -225,7 +228,7 @@ end
 
 **Chú thích**: Người lập trình chỉ quan tâm đến những bước có dấu *.
 
-| | **Trình tự xử lý sự kiện chạm** |
+| | **Trình tự xử lý sự kiện chạm:** |
 |-|-|
 | 1  | Người dùng chạm vào màn hình. |
 | 2* | Gọi hàm tương ứng với thành phần được chạm, tên hàm được đặt tên là `On<Component><Action>`, ví dụ: `OnSliderChange`, `OnButtonClick`, ... |
@@ -233,7 +236,7 @@ end
 | 4* | Sử dụng thư viện cần thiết. |
 | 6* | Xử lý get/set dữ liệu dùng chung liên quan đến chức năng đang xử lý. |
 
-| | **Trình tự xử lý cập nhật màn hình** |
+| | **Trình tự xử lý cập nhật màn hình:** |
 |-|-|
 | 8  | SER gọi cập nhật màn hình sau mỗi 10ms. |
 | 10* | Get trạng thái thay đổi của dữ liệu dùng chung tương ứng với chức năng. |
@@ -355,3 +358,65 @@ Chứa các hàm sử dụng chung và riêng cho tất cả các lớp kiến t
 | `OddCheckAtLast(std::string)` | `bool` | `param1`: dãy seri | Kiểm tra nếu ký tự số cuối dãy seri là lẻ thì trả về `true`, nếu không thì `false`. |
 
 ## 3.3. Kết trúc SIM/SER
+**SER** là lớp xử lý dữ liệu, chức năng ở phần cứng (ESP32). **SIM** là chương trình mô phỏng, thay thế cho ESP32 ở môi trường máy tính phục vụ cho quá trình phát triển phần mềm. **SIM** sử dụng **SER giả lập** **(dummy SER)** để mô phỏng lại quá trình khởi tạo hệ thống, giả lập chuẩn giao tiếp gần giống với phần cứng để get/set common data hệ thống, khởi tạo màn hình, hiển thị và lắng nghe sự kiện.\
+**SER** và **dummy SER** về mặt thiết kế là tương đồng nhau về mặt xử lý do chúng sử dụng chung một kiến trúc tổng thể.\
+Dưới đây là luồng hoạt động của SER.
+
+```mermaid
+sequenceDiagram
+autonumber
+actor user as User
+participant gui as GUI
+participant lib as LIB
+participant ser as SER
+
+user->>ser: Start up system
+activate ser
+ser->>ser: Process receiving data from communication port
+activate ser
+deactivate ser
+ser->>lib: Set received data to system common data
+activate lib
+deactivate lib
+ser->>gui: Create display
+activate gui
+deactivate gui
+deactivate ser
+ser->>gui: Update screen
+activate ser
+activate gui
+deactivate gui
+ser->>ser: Process all common data
+activate ser
+deactivate ser
+ser->>ser: Send data to communication port
+activate ser
+deactivate ser
+ser->>lib: Reset all common data change
+activate lib
+deactivate lib
+deactivate ser
+```
+
+
+| | **Trình tự xử lý của SER:** |
+|-|-|
+| 1  | Người dùng khởi động hệ thống. |
+| 2 | Nhận dữ liệu từ cổng giao tiếp (sử dụng chuẩn I2C cho ESP32 hoặc Window Message cho SIM để mô phỏng). |
+| 3 | Set dữ liệu đã nhận vào dữ liệu dùng chung cho hệ thống (đồng hồ, số seri, số pin, ...), chi tiết dữ liệu dùng chung (common data) sẽ được viết chi tiết ở mục **Kiến trúc LIB**. |
+| 4 | Khởi tạo và hiển thị giao diện trên màn hình. |
+
+| | **Trình tự xử lý khi người dùng thao tác chạm trên màn hình:** |
+|-|-|
+| 5  | Người dùng chạm vào màn hình. |
+| 6 | Xử lý hàm gọi (callback) tương ứng với thành phần GUI (textbox, button, slider, ...) mà người dùng chạm và sự kiện tương ứng của thành phần đó (press, release, click, slider change, ...). |
+| 7 | Xử lý dữ liệu ở thành phần GUI và set dữ liệu vào dữ liệu dùng chung tương ứng với chức năng của thành phần GUI (giá trị màu sắc, số lượng, trạng thái ON/OFF, ...) |
+
+| | **Trình tự xử lý cập nhật màn hình:** |
+|-|-|
+| 8  | SER gọi hàm cập nhật màn hình. |
+| 9 | Lấy giá trị từ dữ liệu dùng chung ở tất cả thành phần GUI. |
+| 11 | Cập nhật thành phần GUI tương ứng với dữ liệu dùng chung của thành phần đó nếu nó có sự thay đổi giá trị. |
+| 12  | Xử lý giá trị cho tất cả cấu trúc dữ liệu dùng chung để chuẩn bị gửi dữ liệu qua cổng giao tiếp. |
+| 13 | Gửi dữ liệu đã xử lý qua cổng giao tiếp. |
+| 14 | Reset trạng thái thay đổi của tất cả dữ liệu dùng chung để chờ sự kiện tiếp theo từ người dùng. |
