@@ -1,6 +1,6 @@
 ﻿#include "CppUnitTest.h"
-#include "ui.h"
-#include "ui_events.h"
+#include "ui/ui.h"
+#include "ui/ui_events.h"
 #include "CommonData.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;

@@ -4,8 +4,8 @@
 // Project name: SquareLine_Project
 
 #include "ui.h"
-#include "CommonData.h"
-#include "CommonLibrary.h"
+#include "../CommonData.h"
+#include "../CommonLibrary.h"
 
 void Init()
 {

@@ -2,6 +2,7 @@
  * @brief Common library
  */
 
+#include <algorithm>
 #include <vector>
 #include "CommonLibrary.h"
 #include "CommonData.h"

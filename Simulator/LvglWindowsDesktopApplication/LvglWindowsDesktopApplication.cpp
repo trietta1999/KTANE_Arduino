@@ -5,7 +5,7 @@
 #include <LvglWindowsIconResource.h>
 
 #include "lvgl/lvgl.h"
-#include "ui.h"
+#include "ui/ui.h"
 #include "CommonData.h"
 #include "CommonLibrary.h"
 

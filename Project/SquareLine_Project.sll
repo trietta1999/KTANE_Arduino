@@ -22,7 +22,7 @@
     "theme_dark": false,
     "theme_color1": 5,
     "theme_color2": 0,
-    "uiExportFolderPath": "D:\\Git\\LVGL_example\\ESP32\\src",
+    "uiExportFolderPath": "D:\\Git\\LVGL_example\\ESP32\\src\\ui",
     "projectExportFolderPath": "D:\\Git\\LVGL_example\\Project",
     "custom_variable_prefix": "uic",
     "backup_cnt": 11,

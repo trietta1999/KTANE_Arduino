@@ -791,15 +791,6 @@
     <ClInclude Include="..\..\ESP32\src\CommonLibrary.h">
       <Filter>Library</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\ESP32\src\ui.h">
-      <Filter>UI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ESP32\src\ui_events.h">
-      <Filter>UI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ESP32\src\ui_helpers.h">
-      <Filter>UI</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\ESP32\src\CommonData.h">
       <Filter>Library\CommonData</Filter>
     </ClInclude>
@@ -808,6 +799,15 @@
     </ClInclude>
     <ClInclude Include="..\..\ESP32\src\CommonDataType.h">
       <Filter>Library\CommonData</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ESP32\src\ui\ui.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ESP32\src\ui\ui_events.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ESP32\src\ui\ui_helpers.h">
+      <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1427,26 +1427,26 @@
     <ClCompile Include="..\..\ESP32\src\CommonLibrary.cpp">
       <Filter>Library</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ESP32\src\ui.c">
-      <Filter>UI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ESP32\src\ui_comp_hook.c">
-      <Filter>UI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ESP32\src\ui_events.cpp">
-      <Filter>UI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ESP32\src\ui_helpers.c">
-      <Filter>UI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ESP32\src\ui_Screen1.c">
-      <Filter>UI</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ESP32\src\CommonData.cpp">
       <Filter>Library\CommonData</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ESP32\src\CommonDataType.cpp">
       <Filter>Library\CommonData</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\ui\ui.c">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\ui\ui_comp_hook.c">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\ui\ui_events.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\ui\ui_helpers.c">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\ui\ui_Screen1.c">
+      <Filter>UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

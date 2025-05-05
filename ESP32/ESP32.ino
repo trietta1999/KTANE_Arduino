@@ -2,7 +2,7 @@
 
 #include <lvgl.h>
 #include <TFT_eSPI.h>
-#include "src/ui.h"
+#include "src/ui/ui.h"
 #include "src/CommonLibrary.h"
 
 /*Don't forget to set Sketchbook location in File/Preferences to the path of your UI project (the parent foder of this INO file)*/

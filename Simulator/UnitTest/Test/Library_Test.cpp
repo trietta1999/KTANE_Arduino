@@ -1,5 +1,5 @@
-﻿#include "CppUnitTest.h"
-#include "windows.h"
+﻿#include <windows.h>
+#include <CppUnitTest.h>
 #include "CommonLibrary.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;

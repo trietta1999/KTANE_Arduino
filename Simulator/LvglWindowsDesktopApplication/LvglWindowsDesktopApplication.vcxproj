@@ -302,9 +302,9 @@
     <ClInclude Include="..\..\ESP32\src\CommonData.h" />
     <ClInclude Include="..\..\ESP32\src\CommonDataType.h" />
     <ClInclude Include="..\..\ESP32\src\CommonLibrary.h" />
-    <ClInclude Include="..\..\ESP32\src\ui.h" />
-    <ClInclude Include="..\..\ESP32\src\ui_events.h" />
-    <ClInclude Include="..\..\ESP32\src\ui_helpers.h" />
+    <ClInclude Include="..\..\ESP32\src\ui\ui.h" />
+    <ClInclude Include="..\..\ESP32\src\ui\ui_events.h" />
+    <ClInclude Include="..\..\ESP32\src\ui\ui_helpers.h" />
     <ClInclude Include="lv_conf.h" />
   </ItemGroup>
   <ItemGroup>
@@ -687,11 +687,11 @@
     <ClCompile Include="..\..\ESP32\src\CommonData.cpp" />
     <ClCompile Include="..\..\ESP32\src\CommonDataType.cpp" />
     <ClCompile Include="..\..\ESP32\src\CommonLibrary.cpp" />
-    <ClCompile Include="..\..\ESP32\src\ui.c" />
-    <ClCompile Include="..\..\ESP32\src\ui_comp_hook.c" />
-    <ClCompile Include="..\..\ESP32\src\ui_events.cpp" />
-    <ClCompile Include="..\..\ESP32\src\ui_helpers.c" />
-    <ClCompile Include="..\..\ESP32\src\ui_Screen1.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_comp_hook.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_events.cpp" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_helpers.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_Screen1.c" />
     <ClCompile Include="ui/**/*.cpp" />
     <ClCompile Include="LvglWindowsDesktopApplication.cpp" />
   </ItemGroup>
