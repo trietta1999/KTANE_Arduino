@@ -5,9 +5,7 @@
 #ifndef _COMMON_DATA_H
 #define _COMMON_DATA_H
 
-#ifdef _WIN64
 #include <cstdint>
-#endif
 #include "CommonDataType.h"
 #include "CData.h"
 
@@ -34,6 +32,7 @@ namespace sys_gui // GUI read/write -> Send data to HOST
     extern CData<uint8_t> StrikeNum;
     extern CData<uint16_t> TimeCycle;
     extern CData<bool> StrikeState;
+    extern CData<uint8_t> Brightness;
 }
 #pragma endregion
 

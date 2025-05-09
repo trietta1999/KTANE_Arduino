@@ -19,8 +19,8 @@
 #define BEEP_INCREASE_DURATION 100
 #define BEEP_TIMEOUT 5000
 
-#define BOX_CHECKED 3
-#define BOX_UNCHECK 2
+#define STATE_CHECKED 3
+#define STATE_UNCHECK 2
 
 #define TO_ENUM(enum_name, item) item,
 #define TO_STRING(enum_name, item) { enum_name::item, #item },

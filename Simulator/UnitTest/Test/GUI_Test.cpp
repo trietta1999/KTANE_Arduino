@@ -22,10 +22,11 @@ public:
 
     TEST_METHOD(TEST_OnSliderChange)
     {
-        lv_slider_set_value(ui_Slider1, 10, LV_ANIM_ON);
+        lv_slider_set_value(ui_Slider1, 100, LV_ANIM_ON);
         OnSliderChange(NULL);
 
-        Assert::IsTrue(SliderValue.GetValue() == 10);
+        Assert::IsTrue(SliderValue.GetValue() == 100);
+        Assert::IsTrue(sys_gui::Brightness.GetValue() == 100);
     }
 
     TEST_METHOD(TEST_OnButtonNormalClick)

@@ -1,108 +1,87 @@
-//Arduino-TFT_eSPI board-template main routine. There's a TFT_eSPI create+flush driver already in LVGL-9.1 but we create our own here for more control (like e.g. 16-bit color swap).
-
 #include <lvgl.h>
 #include <TFT_eSPI.h>
+#include <XPT2046_Touchscreen.h>
+
 #include "src/ui/ui.h"
+#include "src/CommonData.h"
 #include "src/CommonLibrary.h"
 
-/*Don't forget to set Sketchbook location in File/Preferences to the path of your UI project (the parent foder of this INO file)*/
+#define BL_PIN 21
 
-/*Change to your screen resolution*/
-static const uint16_t screenWidth  = 320;
-static const uint16_t screenHeight = 240;
+// Touchscreen pins
+#define XPT2046_IRQ 36   // T_IRQ
+#define XPT2046_MOSI 32  // T_DIN
+#define XPT2046_MISO 39  // T_OUT
+#define XPT2046_CLK 25   // T_CLK
+#define XPT2046_CS 33    // T_CS
 
-enum { SCREENBUFFER_SIZE_PIXELS = screenWidth * screenHeight / 10 };
-static lv_color_t buf [SCREENBUFFER_SIZE_PIXELS];
+// Screen resolution
+#define SCREEN_WIDTH 240
+#define SCREEN_HEIGHT 320
 
-TFT_eSPI tft = TFT_eSPI( screenWidth, screenHeight ); /* TFT instance */
+SPIClass touchscreenSPI = SPIClass(VSPI);
+XPT2046_Touchscreen touchscreen(XPT2046_CS, XPT2046_IRQ);
 
-/* Display flushing */
-void my_disp_flush (lv_display_t *disp, const lv_area_t *area, uint8_t *pixelmap)
-{
-    uint32_t w = ( area->x2 - area->x1 + 1 );
-    uint32_t h = ( area->y2 - area->y1 + 1 );
+#define DRAW_BUF_SIZE (SCREEN_WIDTH * SCREEN_HEIGHT / 10 * (LV_COLOR_DEPTH / 8))
+uint32_t draw_buf[DRAW_BUF_SIZE / 4];
 
-    if (LV_COLOR_16_SWAP) {
-        size_t len = lv_area_get_size( area );
-        lv_draw_sw_rgb565_swap( pixelmap, len );
-    }
+// Get the Touchscreen data
+void touchscreen_read(lv_indev_t* indev, lv_indev_data_t* data) {
+  // Checks if Touchscreen was touched, and prints X, Y and Pressure (Z)
+  if (touchscreen.tirqTouched() && touchscreen.touched()) {
+    // Get Touchscreen points
+    TS_Point p = touchscreen.getPoint();
+    data->state = LV_INDEV_STATE_PRESSED;
 
-    tft.startWrite();
-    tft.setAddrWindow( area->x1, area->y1, w, h );
-    tft.pushColors( (uint16_t*) pixelmap, w * h, true );
-    tft.endWrite();
-
-    lv_disp_flush_ready( disp );
+    // Set the coordinates
+    data->point.x = map(p.x, 200, 3700, 1, SCREEN_WIDTH);
+    data->point.y = map(p.y, 240, 3800, 1, SCREEN_HEIGHT);
+  } else {
+    data->state = LV_INDEV_STATE_RELEASED;
+  }
 }
 
-/*Read the touchpad*/
-void my_touchpad_read (lv_indev_t * indev_driver, lv_indev_data_t * data)
-{
-    uint16_t touchX = 0, touchY = 0;
+void setup() {
+  // LVGL init
+  lv_init();
 
-    bool touched = false;//tft.getTouch( &touchX, &touchY, 600 );
+  // Start the SPI for the touchscreen and init the touchscreen
+  touchscreenSPI.begin(XPT2046_CLK, XPT2046_MISO, XPT2046_MOSI, XPT2046_CS);
+  touchscreen.begin(touchscreenSPI);
+  touchscreen.setRotation(2);
 
-    if (!touched)
-    {
-        data->state = LV_INDEV_STATE_REL;
-    }
-    else
-    {
-        data->state = LV_INDEV_STATE_PR;
+  // Create a display object
+  lv_display_t* disp;
+  // Initialize the TFT display using the TFT_eSPI library
+  disp = lv_tft_espi_create(SCREEN_WIDTH, SCREEN_HEIGHT, draw_buf, sizeof(draw_buf));
+  lv_display_set_rotation(disp, LV_DISPLAY_ROTATION_270);
 
-        /*Set the coordinates*/
-        data->point.x = touchX;
-        data->point.y = touchY;
+  // Initialize an LVGL input device object (Touchscreen)
+  lv_indev_t* indev = lv_indev_create();
+  lv_indev_set_type(indev, LV_INDEV_TYPE_POINTER);
+  // Set the callback function to read Touchscreen input
+  lv_indev_set_read_cb(indev, touchscreen_read);
 
-        Serial.print( "Data x " );
-        Serial.println( touchX );
+  // Create UI
+  ui_init();
+  // Custom init
+  Init();
 
-        Serial.print( "Data y " );
-        Serial.println( touchY );
-    }
+  pinMode(BL_PIN, OUTPUT);
+  analogWrite(BL_PIN, sys_gui::Brightness.GetValue());
 }
 
-/*Set tick routine needed for LVGL internal timings*/
-static uint32_t my_tick_get_cb (void) { return millis(); }
-
-
-void setup ()
-{
-    Serial.begin( 115200 ); /* prepare for possible serial debug */
-
-    String LVGL_Arduino = "Hello Arduino! ";
-    LVGL_Arduino += String('V') + lv_version_major() + "." + lv_version_minor() + "." + lv_version_patch();
-
-    Serial.println( LVGL_Arduino );
-    Serial.println( "I am LVGL_Arduino" );
-
-    lv_init();
-
-    tft.begin();          /* TFT init */
-    tft.setRotation( 3 ); /* Landscape orientation, flipped */
-
-    static lv_disp_t* disp;
-    disp = lv_display_create( screenWidth, screenHeight );
-    lv_display_set_buffers( disp, buf, NULL, SCREENBUFFER_SIZE_PIXELS * sizeof(lv_color_t), LV_DISPLAY_RENDER_MODE_PARTIAL );
-    lv_display_set_flush_cb( disp, my_disp_flush );
-
-    static lv_indev_t* indev;
-    indev = lv_indev_create();
-    lv_indev_set_type( indev, LV_INDEV_TYPE_POINTER );
-    lv_indev_set_read_cb( indev, my_touchpad_read );
-
-    lv_tick_set_cb( my_tick_get_cb );
-
-    ui_init();
-
-    Init();
-
-    Serial.println( "Setup done" );
+void DataProcess() {
+  if (sys_gui::Brightness.GetState()) {
+    analogWrite(BL_PIN, sys_gui::Brightness.GetValue());
+  }
 }
 
-void loop ()
-{
-    lv_timer_handler(); /* let the GUI do its work */
-    AutoUpdate();
-    delay(5);
+void loop() {
+  lv_task_handler();
+  AutoUpdate();
+  DataProcess();
+  UpdateAll();
+  lv_tick_inc(10);
+  delay(10);
 }

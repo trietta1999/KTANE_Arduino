@@ -189,10 +189,10 @@ int WINAPI wWinMain(
 
     while (true)
     {
+        ::lv_timer_handler();
         AutoUpdate();
         UpdateAll();
-        uint32_t time_till_next = ::lv_timer_handler();
-        ::Sleep(time_till_next);
+        ::Sleep(10);
     }
 
     lv_deinit();

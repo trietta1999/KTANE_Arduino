@@ -10,6 +10,9 @@
 void Init()
 {
     // TODO: Updates the screen on first startup
+
+    sys_gui::Brightness.SetValue(100);
+    lv_slider_set_value(ui_Slider1, sys_gui::Brightness.GetValue(), LV_ANIM_OFF);
 }
 
 void AutoUpdate()
@@ -60,6 +63,7 @@ void OnSliderChange(lv_event_t* e)
     // TODO: Perform logic processing related to the component
 
     SliderValue.SetValue(lv_slider_get_value(ui_Slider1));
+    sys_gui::Brightness.SetValue(lv_slider_get_value(ui_Slider1));
 }
 
 void OnArcChange(lv_event_t* e)

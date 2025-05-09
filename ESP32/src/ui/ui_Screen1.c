@@ -11,6 +11,7 @@ void ui_Screen1_screen_init(void)
     lv_obj_remove_flag(ui_Screen1, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
 
     ui_Slider1 = lv_slider_create(ui_Screen1);
+    lv_slider_set_range(ui_Slider1, 10, 255);
     lv_slider_set_value(ui_Slider1, 0, LV_ANIM_OFF);
     if(lv_slider_get_mode(ui_Slider1) == LV_SLIDER_MODE_RANGE) lv_slider_set_left_value(ui_Slider1, 0, LV_ANIM_OFF);
     lv_obj_set_width(ui_Slider1, 22);

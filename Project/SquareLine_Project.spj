@@ -89,8 +89,8 @@
                 "nid": 1020,
                 "strtype": "SLIDER/Range",
                 "intarray": [
-                  0,
-                  100
+                  10,
+                  255
                 ],
                 "InheritedType": 7
               },
@@ -1916,10 +1916,10 @@
     "theme_dark": false,
     "theme_color1": 5,
     "theme_color2": 0,
-    "uiExportFolderPath": "D:\\Git\\LVGL_example\\ESP32\\src\\ui",
-    "projectExportFolderPath": "D:\\Git\\LVGL_example\\Project",
+    "uiExportFolderPath": "D:\\Git\\KTANE_Arduino\\LVGL_example\\ESP32\\src\\ui",
+    "projectExportFolderPath": "D:\\Git\\KTANE_Arduino\\LVGL_example\\Project",
     "custom_variable_prefix": "uic",
-    "backup_cnt": 10,
+    "backup_cnt": 11,
     "autosave_cnt": 0,
     "lvgl_version": "9.1.0",
     "callfuncsexport": "CPP_FILE",

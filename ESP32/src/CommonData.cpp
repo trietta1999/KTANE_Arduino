@@ -26,6 +26,7 @@ namespace sys_gui
     CData<uint8_t> StrikeNum;
     CData<uint16_t> TimeCycle;
     CData<bool> StrikeState;
+    CData<uint8_t> Brightness;
 }
 #pragma endregion
 
@@ -50,5 +51,5 @@ void UpdateAll()
     DropdownValue.ResetState();
     SwitchValue.ResetState();
     RollerValue.ResetState();
-#pragma endregion
+    sys_gui::Brightness.ResetState();
 }
