@@ -20,12 +20,12 @@ std::string GenerateSerialNumber() {
     std::string digits = "0123456789";
     std::string serial_number;
 
-    for (int i = 0; i < total - 1; i++) {
-        int random_index = rand() % characters.size();
+    for (uint8_t i = 0; i < total - 1; i++) {
+        uint8_t random_index = RandomRange(0, characters.size());
         serial_number += characters[random_index];
     }
 
-    int random_index = rand() % digits.size();
+    uint8_t random_index = RandomRange(0, digits.size());
     serial_number += digits[random_index];
 
     return serial_number;
