@@ -1,27 +1,3 @@
-# Mục lục
-
-<!-- TOC -->
-
-- [Mục lục](#m%E1%BB%A5c-l%E1%BB%A5c)
-- [Tổng quan](#t%E1%BB%95ng-quan)
-    - [Keep Talking and Nobody Explodes](#keep-talking-and-nobody-explodes)
-    - [Cẩm nang Gỡ bom](#c%E1%BA%A9m-nang-g%E1%BB%A1-bom)
-    - [KTANE Arduino](#ktane-arduino)
-    - [LVGL](#lvgl)
-- [Phần mềm](#ph%E1%BA%A7n-m%E1%BB%81m)
-- [Kiến trúc phần mềm](#ki%E1%BA%BFn-tr%C3%BAc-ph%E1%BA%A7n-m%E1%BB%81m)
-    - [Kiến trúc GUI](#ki%E1%BA%BFn-tr%C3%BAc-gui)
-    - [Kiến trúc LIB](#ki%E1%BA%BFn-tr%C3%BAc-lib)
-        - [Kiến trúc dữ liệu dùng chung Common data](#ki%E1%BA%BFn-tr%C3%BAc-d%E1%BB%AF-li%E1%BB%87u-d%C3%B9ng-chung-common-data)
-        - [Thư viện dùng chung](#th%C6%B0-vi%E1%BB%87n-d%C3%B9ng-chung)
-    - [Kiến trúc SIM/SER](#ki%E1%BA%BFn-tr%C3%BAc-simser)
-        - [Tổng quan](#t%E1%BB%95ng-quan)
-        - [Kiến trúc Dummy SER](#ki%E1%BA%BFn-tr%C3%BAc-dummy-ser)
-        - [Kiến trúc SER](#ki%E1%BA%BFn-tr%C3%BAc-ser)
-- [Kiểm thử đơn vị Unit test](#ki%E1%BB%83m-th%E1%BB%AD-%C4%91%C6%A1n-v%E1%BB%8B-unit-test)
-
-<!-- /TOC -->
-
 # 1. Tổng quan
 ## 1.1. Keep Talking and Nobody Explodes
 Keep Talking and Nobody Explodes (viết tắt là KTANE) là một tựa game giải đố hợp tác độc đáo và đầy kịch tính, thách thức khả năng giao tiếp và làm việc nhóm của bạn dưới áp lực cao. Trò chơi đặt người chơi vào một tình huống căng thẳng: một người bị nhốt trong phòng với một quả bom phức tạp đang đếm ngược, trong khi những người chơi còn lại là "chuyên gia" sở hữu một cuốn sách hướng dẫn dày đặc thông tin về cách gỡ bom – nhưng họ lại không thể nhìn thấy quả bom! Để thành công, người gỡ bom phải mô tả chính xác những gì họ thấy trên bom (các module, dây nhợ, nút bấm, màn hình...) cho các chuyên gia nghe qua giao tiếp bằng lời nói, và các chuyên gia phải nhanh chóng tìm thông tin trong cuốn sách "Cẩm nang Gỡ bom" để hướng dẫn lại từng bước vô hiệu hóa từng module trước khi hết giờ. Mỗi màn chơi là một cuộc đua nghẹt thở với thời gian, đòi hỏi sự lắng nghe cẩn thận, truyền đạt rõ ràng và phối hợp nhịp nhàng, biến những khoảnh khắc căng thẳng tột độ thành những tràng cười sảng khoái hoặc những tiếng hét đáng nhớ khi bom (có thể) phát nổ.
@@ -353,7 +329,7 @@ Get/Set ở SER. Chỉ get ở những lớp kiến trúc khác.
 | `ComPortType` | `COMPORT_TYPE` | Loại pin ngẫu nhiên, tham khảo "Phụ Lục C: Tham Khảo Cách Xác Định Cổng Giao Tiếp" của "Cẩm nang Gỡ bom". |
 | `SerialNum` | `std::string` | Dãy số seri ngẫu nhiên có 10 ký tự gồm chữ in hoa và số. |
 | `BatteryNum` | `uint8_t` | Số lượng pin ngẫu nhiên từ 1-5. |
-| `RandomSeed` | `uint8_t` | Hạt giống ngẫu nhiên được tạo khi khởi động hệ thống, tồn tại trong suốt chương trình, sử dụng cho việc tạo ngẫu nhiên hệ thống câu đố và cách giải đúng. |
+| `RandomSeed` | `uint32_t` | Hạt giống ngẫu nhiên được tạo khi khởi động hệ thống, tồn tại trong suốt chương trình, sử dụng cho việc tạo ngẫu nhiên hệ thống câu đố và cách giải đúng. |
 
 **Cách tạo mới common data**
 | Bước | File | Mô tả |
