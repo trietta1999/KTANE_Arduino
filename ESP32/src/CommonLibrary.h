@@ -19,7 +19,7 @@ bool OddCheckAtLast(const std::string&);
 
 // Allow modification
 #pragma region Custom_function
-
+void CreateRandomWireList();
 #pragma endregion
 
 #endif // !_COMMON_LIBRARY_H
