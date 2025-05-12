@@ -6,6 +6,7 @@
 #define _COMMON_DATA_H
 
 #include <cstdint>
+#include <vector>
 #include "CommonDataType.h"
 #include "CData.h"
 
@@ -22,7 +23,7 @@ namespace sys_host // GUI read only, received from HOST
     extern CData<COMPORT_TYPE> ComPortType;
     extern CData<std::string> SerialNum;
     extern CData<uint8_t> BatteryNum;
-    extern CData<uint8_t> RandomSeed;
+    extern CData<uint32_t> RandomSeed;
     extern CData<std::pair<uint8_t, uint8_t>> TimeClock;
 }
 
@@ -38,13 +39,8 @@ namespace sys_gui // GUI read/write -> Send data to HOST
 
 // Allow modification
 #pragma region Custom_data
-extern CData<uint16_t> Button2Value;
-extern CData<int32_t> SliderValue;
-extern CData<int32_t> ArcValue;
-extern CData<uint16_t> CheckboxValue;
-extern CData<std::string> DropdownValue;
-extern CData<uint16_t> SwitchValue;
-extern CData<std::string> RollerValue;
+extern CData<std::vector<COLOR>> WireColorList;
+extern CData<uint8_t> CorrectWireIndex;
 #pragma endregion
 
 void UpdateAll();

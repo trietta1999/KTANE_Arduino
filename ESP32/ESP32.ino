@@ -57,7 +57,7 @@ void InitCDataFromFakeTimer() {
 
   sys_gui::StrikeNum.SetValue(0);
   sys_gui::TimeCycle.SetValue(TIMECYCLE_0);
-  sys_gui::SuccessState.SetValue(false);
+  sys_gui::SuccessState.SetValue(INCORRECT);
 }
 
 void DataProcess() {

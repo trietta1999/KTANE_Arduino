@@ -72,5 +72,22 @@ bool NumberCheckInTimer(uint8_t num)
 
 // Allow modification
 #pragma region Custom_function
+void CreateRandomWireList()
+{
+    // Create random wire list and color
+    uint8_t wireNum = RandomRange(3, 7);
 
+    std::vector<COLOR> listColor;
+    for (uint8_t i = 0; i < wireNum; i++)
+    {
+        uint8_t randomColorIndex = RandomRange((uint8_t)WIRECOLOR_TYPE::MIN + 1, (uint8_t)WIRECOLOR_TYPE::MAX) - 1;
+        listColor.push_back(std::next(mapColor.begin(), randomColorIndex)->second);
+    }
+    if (listColor.size() < 6)
+    {
+        listColor.resize(6, NON_COLOR);
+    }
+
+    WireColorList.SetValue(listColor);
+}
 #pragma endregion

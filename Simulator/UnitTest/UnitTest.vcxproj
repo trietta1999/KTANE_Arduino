@@ -171,7 +171,9 @@
     <ClCompile Include="..\..\ESP32\src\ui\ui_comp_hook.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_events.cpp" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_helpers.c" />
-    <ClCompile Include="..\..\ESP32\src\ui\ui_Screen1.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_fail_png.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_success_png.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_Main.c" />
     <ClCompile Include="Test\GUI_Test.cpp" />
     <ClCompile Include="Test\Library_Test.cpp" />
     <None Include="..\LvglPlatform\lvgl\env_support\pikascript\pika_lvgl.c" />

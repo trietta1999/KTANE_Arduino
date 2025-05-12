@@ -3,119 +3,130 @@
 // LVGL version: 9.1.0
 // Project name: SquareLine_Project
 
+#include <unordered_map>
+#include <iterator>
+#include <thread>
+#include <chrono>
 #include "ui.h"
 #include "../CommonData.h"
 #include "../CommonLibrary.h"
 
+#define th_sleep(d) std::this_thread::sleep_until(std::chrono::system_clock::now() + std::chrono::milliseconds(d))
+
+std::vector<lv_obj_t*> listWire;
+std::vector<lv_obj_t*> listSelect;
+
+/*
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+
+// Hàm kiểm tra tần suất xuất hiện của các phần tử trong mảng
+void countFrequency(int arr[], int size) {
+    // Mảng frequency để đếm số lần xuất hiện của các giá trị từ 1 đến 4
+    int frequency[5] = { 0 }; // Chỉ cần 5 phần tử, vì giá trị lớn nhất là 4
+
+    // Đếm số lần xuất hiện của từng giá trị trong mảng
+    for (int i = 0; i < size; ++i) {
+        frequency[arr[i]]++; // Tăng tần suất cho giá trị tương ứng
+    }
+
+    // In ra tần suất xuất hiện của từng giá trị
+    for (int i = 1; i <= 4; ++i) {
+        std::cout << "Giá trị " << i << " xuất hiện " << frequency[i] << " lần.\n";
+    }
+}
+
+int main() {
+    // Khởi tạo seed cho hàm random
+    srand(static_cast<unsigned int>(time(0)));
+
+    // Tạo độ dài mảng ngẫu nhiên từ 3 đến 6
+    int size = rand() % 4 + 3; // Rand từ 0 đến 3, cộng thêm 3 để có giá trị từ 3 đến 6
+
+    // Tạo mảng với số lượng phần tử ngẫu nhiên
+    int* arr = new int[size];
+
+    // Gán giá trị ngẫu nhiên từ 1 đến 4 cho mỗi phần tử trong mảng
+    for (int i = 0; i < size; ++i) {
+        arr[i] = rand() % 4 + 1; // Rand từ 1 đến 4
+    }
+
+    // In ra mảng để kiểm tra
+    std::cout << "Mảng ngẫu nhiên có " << size << " phần tử: ";
+    for (int i = 0; i < size; ++i) {
+        std::cout << arr[i] << " ";
+    }
+    std::cout << std::endl;
+
+    // Kiểm tra và tính toán tần suất của các phần tử
+    countFrequency(arr, size);
+
+    return 0;
+}
+
+*/
+
 void Init()
 {
-    // TODO: Updates the screen on first startup
-
+    // Brightness
     sys_gui::Brightness.SetValue(100);
-    lv_slider_set_value(ui_Slider1, sys_gui::Brightness.GetValue(), LV_ANIM_OFF);
+    lv_slider_set_value(ui_sldBrightness, sys_gui::Brightness.GetValue(), LV_ANIM_OFF);
+
+    // Wire list
+    listWire = { ui_barWire1, ui_barWire2, ui_barWire3, ui_barWire4, ui_barWire5, ui_barWire6 };
+    listSelect = { ui_swSelect1, ui_swSelect2, ui_swSelect3, ui_swSelect4, ui_swSelect5, ui_swSelect6 };
+
+    // Create random color wire list
+    CreateRandomWireList();
+
+    for (uint8_t i = 0; i < listWire.size(); i++)
+    {
+        auto color = WireColorList.GetValue().at(i);
+
+        if (color != NON_COLOR)
+        {
+            lv_obj_set_style_bg_color(listWire.at(i), lv_color_hex(color), LV_PART_INDICATOR | LV_STATE_DEFAULT);
+        }
+        else
+        {
+            lv_obj_add_state(listWire.at(i), LV_STATE_DISABLED);
+            lv_obj_add_state(listSelect.at(i), LV_STATE_DISABLED);
+            lv_obj_clear_state(listSelect.at(i), LV_STATE_CHECKED);
+        }
+    }
 }
 
 void AutoUpdate()
 {
-    /* TODO: Check state of shared data and perform screen update
-             Reset state function is recommended after screen updating
-             This function is running continuously
-    */
-
-    if (Button2Value.GetState())
+    if (sys_gui::SuccessState.GetValue() != INCORRECT)
     {
-        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, std::to_string(Button2Value.GetValue()).c_str());
-    }
+        lv_obj_clear_flag(ui_imgResult, LV_OBJ_FLAG_HIDDEN);
 
-    if (SliderValue.GetState())
-    {
-        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, std::to_string(SliderValue.GetValue()).c_str());
-    }
-
-    if (ArcValue.GetState())
-    {
-        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, std::to_string(ArcValue.GetValue()).c_str());
-    }
-
-    if (CheckboxValue.GetState())
-    {
-        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, std::to_string(CheckboxValue.GetValue()).c_str());
-    }
-
-    if (DropdownValue.GetState())
-    {
-        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, DropdownValue.GetValue().c_str());
-    }
-
-    if (SwitchValue.GetState())
-    {
-        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, std::to_string(SwitchValue.GetValue()).c_str());
-    }
-
-    if (RollerValue.GetState())
-    {
-        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, RollerValue.GetValue().c_str());
+        if (sys_gui::SuccessState.GetValue() == STATE_UNCHECK)
+        {
+            lv_obj_add_state(ui_imgResult, LV_STATE_DISABLED);
+        }
+        else if (sys_gui::SuccessState.GetValue() == STATE_CHECKED)
+        {
+            lv_obj_add_state(ui_imgResult, LV_STATE_CHECKED);
+        }
     }
 }
 
-void OnSliderChange(lv_event_t* e)
+void OnBrightnessChange(lv_event_t* e)
 {
-    // TODO: Perform logic processing related to the component
-
-    SliderValue.SetValue(lv_slider_get_value(ui_Slider1));
-    sys_gui::Brightness.SetValue(lv_slider_get_value(ui_Slider1));
+    sys_gui::Brightness.SetValue(lv_slider_get_value(ui_sldBrightness));
 }
 
-void OnArcChange(lv_event_t* e)
+void OnWireSelect(lv_event_t* e)
 {
-    // TODO: Perform logic processing related to the component
-
-    ArcValue.SetValue(lv_arc_get_value(ui_Arc1));
-}
-
-void OnCheckboxClick(lv_event_t* e)
-{
-    // TODO: Perform logic processing related to the component
-
-    CheckboxValue.SetValue(lv_obj_get_state(ui_Checkbox1));
-}
-
-void OnDropdownChange(lv_event_t* e)
-{
-    // TODO: Perform logic processing related to the component
-
-    char buf[100] = { 0 };
-    lv_dropdown_get_selected_str(ui_Dropdown1, buf, sizeof(buf));
-    DropdownValue.SetValue(buf);
-}
-
-void OnSwitchClick(lv_event_t* e)
-{
-    // TODO: Perform logic processing related to the component
-
-    SwitchValue.SetValue(lv_obj_get_state(ui_Switch1));
-}
-
-void OnRollerChange(lv_event_t* e)
-{
-    // TODO: Perform logic processing related to the component
-
-    char buf[100] = { 0 };
-    lv_roller_get_selected_str(ui_Roller1, buf, sizeof(buf));
-    RollerValue.SetValue(buf);
-}
-
-void OnButtonNormalClick(lv_event_t* e)
-{
-    // TODO: Perform logic processing related to the component
-
-    Button2Value.SetValue(1);
-    sys_gui::StrikeState.SetValue(true);
-}
-
-void OnButtonToggleClick(lv_event_t* e)
-{
-    // TODO: Perform logic processing related to the component
-
-    Button2Value.SetValue(lv_obj_get_state(ui_Button2));
+    if (std::find(listSelect.begin(), listSelect.end(), e->current_target) - listSelect.begin() == CorrectWireIndex.GetValue())
+    {
+        sys_gui::SuccessState.SetValue(STATE_CHECKED);
+    }
+    else
+    {
+        sys_gui::StrikeState.SetValue(true);
+    }
 }
