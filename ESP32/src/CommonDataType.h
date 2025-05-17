@@ -8,6 +8,8 @@
 #include <string>
 #include <unordered_map>
 
+#define INCORRECT (uint8_t)(-1)
+
 #define MINUTE_POS 0
 #define SECOND_POS 1
 
@@ -77,11 +79,6 @@ EXTERN_MAP_ENUM_STR(LABEL_INDICATOR)
 EXTERN_MAP_ENUM_STR(BATTERY_TYPE)
 EXTERN_MAP_ENUM_STR(COMPORT_TYPE)
 
-enum class LED_COLOR
-{
-    Red,
-    Green,
-};
 #pragma endregion
 
 // Allow modification
