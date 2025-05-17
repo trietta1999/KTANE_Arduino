@@ -1,6 +1,7 @@
 #include <lvgl.h>
 #include <TFT_eSPI.h>
 #include <XPT2046_Touchscreen.h>
+#include "BluetoothSerial.h"
 
 #include "src/ui/ui.h"
 #include "src/CommonData.h"
@@ -22,6 +23,8 @@
 SPIClass touchscreenSPI = SPIClass(VSPI);
 XPT2046_Touchscreen touchscreen(XPT2046_CS, XPT2046_IRQ);
 
+BluetoothSerial SerialBT;
+
 #define DRAW_BUF_SIZE (SCREEN_WIDTH * SCREEN_HEIGHT / 10 * (LV_COLOR_DEPTH / 8))
 uint32_t draw_buf[DRAW_BUF_SIZE / 4];
 
@@ -41,7 +44,70 @@ void touchscreen_read(lv_indev_t* indev, lv_indev_data_t* data) {
   }
 }
 
+void InitCDataFromFakeTimer() {
+  uint32_t seed = esp_random();
+  srand(seed);
+
+  sys_host::RandomSeed.SetValue(seed);
+  sys_host::LabelIndicator.SetValue((LABEL_INDICATOR)RandomRange(0, (uint8_t)LABEL_INDICATOR::MAX));
+  sys_host::BatteryType.SetValue((BATTERY_TYPE)RandomRange(0, (uint8_t)BATTERY_TYPE::MAX));
+  sys_host::ComPortType.SetValue((COMPORT_TYPE)RandomRange(0, (uint8_t)COMPORT_TYPE::MAX));
+  sys_host::BatteryNum.SetValue(RandomRange(1, 5));
+  sys_host::SerialNum.SetValue(GenerateSerialNumber());
+
+  sys_gui::StrikeNum.SetValue(0);
+  sys_gui::TimeCycle.SetValue(TIMECYCLE_0);
+  sys_gui::SuccessState.SetValue(false);
+}
+
+void DataProcess() {
+  if (sys_gui::Brightness.GetState()) {
+    analogWrite(BL_PIN, sys_gui::Brightness.GetValue());
+  }
+
+  if (SerialBT.available()) {
+    String read = SerialBT.readStringUntil('\n');
+
+    if (read == "sys_data") {
+      SerialBT.println("===== Dummy Data Initialized =====");
+      SerialBT.println(String("LabelIndicator: ") + map_LABEL_INDICATOR[sys_host::LabelIndicator.GetValue()].c_str());
+      SerialBT.println(String("BatteryType: ") + map_BATTERY_TYPE[sys_host::BatteryType.GetValue()].c_str());
+      SerialBT.println(String("ComPortType: ") + map_COMPORT_TYPE[sys_host::ComPortType.GetValue()].c_str());
+      SerialBT.println(String("BatteryNum: ") + sys_host::BatteryNum.GetValue());
+      SerialBT.println(String("SerialNum: ") + sys_host::SerialNum.GetValue().c_str());
+      SerialBT.println("==================================");
+    }
+  }
+
+  // Temporary -->
+  if (sys_gui::StrikeNum.GetValue() < 3) {
+    if (sys_gui::StrikeState.GetValue()) {
+      sys_gui::StrikeNum.SetValue(sys_gui::StrikeNum.GetValue() + 1);
+
+      switch (sys_gui::StrikeNum.GetValue()) {
+        case 0:
+          sys_gui::TimeCycle.SetValue(TIMECYCLE_0);
+          break;
+        case 1:
+          sys_gui::TimeCycle.SetValue(TIMECYCLE_1);
+          break;
+        case 2:
+          sys_gui::TimeCycle.SetValue(TIMECYCLE_2);
+          break;
+        default:
+          break;
+      }
+
+      sys_gui::StrikeState.SetValue(false);
+    }
+  }
+  // Temporary <--
+}
+
 void setup() {
+  // Bluetooth serial init
+  SerialBT.begin("ESP32-BT-Wires-Module");
+
   // LVGL init
   lv_init();
 
@@ -64,17 +130,16 @@ void setup() {
 
   // Create UI
   ui_init();
+
+  // Temporary -->
+  InitCDataFromFakeTimer();
+  // Temporary <--
+
   // Custom init
   Init();
 
   pinMode(BL_PIN, OUTPUT);
   analogWrite(BL_PIN, sys_gui::Brightness.GetValue());
-}
-
-void DataProcess() {
-  if (sys_gui::Brightness.GetState()) {
-    analogWrite(BL_PIN, sys_gui::Brightness.GetValue());
-  }
 }
 
 void loop() {
