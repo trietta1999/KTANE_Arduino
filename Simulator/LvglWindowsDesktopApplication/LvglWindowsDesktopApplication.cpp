@@ -1,4 +1,5 @@
 ﻿#include <Windows.h>
+#include <WaaSApi.h>
 #include <thread>
 #include <iostream>
 #include <iomanip>
@@ -24,11 +25,11 @@ void RunFakeTimer(int8_t minute)
     int8_t second = 0;
 
     if (GetConsoleScreenBufferInfo(hConsole, &csbi)) {
-        while ((minute >= 0) && (!sys_gui::IsSuccess.GetValue()) && (sys_gui::StrikeNum.GetValue() < 3))
+        while ((minute >= 0) && (sys_gui::SuccessState.GetValue() != STATE_CHECKED) && (sys_gui::StrikeNum.GetValue() < 3))
         {
-            while ((second >= 0) && (!sys_gui::IsSuccess.GetValue()) && (sys_gui::StrikeNum.GetValue() < 3))
+            while ((second >= 0) && (sys_gui::SuccessState.GetValue() != STATE_CHECKED) && (sys_gui::StrikeNum.GetValue() < 3))
             {
-                ::Beep(BEEP_FRE, BEEP_INCREASE_DURATION);
+                //::Beep(BEEP_FRE, BEEP_INCREASE_DURATION);
 
                 SetConsoleCursorPosition(hConsole, csbi.dwCursorPosition);
                 std::cout << std::setfill('0') << std::setw(2) << std::to_string(minute) << ":"
@@ -45,16 +46,21 @@ void RunFakeTimer(int8_t minute)
             second = 59;
         }
 
-        if (!sys_gui::IsSuccess.GetValue())
+        if (sys_gui::SuccessState.GetValue() == INCORRECT)
         {
-            ::Beep(BEEP_FRE, BEEP_TIMEOUT);
+            sys_gui::SuccessState.SetValue(STATE_UNCHECK);
+            //::Beep(BEEP_FRE, BEEP_TIMEOUT);
+        }
+        else
+        {
+            ::MessageBox(NULL, L"", L"", MB_ICONINFORMATION);
         }
     }
 }
 
 void InitCDataFromFakeTimer()
 {
-    uint8_t seed = time(0);
+    uint32_t seed = time(0);
     srand(seed);
 
     sys_host::RandomSeed.SetValue(seed);
@@ -66,9 +72,8 @@ void InitCDataFromFakeTimer()
 
     sys_gui::StrikeNum.SetValue(0);
     sys_gui::TimeCycle.SetValue(TIMECYCLE_0);
-    sys_gui::TimeClock.SetValue(std::make_pair(2, 0));
-    sys_gui::StrikeNum.SetValue(0);
-    sys_gui::IsSuccess.SetValue(false);
+    sys_gui::TimeClock.SetValue(std::make_pair(30, 0));
+    sys_gui::SuccessState.SetValue(INCORRECT);
 
     AttachConsoleWindow();
 
@@ -83,34 +88,36 @@ void InitCDataFromFakeTimer()
 
         RunFakeTimer(std::get<MINUTE_POS>(sys_gui::TimeClock.GetValue()));
         }).detach();
+}
 
-    std::thread([]() {
-        while (sys_gui::StrikeNum.GetValue() != 3)
+void DataProcess()
+{
+    if (sys_gui::StrikeNum.GetValue() < 3)
+    {
+        if (sys_gui::StrikeState.GetValue())
         {
-            if (sys_gui::StrikeState.GetValue())
+            sys_gui::StrikeNum.SetValue(sys_gui::StrikeNum.GetValue() + 1);
+
+            switch (sys_gui::StrikeNum.GetValue())
             {
-                sys_gui::StrikeNum.SetValue(sys_gui::StrikeNum.GetValue() + 1);
-
-                switch (sys_gui::StrikeNum.GetValue())
-                {
-                case 0:
-                    sys_gui::TimeCycle.SetValue(TIMECYCLE_0);
-                    break;
-                case 1:
-                    sys_gui::TimeCycle.SetValue(TIMECYCLE_1);
-                    break;
-                case 2:
-                    sys_gui::TimeCycle.SetValue(TIMECYCLE_2);
-                    break;
-                default:
-                    break;
-                }
-
-                sys_gui::StrikeState.SetValue(false);
+            case 0:
+                sys_gui::TimeCycle.SetValue(TIMECYCLE_0);
+                break;
+            case 1:
+                sys_gui::TimeCycle.SetValue(TIMECYCLE_1);
+                break;
+            case 2:
+                sys_gui::TimeCycle.SetValue(TIMECYCLE_2);
+                break;
+            default:
+                break;
             }
-            ::Sleep(100);
+
+            sys_gui::StrikeState.SetValue(false);
+
+            ::MessageBox(NULL, L"", L"", MB_ICONERROR);
         }
-        }).detach();
+    }
 }
 
 int WINAPI wWinMain(
@@ -191,6 +198,7 @@ int WINAPI wWinMain(
     {
         ::lv_timer_handler();
         AutoUpdate();
+        DataProcess();
         UpdateAll();
         ::Sleep(10);
     }
