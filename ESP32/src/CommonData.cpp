@@ -22,7 +22,7 @@ namespace sys_host {
 namespace sys_gui
 {
     CData<std::pair<uint8_t, uint8_t>> TimeClock;
-    CData<bool> IsSuccess;
+    CData<uint8_t> SuccessState;
     CData<uint8_t> StrikeNum;
     CData<uint16_t> TimeCycle;
     CData<bool> StrikeState;
