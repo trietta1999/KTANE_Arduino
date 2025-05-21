@@ -1,5 +1,6 @@
 ﻿#include <windows.h>
 #include <CppUnitTest.h>
+#include "CommonData.h"
 #include "CommonLibrary.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -63,5 +64,41 @@ public:
     TEST_METHOD(TEST_OddCheckAtLast_2)
     {
         Assert::IsTrue(OddCheckAtLast("QWRTEHN1") == true);
+    }
+
+    TEST_METHOD(TEST_NumberCheckInTimer_1)
+    {
+        sys_host::TimeClock.SetValue(std::make_pair(12, 34));
+        Assert::IsTrue(NumberCheckInTimer(1) == true);
+    }
+
+    TEST_METHOD(TEST_NumberCheckInTimer_2)
+    {
+        sys_host::TimeClock.SetValue(std::make_pair(12, 34));
+        Assert::IsTrue(NumberCheckInTimer(2) == true);
+    }
+
+    TEST_METHOD(TEST_NumberCheckInTimer_3)
+    {
+        sys_host::TimeClock.SetValue(std::make_pair(12, 34));
+        Assert::IsTrue(NumberCheckInTimer(3) == true);
+    }
+
+    TEST_METHOD(TEST_NumberCheckInTimer_4)
+    {
+        sys_host::TimeClock.SetValue(std::make_pair(12, 34));
+        Assert::IsTrue(NumberCheckInTimer(4) == true);
+    }
+
+    TEST_METHOD(TEST_NumberCheckInTimer_5)
+    {
+        sys_host::TimeClock.SetValue(std::make_pair(12, 34));
+        Assert::IsTrue(NumberCheckInTimer(5) == false);
+    }
+
+    TEST_METHOD(TEST_NumberCheckInTimer_6)
+    {
+        sys_host::TimeClock.SetValue(std::make_pair(22, 22));
+        Assert::IsTrue(NumberCheckInTimer(2) == true);
     }
 };
