@@ -54,6 +54,20 @@ bool OddCheckAtLast(const std::string& str)
 
     return false;
 }
+
+bool NumberCheckInTimer(uint8_t num)
+{
+    auto timer = sys_host::TimeClock.GetValue();
+    uint8_t minute = std::get<MINUTE_POS>(timer);
+    uint8_t second = std::get<SECOND_POS>(timer);
+
+    if ((minute / 10 % 10 == num) || (minute % 10 == num) || (second / 10 % 10 == num) || (second % 10 == num))
+    {
+        return true;
+    }
+
+    return false;
+}
 #pragma endregion
 
 // Allow modification
