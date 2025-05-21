@@ -15,6 +15,7 @@ uint8_t RandomRange(uint8_t, uint8_t);
 std::string GenerateSerialNumber();
 bool VowelCheck(const std::string&);
 bool OddCheckAtLast(const std::string&);
+bool NumberCheckInTimer(uint8_t);
 #pragma endregion
 
 // Allow modification

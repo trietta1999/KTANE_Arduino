@@ -35,7 +35,7 @@ void RunFakeTimer(int8_t minute)
                 std::cout << std::setfill('0') << std::setw(2) << std::to_string(minute) << ":"
                     << std::setw(2) << std::to_string(second);
 
-                sys_gui::TimeClock.SetValue(std::make_pair(minute, second));
+                sys_host::TimeClock.SetValue(std::make_pair(minute, second));
 
                 second--;
 
@@ -69,10 +69,10 @@ void InitCDataFromFakeTimer()
     sys_host::ComPortType.SetValue((COMPORT_TYPE)RandomRange(0, (uint8_t)COMPORT_TYPE::MAX));
     sys_host::BatteryNum.SetValue(RandomRange(1, 5));
     sys_host::SerialNum.SetValue(GenerateSerialNumber());
+    sys_host::TimeClock.SetValue(std::make_pair(30, 0));
 
     sys_gui::StrikeNum.SetValue(0);
     sys_gui::TimeCycle.SetValue(TIMECYCLE_0);
-    sys_gui::TimeClock.SetValue(std::make_pair(30, 0));
     sys_gui::SuccessState.SetValue(INCORRECT);
 
     AttachConsoleWindow();
@@ -86,7 +86,7 @@ void InitCDataFromFakeTimer()
         std::cout << "SerialNum: " << sys_host::SerialNum.GetValue() << "\n";
         std::cout << "==================================\n";
 
-        RunFakeTimer(std::get<MINUTE_POS>(sys_gui::TimeClock.GetValue()));
+        RunFakeTimer(std::get<MINUTE_POS>(sys_host::TimeClock.GetValue()));
         }).detach();
 }
 
