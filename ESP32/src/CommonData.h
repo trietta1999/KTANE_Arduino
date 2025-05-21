@@ -23,11 +23,11 @@ namespace sys_host // GUI read only, received from HOST
     extern CData<std::string> SerialNum;
     extern CData<uint8_t> BatteryNum;
     extern CData<uint8_t> RandomSeed;
+    extern CData<std::pair<uint8_t, uint8_t>> TimeClock;
 }
 
 namespace sys_gui // GUI read/write -> Send data to HOST
 {
-    extern CData<std::pair<uint8_t, uint8_t>> TimeClock;
     extern CData<uint8_t> SuccessState;
     extern CData<uint8_t> StrikeNum;
     extern CData<uint16_t> TimeCycle;
