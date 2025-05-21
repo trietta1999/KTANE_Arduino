@@ -17,11 +17,11 @@ namespace sys_host {
     CData<std::string> SerialNum;
     CData<uint8_t> BatteryNum;
     CData<uint8_t> RandomSeed;
+    CData<std::pair<uint8_t, uint8_t>> TimeClock;
 }
 
 namespace sys_gui
 {
-    CData<std::pair<uint8_t, uint8_t>> TimeClock;
     CData<uint8_t> SuccessState;
     CData<uint8_t> StrikeNum;
     CData<uint16_t> TimeCycle;
