@@ -22,7 +22,7 @@ namespace sys_host // GUI read only, received from HOST
     extern CData<COMPORT_TYPE> ComPortType;
     extern CData<std::string> SerialNum;
     extern CData<uint8_t> BatteryNum;
-    extern CData<uint8_t> RandomSeed;
+    extern CData<uint32_t> RandomSeed;
     extern CData<std::pair<uint8_t, uint8_t>> TimeClock;
 }
 

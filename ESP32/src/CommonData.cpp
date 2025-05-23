@@ -16,7 +16,7 @@ namespace sys_host {
     CData<COMPORT_TYPE> ComPortType;
     CData<std::string> SerialNum;
     CData<uint8_t> BatteryNum;
-    CData<uint8_t> RandomSeed;
+    CData<uint32_t> RandomSeed;
     CData<std::pair<uint8_t, uint8_t>> TimeClock;
 }
 
