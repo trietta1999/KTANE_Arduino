@@ -5,6 +5,7 @@
 #ifndef _COMMON_DATATYPE_H
 #define _COMMON_DATATYPE_H
 
+#include <cstdint>
 #include <string>
 #include <unordered_map>
 
@@ -12,6 +13,10 @@
 
 #define MINUTE_POS 0
 #define SECOND_POS 1
+
+#define FIRST_EVENT 0
+#define SECOND_EVENT 1
+#define SPECIAL_NUM 2S
 
 #define TIMECYCLE_0 1000
 #define TIMECYCLE_1 500
@@ -23,6 +28,9 @@
 
 #define STATE_CHECKED 3
 #define STATE_UNCHECK 2
+
+#define COLOR uint32_t
+#define NON_COLOR 0x000001
 
 #define TO_ENUM(enum_name, item) item,
 #define TO_STRING(enum_name, item) { enum_name::item, #item },
@@ -57,6 +65,20 @@
         CREATE(e, Serial) \
         CREATE(e, Stereo_RCA) \
 
+#define DEF_COLOR_TYPE(e, CREATE) \
+        CREATE(e, RED) \
+        CREATE(e, WHITE) \
+        CREATE(e, BLUE) \
+        CREATE(e, YELLOW) \
+        CREATE(e, PINK) \
+        CREATE(e, BLACK) \
+
+#define DEF_BTN_LABEL_TYPE(e, CREATE) \
+        CREATE(e, Abort) \
+        CREATE(e, Detonate) \
+        CREATE(e, Hold) \
+        CREATE(e, Press) \
+
 enum class LABEL_INDICATOR
 {
     DEF_LABEL_INDICATOR(LABEL_INDICATOR, TO_ENUM)
@@ -75,9 +97,25 @@ enum class COMPORT_TYPE
     MAX
 };
 
+enum class COLOR_TYPE
+{
+    MIN,
+    DEF_COLOR_TYPE(COLOR_TYPE, TO_ENUM)
+    MAX
+};
+
+enum class BTN_LABEL_TYPE
+{
+    MIN,
+    DEF_BTN_LABEL_TYPE(BTN_LABEL_TYPE, TO_ENUM)
+    MAX
+};
+
 EXTERN_MAP_ENUM_STR(LABEL_INDICATOR)
 EXTERN_MAP_ENUM_STR(BATTERY_TYPE)
 EXTERN_MAP_ENUM_STR(COMPORT_TYPE)
+EXTERN_MAP_ENUM_STR(COLOR_TYPE)
+EXTERN_MAP_ENUM_STR(BTN_LABEL_TYPE)
 
 #pragma endregion
 

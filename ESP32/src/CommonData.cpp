@@ -16,7 +16,7 @@ namespace sys_host {
     CData<COMPORT_TYPE> ComPortType;
     CData<std::string> SerialNum;
     CData<uint8_t> BatteryNum;
-    CData<uint8_t> RandomSeed;
+    CData<uint32_t> RandomSeed;
     CData<std::pair<uint8_t, uint8_t>> TimeClock;
 }
 
@@ -32,24 +32,20 @@ namespace sys_gui
 
 // Allow modification
 #pragma region Custom_data
-CData<uint16_t> Button2Value;
-CData<int32_t> SliderValue;
-CData<int32_t> ArcValue;
-CData<uint16_t> CheckboxValue;
-CData<std::string> DropdownValue;
-CData<uint16_t> SwitchValue;
-CData<std::string> RollerValue;
+CData<COLOR> ButtonColor;
+CData<std::string> ButtonLabel;
+CData<COLOR> StripColor;
+CData<std::tuple<uint32_t, uint32_t, uint32_t>> CorrectEvent;
+CData<std::tuple<uint32_t, uint32_t, uint32_t>> TempEvent;
 #pragma endregion
 
 // Add auto reset state for custom data only
 void UpdateAll()
 {
-    Button2Value.ResetState();
-    SliderValue.ResetState();
-    ArcValue.ResetState();
-    CheckboxValue.ResetState();
-    DropdownValue.ResetState();
-    SwitchValue.ResetState();
-    RollerValue.ResetState();
     sys_gui::Brightness.ResetState();
+    ButtonColor.ResetState();
+    ButtonLabel.ResetState();
+    StripColor.ResetState();
+    CorrectEvent.ResetState();
+    TempEvent.ResetState();
 }

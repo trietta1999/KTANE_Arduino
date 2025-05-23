@@ -1445,7 +1445,13 @@
     <ClCompile Include="..\..\ESP32\src\ui\ui_helpers.c">
       <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ESP32\src\ui\ui_Screen1.c">
+    <ClCompile Include="..\..\ESP32\src\ui\ui_Main.c">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_fail_png.c">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_success_png.c">
       <Filter>UI</Filter>
     </ClCompile>
   </ItemGroup>

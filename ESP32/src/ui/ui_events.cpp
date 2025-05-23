@@ -9,113 +9,77 @@
 
 void Init()
 {
-    // TODO: Updates the screen on first startup
-
+    // Brightness
     sys_gui::Brightness.SetValue(100);
-    lv_slider_set_value(ui_Slider1, sys_gui::Brightness.GetValue(), LV_ANIM_OFF);
+    lv_slider_set_value(ui_sldBrightness, sys_gui::Brightness.GetValue(), LV_ANIM_OFF);
 }
 
 void AutoUpdate()
 {
-    /* TODO: Check state of shared data and perform screen update
-             Reset state function is recommended after screen updating
-             This function is running continuously
-    */
-
-    if (Button2Value.GetState())
+    if (TempEvent.GetState())
     {
-        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, std::to_string(Button2Value.GetValue()).c_str());
+        auto tempEvent = TempEvent.GetValue();
+
+        if (std::get<FIRST_EVENT>(tempEvent) && std::get<SECOND_EVENT>(tempEvent))
+        {
+            if (tempEvent == CorrectEvent.GetValue())
+            {
+                sys_gui::SuccessState.SetValue(true);
+            }
+            else
+            {
+                sys_gui::StrikeState.SetValue(true);
+            }
+
+            TempEvent.SetValue(std::make_tuple(0, 0, 0));
+        }
     }
 
-    if (SliderValue.GetState())
+    if (sys_gui::SuccessState.GetValue() != INCORRECT)
     {
-        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, std::to_string(SliderValue.GetValue()).c_str());
-    }
+        lv_obj_clear_flag(ui_imgResult, LV_OBJ_FLAG_HIDDEN);
 
-    if (ArcValue.GetState())
-    {
-        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, std::to_string(ArcValue.GetValue()).c_str());
-    }
-
-    if (CheckboxValue.GetState())
-    {
-        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, std::to_string(CheckboxValue.GetValue()).c_str());
-    }
-
-    if (DropdownValue.GetState())
-    {
-        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, DropdownValue.GetValue().c_str());
-    }
-
-    if (SwitchValue.GetState())
-    {
-        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, std::to_string(SwitchValue.GetValue()).c_str());
-    }
-
-    if (RollerValue.GetState())
-    {
-        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, RollerValue.GetValue().c_str());
+        if (sys_gui::SuccessState.GetValue() == STATE_UNCHECK)
+        {
+            lv_obj_add_state(ui_imgResult, LV_STATE_DISABLED);
+        }
+        else if (sys_gui::SuccessState.GetValue() == STATE_CHECKED)
+        {
+            lv_obj_add_state(ui_imgResult, LV_STATE_CHECKED);
+        }
     }
 }
 
-void OnSliderChange(lv_event_t* e)
+void OnBrightnessChange(lv_event_t* e)
 {
-    // TODO: Perform logic processing related to the component
-
-    SliderValue.SetValue(lv_slider_get_value(ui_Slider1));
-    sys_gui::Brightness.SetValue(lv_slider_get_value(ui_Slider1));
+    sys_gui::Brightness.SetValue(lv_slider_get_value(ui_sldBrightness));
 }
 
-void OnArcChange(lv_event_t* e)
+void OnButtonPress(lv_event_t * e)
 {
-    // TODO: Perform logic processing related to the component
+    auto tempEvent = TempEvent.GetValue();
+    std::get<FIRST_EVENT>(tempEvent) = LV_EVENT_LONG_PRESSED;
 
-    ArcValue.SetValue(lv_arc_get_value(ui_Arc1));
+    TempEvent.SetValue(tempEvent);
 }
 
-void OnCheckboxClick(lv_event_t* e)
+void OnButtonClick(lv_event_t * e)
 {
-    // TODO: Perform logic processing related to the component
+    auto tempEvent = TempEvent.GetValue();
+    auto firstEvent = std::get<FIRST_EVENT>(tempEvent);
 
-    CheckboxValue.SetValue(lv_obj_get_state(ui_Checkbox1));
+    if (firstEvent != LV_EVENT_LONG_PRESSED)
+    {
+        std::get<FIRST_EVENT>(tempEvent) = LV_EVENT_CLICKED;
+    }
+
+    TempEvent.SetValue(tempEvent);
 }
 
-void OnDropdownChange(lv_event_t* e)
+void OnButtonRelease(lv_event_t * e)
 {
-    // TODO: Perform logic processing related to the component
+    auto tempEvent = TempEvent.GetValue();
+    std::get<SECOND_EVENT>(tempEvent) = LV_EVENT_RELEASED;
 
-    char buf[100] = { 0 };
-    lv_dropdown_get_selected_str(ui_Dropdown1, buf, sizeof(buf));
-    DropdownValue.SetValue(buf);
-}
-
-void OnSwitchClick(lv_event_t* e)
-{
-    // TODO: Perform logic processing related to the component
-
-    SwitchValue.SetValue(lv_obj_get_state(ui_Switch1));
-}
-
-void OnRollerChange(lv_event_t* e)
-{
-    // TODO: Perform logic processing related to the component
-
-    char buf[100] = { 0 };
-    lv_roller_get_selected_str(ui_Roller1, buf, sizeof(buf));
-    RollerValue.SetValue(buf);
-}
-
-void OnButtonNormalClick(lv_event_t* e)
-{
-    // TODO: Perform logic processing related to the component
-
-    Button2Value.SetValue(1);
-    sys_gui::StrikeState.SetValue(true);
-}
-
-void OnButtonToggleClick(lv_event_t* e)
-{
-    // TODO: Perform logic processing related to the component
-
-    Button2Value.SetValue(lv_obj_get_state(ui_Button2));
+    TempEvent.SetValue(tempEvent);
 }
