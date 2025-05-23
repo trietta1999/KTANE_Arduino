@@ -351,6 +351,7 @@ Chứa các hàm sử dụng chung và riêng cho tất cả các lớp kiến t
 | `GenerateSerialNumber()` | `std::string` | - | Tạo dãy seri ngẫu nhiên có 10 ký tự bao gồm chữ in hoa và số. |
 | `VowelCheck(std::string)` | `bool` | `param1`: dãy seri | Kiểm tra nếu dãy seri có chứa nguyên âm thì trả về `true`, nếu không thì `false`. |
 | `OddCheckAtLast(std::string)` | `bool` | `param1`: dãy seri | Kiểm tra nếu ký tự số cuối dãy seri là lẻ thì trả về `true`, nếu không thì `false`. |
+| `NumberCheckInTimer(uint8_t)` | `bool` | `param1`: số cần tìm trong timer | Kiểm tra nếu số cần tìm có xuất hiện trong itmer thì trả về `true`, nếu không thì `false`. |
 
 ## 3.3. Kiến trúc SIM/SER
 ### 3.3.1. Tổng quan
