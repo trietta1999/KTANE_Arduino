@@ -1,0 +1,34 @@
+name: CI/CD C++ Visual Studio
+
+on:
+  workflow_dispatch: # Kích hoạt workflow thủ công
+
+env:
+  SOLUTION_FILE: Simulator/LVGL.sln # Tên file Solution mặc định
+  BUILD_CONFIG: Debug # Cấu hình build mặc định (Release hoặc Debug)
+  PLATFORM: x64 # Nền tảng mặc định (x86 hoặc x64)
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Restore NuGet packages (if applicable)
+        run: nuget restore ${{ env.SOLUTION_FILE }}
+
+      - name: Build solution
+        run: msbuild ${{ env.SOLUTION_FILE }} /p:Configuration=${{ env.BUILD_CONFIG }} /p:Platform=${{ env.PLATFORM }} /m /verbosity:minimal
+
+      - name: Upload build artifacts (Optional)
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.SOLUTION_FILE }}-${{ env.BUILD_CONFIG }}-${{ env.PLATFORM }}
+          path: Out
+            # Đường dẫn đến file .exe hoặc các file đầu ra của bạn
+            # Cần điều chỉnh đường dẫn này cho phù hợp với cấu trúc project của bạn
