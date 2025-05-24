@@ -1,7 +1,12 @@
-name: CI/CD C++ Visual Studio
+name: CI/CD C++ Visual Studio - Build theo Branch
 
 on:
   workflow_dispatch: # Kích hoạt workflow thủ công
+    inputs:
+      branch_name:
+        description: 'Tên nhánh để checkout và build'
+        required: true
+        default: 'feature_Host_Timer' # Nhánh mặc định (ví dụ: main, develop, feature/xyz)
 
 env:
   SOLUTION_FILE: Simulator/LVGL.sln # Tên file Solution mặc định
@@ -13,8 +18,10 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repository from specified branch
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch_name }} # Sử dụng tên nhánh từ input
 
       - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@v2
@@ -28,7 +35,9 @@ jobs:
       - name: Upload build artifacts (Optional)
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.SOLUTION_FILE }}-${{ env.BUILD_CONFIG }}-${{ env.PLATFORM }}
-          path: Out
+          name: ${{ env.SOLUTION_FILE }}-${{ env.BUILD_CONFIG }}-${{ env.PLATFORM }}-${{ github.event.inputs.branch_name }} # Thêm tên branch vào tên artifact
+          path: Out/*
             # Đường dẫn đến file .exe hoặc các file đầu ra của bạn
             # Cần điều chỉnh đường dẫn này cho phù hợp với cấu trúc project của bạn
+            # Ví dụ: **/${{ env.BUILD_CONFIG }}/*.exe
+            # Ví dụ: bin/${{ env.PLATFORM }}/${{ env.BUILD_CONFIG }}/
