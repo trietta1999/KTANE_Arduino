@@ -35,7 +35,7 @@ jobs:
       - name: Upload build artifacts (Optional)
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.SOLUTION_FILE }}-${{ env.BUILD_CONFIG }}-${{ env.PLATFORM }}-${{ github.event.inputs.branch_name }} # Thêm tên branch vào tên artifact
+          name: ${{ env.BUILD_CONFIG }}-${{ env.PLATFORM }}-${{ github.event.inputs.branch_name }} # Thêm tên branch vào tên artifact
           path: Simulator/Output/**
             # Đường dẫn đến file .exe hoặc các file đầu ra của bạn
             # Cần điều chỉnh đường dẫn này cho phù hợp với cấu trúc project của bạn
