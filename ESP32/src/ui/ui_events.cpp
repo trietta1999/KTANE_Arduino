@@ -3,119 +3,142 @@
 // LVGL version: 9.1.0
 // Project name: SquareLine_Project
 
+#include <vector>
 #include "ui.h"
 #include "../CommonData.h"
 #include "../CommonLibrary.h"
 
+std::vector<std::pair<lv_obj_t*, uint8_t>> listBtnSettingModule = { };
+std::vector<std::pair<lv_obj_t*, uint8_t>> listBtnSettingNeedyModule = { };
+
 void Init()
 {
-    // TODO: Updates the screen on first startup
-
+    // Brightness
     sys_gui::Brightness.SetValue(100);
-    lv_slider_set_value(ui_Slider1, sys_gui::Brightness.GetValue(), LV_ANIM_OFF);
+    lv_slider_set_value(ui_sldBrightness, sys_gui::Brightness.GetValue(), LV_ANIM_OFF);
+
+    listBtnSettingModule = {
+        std::make_pair(ui_btnSettingModule1, lv_obj_get_state(ui_btnSettingModule1)),
+        std::make_pair(ui_btnSettingModule2, lv_obj_get_state(ui_btnSettingModule2)),
+        std::make_pair(ui_btnSettingModule3, lv_obj_get_state(ui_btnSettingModule3)),
+        std::make_pair(ui_btnSettingModule4, lv_obj_get_state(ui_btnSettingModule4)),
+        std::make_pair(ui_btnSettingModule5, lv_obj_get_state(ui_btnSettingModule5)),
+        std::make_pair(ui_btnSettingModule6, lv_obj_get_state(ui_btnSettingModule6)),
+        std::make_pair(ui_btnSettingModule7, lv_obj_get_state(ui_btnSettingModule7)),
+        std::make_pair(ui_btnSettingModule8, lv_obj_get_state(ui_btnSettingModule8)),
+        std::make_pair(ui_btnSettingModule9, lv_obj_get_state(ui_btnSettingModule9)),
+        std::make_pair(ui_btnSettingModule10, lv_obj_get_state(ui_btnSettingModule10)),
+        std::make_pair(ui_btnSettingModule11, lv_obj_get_state(ui_btnSettingModule11)),
+    };
+
+    listBtnSettingNeedyModule = {
+        std::make_pair(ui_btnSettingNeedyModule1, lv_obj_get_state(ui_btnSettingNeedyModule1)),
+        std::make_pair(ui_btnSettingNeedyModule2, lv_obj_get_state(ui_btnSettingNeedyModule2)),
+        std::make_pair(ui_btnSettingNeedyModule3, lv_obj_get_state(ui_btnSettingNeedyModule3)),
+    };
+
+    TimerSetting_OnButtonSaveClick(nullptr);
 }
 
 void AutoUpdate()
 {
-    /* TODO: Check state of shared data and perform screen update
-             Reset state function is recommended after screen updating
-             This function is running continuously
-    */
-
-    if (Button2Value.GetState())
+    if (sys_host::TimeClock.GetState())
     {
-        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, std::to_string(Button2Value.GetValue()).c_str());
+        auto time = sys_host::TimeClock.GetValue();
+        char text[6] = { 0 };
+        sprintf(text, "%02d:%02d", std::get<MINUTE_POS>(time), std::get<SECOND_POS>(time));
+        lv_label_set_text(ui_lblTimer, text);
     }
 
-    if (SliderValue.GetState())
+    if (sys_gui::SuccessState.GetValue() != INCORRECT)
     {
-        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, std::to_string(SliderValue.GetValue()).c_str());
-    }
+        lv_obj_clear_flag(ui_imgResult, LV_OBJ_FLAG_HIDDEN);
 
-    if (ArcValue.GetState())
-    {
-        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, std::to_string(ArcValue.GetValue()).c_str());
-    }
-
-    if (CheckboxValue.GetState())
-    {
-        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, std::to_string(CheckboxValue.GetValue()).c_str());
-    }
-
-    if (DropdownValue.GetState())
-    {
-        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, DropdownValue.GetValue().c_str());
-    }
-
-    if (SwitchValue.GetState())
-    {
-        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, std::to_string(SwitchValue.GetValue()).c_str());
-    }
-
-    if (RollerValue.GetState())
-    {
-        _ui_label_set_property(ui_Label1, _UI_LABEL_PROPERTY_TEXT, RollerValue.GetValue().c_str());
+        if (sys_gui::SuccessState.GetValue() == STATE_UNCHECK)
+        {
+            lv_obj_add_state(ui_imgResult, LV_STATE_DISABLED);
+        }
+        else if (sys_gui::SuccessState.GetValue() == STATE_CHECKED)
+        {
+            lv_obj_add_state(ui_imgResult, LV_STATE_CHECKED);
+        }
     }
 }
 
-void OnSliderChange(lv_event_t* e)
+void OnBrightnessChange(lv_event_t* e)
 {
-    // TODO: Perform logic processing related to the component
-
-    SliderValue.SetValue(lv_slider_get_value(ui_Slider1));
-    sys_gui::Brightness.SetValue(lv_slider_get_value(ui_Slider1));
+    sys_gui::Brightness.SetValue(lv_slider_get_value(ui_sldBrightness));
 }
 
-void OnArcChange(lv_event_t* e)
+void Login_OnTextAreaEdit(lv_event_t * e)
 {
-    // TODO: Perform logic processing related to the component
+    std::string text(lv_textarea_get_text(ui_TextArea));
 
-    ArcValue.SetValue(lv_arc_get_value(ui_Arc1));
+    if (text.length() == lv_textarea_get_max_length(ui_TextArea))
+    {
+        if (text == VERIFY_CODE)
+        {
+            lv_obj_set_style_bg_color(ui_TextArea, lv_color_hex(COLOR_GREEN), LV_PART_MAIN | LV_STATE_DEFAULT);
+
+            if (lv_event_get_code(e) == LV_EVENT_READY)
+            {
+                _ui_screen_change(&ui_Main, LV_SCR_LOAD_ANIM_FADE_ON, 100, 0, &ui_Main_screen_init);
+            }
+        }
+        else
+        {
+            lv_obj_set_style_bg_color(ui_TextArea, lv_color_hex(COLOR_RED), LV_PART_MAIN | LV_STATE_DEFAULT);
+        }
+    }
+    else
+    {
+        lv_obj_set_style_bg_color(ui_TextArea, lv_color_hex(COLOR_WHITE), LV_PART_MAIN | LV_STATE_DEFAULT);
+    }
 }
 
-void OnCheckboxClick(lv_event_t* e)
+void Main_OnButtonPlayClick(lv_event_t * e)
 {
-    // TODO: Perform logic processing related to the component
-
-    CheckboxValue.SetValue(lv_obj_get_state(ui_Checkbox1));
+    sys_gui::IsStarted.SetValue(true);
 }
 
-void OnDropdownChange(lv_event_t* e)
+void Main_OnButtonRestartClick(lv_event_t * e)
 {
-    // TODO: Perform logic processing related to the component
+#ifdef _WIN64
+    //exit(0);
+#else
 
-    char buf[100] = { 0 };
-    lv_dropdown_get_selected_str(ui_Dropdown1, buf, sizeof(buf));
-    DropdownValue.SetValue(buf);
+#endif
 }
 
-void OnSwitchClick(lv_event_t* e)
+void Setting_OnButtonBackClick(lv_event_t * e)
 {
-    // TODO: Perform logic processing related to the component
-
-    SwitchValue.SetValue(lv_obj_get_state(ui_Switch1));
+	// Your code here
 }
 
-void OnRollerChange(lv_event_t* e)
+void TimerSetting_OnButtonSaveClick(lv_event_t * e)
 {
-    // TODO: Perform logic processing related to the component
+    char bufMinute[3] = { 0 }, bufSecond[3] = { 0 };
 
-    char buf[100] = { 0 };
-    lv_roller_get_selected_str(ui_Roller1, buf, sizeof(buf));
-    RollerValue.SetValue(buf);
+    lv_roller_get_selected_str(ui_rlSettingMinute, bufMinute, sizeof(bufMinute));
+    lv_roller_get_selected_str(ui_rlSettingSecond, bufSecond, sizeof(bufSecond));
+
+    sys_host::TimeClock.SetValue(std::make_pair(std::stoi(bufMinute), std::stoi(bufSecond)));
 }
 
-void OnButtonNormalClick(lv_event_t* e)
+void Score_OnLoaded(lv_event_t * e)
 {
-    // TODO: Perform logic processing related to the component
+#ifdef _WIN64
+    
+#else
 
-    Button2Value.SetValue(1);
-    sys_gui::StrikeState.SetValue(true);
+#endif
 }
 
-void OnButtonToggleClick(lv_event_t* e)
+void Score_OnRollerOrderChange(lv_event_t * e)
 {
-    // TODO: Perform logic processing related to the component
+    uint32_t index = lv_roller_get_selected(ui_rlScoreOrder);
 
-    Button2Value.SetValue(lv_obj_get_state(ui_Button2));
+    lv_roller_set_selected(ui_rlScoreModuleCount, index, LV_ANIM_ON);
+    lv_roller_set_selected(ui_rlScoreCompletionTime, index, LV_ANIM_ON);
+    lv_roller_set_selected(ui_rlScoreResult, index, LV_ANIM_ON);
 }

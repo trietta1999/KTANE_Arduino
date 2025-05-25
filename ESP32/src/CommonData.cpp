@@ -27,29 +27,17 @@ namespace sys_gui
     CData<uint16_t> TimeCycle;
     CData<bool> StrikeState;
     CData<uint8_t> Brightness;
+    CData<bool> IsStarted;
 }
 #pragma endregion
 
 // Allow modification
 #pragma region Custom_data
-CData<uint16_t> Button2Value;
-CData<int32_t> SliderValue;
-CData<int32_t> ArcValue;
-CData<uint16_t> CheckboxValue;
-CData<std::string> DropdownValue;
-CData<uint16_t> SwitchValue;
-CData<std::string> RollerValue;
+
 #pragma endregion
 
 // Add auto reset state for custom data only
 void UpdateAll()
 {
-    Button2Value.ResetState();
-    SliderValue.ResetState();
-    ArcValue.ResetState();
-    CheckboxValue.ResetState();
-    DropdownValue.ResetState();
-    SwitchValue.ResetState();
-    RollerValue.ResetState();
     sys_gui::Brightness.ResetState();
 }

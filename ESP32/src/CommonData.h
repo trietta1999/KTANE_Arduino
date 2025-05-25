@@ -6,6 +6,8 @@
 #define _COMMON_DATA_H
 
 #include <cstdint>
+#include <tuple>
+#include <string>
 #include "CommonDataType.h"
 #include "CData.h"
 
@@ -33,18 +35,13 @@ namespace sys_gui // GUI read/write -> Send data to HOST
     extern CData<uint16_t> TimeCycle;
     extern CData<bool> StrikeState;
     extern CData<uint8_t> Brightness;
+    extern CData<bool> IsStarted;
 }
 #pragma endregion
 
 // Allow modification
 #pragma region Custom_data
-extern CData<uint16_t> Button2Value;
-extern CData<int32_t> SliderValue;
-extern CData<int32_t> ArcValue;
-extern CData<uint16_t> CheckboxValue;
-extern CData<std::string> DropdownValue;
-extern CData<uint16_t> SwitchValue;
-extern CData<std::string> RollerValue;
+
 #pragma endregion
 
 void UpdateAll();
