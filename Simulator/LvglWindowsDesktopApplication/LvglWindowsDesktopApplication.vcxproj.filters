@@ -809,6 +809,12 @@
     <ClInclude Include="..\..\ESP32\src\ui\ui_helpers.h">
       <Filter>UI</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\ESP32\src\CommonService.h">
+      <Filter>Library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ESP32\src\ArduinoJson-v7.4.1.h">
+      <Filter>Library</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)..\LvglPlatform\lvgl\.typos.toml">
@@ -1453,6 +1459,9 @@
     </ClCompile>
     <ClCompile Include="..\..\ESP32\src\ui\ui_img_success_png.c">
       <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\CommonService.cpp">
+      <Filter>Library</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

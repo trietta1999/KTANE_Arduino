@@ -1,5 +1,6 @@
-﻿#include <Windows.h>
-#include <WaaSApi.h>
+﻿#pragma warning(disable : 4244)
+
+#include <Windows.h>
 #include <thread>
 #include <iostream>
 #include <iomanip>
@@ -8,116 +9,142 @@
 #include "lvgl/lvgl.h"
 #include "ui/ui.h"
 #include "CommonData.h"
+#include "CommonService.h"
 #include "CommonLibrary.h"
 
-void AttachConsoleWindow()
+WNDPROC OriginalWndProc = NULL;
+HWND ClientHandle = NULL;
+
+LRESULT CALLBACK MyNewWinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-    AllocConsole();
-    FILE* fp;
-    freopen_s(&fp, "CONOUT$", "w", stdout);
-    freopen_s(&fp, "CONOUT$", "w", stderr);
-}
-
-void RunFakeTimer(int8_t minute)
-{
-    CONSOLE_SCREEN_BUFFER_INFO csbi;
-    HANDLE hConsole = ::GetStdHandle(STD_OUTPUT_HANDLE);
-    int8_t second = 0;
-
-    if (GetConsoleScreenBufferInfo(hConsole, &csbi)) {
-        while ((minute >= 0) && (sys_gui::SuccessState.GetValue() != STATE_CHECKED) && (sys_gui::StrikeNum.GetValue() < 3))
-        {
-            while ((second >= 0) && (sys_gui::SuccessState.GetValue() != STATE_CHECKED) && (sys_gui::StrikeNum.GetValue() < 3))
-            {
-                //::Beep(BEEP_FRE, BEEP_INCREASE_DURATION);
-
-                SetConsoleCursorPosition(hConsole, csbi.dwCursorPosition);
-                std::cout << std::setfill('0') << std::setw(2) << std::to_string(minute) << ":"
-                    << std::setw(2) << std::to_string(second);
-
-                sys_host::TimeClock.SetValue(std::make_pair(minute, second));
-
-                second--;
-
-                ::Sleep(sys_gui::TimeCycle.GetValue());
-            }
-
-            minute--;
-            second = 59;
-        }
-
-        if (sys_gui::SuccessState.GetValue() == INCORRECT)
-        {
-            sys_gui::SuccessState.SetValue(STATE_UNCHECK);
-            //::Beep(BEEP_FRE, BEEP_TIMEOUT);
-        }
-        else
-        {
-            ::MessageBox(NULL, L"", L"", MB_ICONINFORMATION);
-        }
-    }
-}
-
-void InitCDataFromFakeTimer()
-{
-    uint32_t seed = time(0);
-    srand(seed);
-
-    sys_host::RandomSeed.SetValue(seed);
-    sys_host::LabelIndicator.SetValue((LABEL_INDICATOR)RandomRange(0, (uint8_t)LABEL_INDICATOR::MAX));
-    sys_host::BatteryType.SetValue((BATTERY_TYPE)RandomRange(0, (uint8_t)BATTERY_TYPE::MAX));
-    sys_host::ComPortType.SetValue((COMPORT_TYPE)RandomRange(0, (uint8_t)COMPORT_TYPE::MAX));
-    sys_host::BatteryNum.SetValue(RandomRange(1, 5));
-    sys_host::SerialNum.SetValue(GenerateSerialNumber());
-    sys_host::TimeClock.SetValue(std::make_pair(30, 0));
-
-    sys_gui::StrikeNum.SetValue(0);
-    sys_gui::TimeCycle.SetValue(TIMECYCLE_0);
-    sys_gui::SuccessState.SetValue(INCORRECT);
-
-    AttachConsoleWindow();
-
-    std::thread([]() {
-        std::cout << "===== Dummy Data Initialized =====\n";
-        std::cout << "LabelIndicator: " << map_LABEL_INDICATOR[sys_host::LabelIndicator.GetValue()] << "\n";
-        std::cout << "BatteryType: " << map_BATTERY_TYPE[sys_host::BatteryType.GetValue()] << "\n";
-        std::cout << "ComPortType: " << map_COMPORT_TYPE[sys_host::ComPortType.GetValue()] << "\n";
-        std::cout << "BatteryNum: " << std::to_string(sys_host::BatteryNum.GetValue()) << "\n";
-        std::cout << "SerialNum: " << sys_host::SerialNum.GetValue() << "\n";
-        std::cout << "==================================\n";
-
-        RunFakeTimer(std::get<MINUTE_POS>(sys_host::TimeClock.GetValue()));
-        }).detach();
-}
-
-void DataProcess()
-{
-    if (sys_gui::StrikeNum.GetValue() < 3)
+    switch (uMsg)
     {
-        if (sys_gui::StrikeState.GetValue())
+    case WM_SET_CLIENT_HANDLE:
+    {
+        HANDLE hMapFile = OpenFileMapping(FILE_MAP_ALL_ACCESS, FALSE, SHARED_MEM);
+        if (!hMapFile)
         {
-            sys_gui::StrikeNum.SetValue(sys_gui::StrikeNum.GetValue() + 1);
+            return FALSE;
+        }
 
-            switch (sys_gui::StrikeNum.GetValue())
-            {
-            case 0:
-                sys_gui::TimeCycle.SetValue(TIMECYCLE_0);
-                break;
-            case 1:
-                sys_gui::TimeCycle.SetValue(TIMECYCLE_1);
-                break;
-            case 2:
-                sys_gui::TimeCycle.SetValue(TIMECYCLE_2);
-                break;
-            default:
-                break;
-            }
+        LPVOID pBuffer = MapViewOfFile(hMapFile, FILE_MAP_ALL_ACCESS, 0, 0, BUFFER_SIZE);
+        if (!pBuffer)
+        {
+            CloseHandle(hMapFile);
+            return FALSE;
+        }
 
-            sys_gui::StrikeState.SetValue(false);
+        auto receivedJsonString = (const char*)pBuffer;
+        if (!receivedJsonString)
+        {
+            UnmapViewOfFile(pBuffer);
+            CloseHandle(hMapFile);
+            return FALSE;
+        }
 
-            ::MessageBox(NULL, L"", L"", MB_ICONERROR);
+        JsonDocument jsonDoc;
+        deserializeJson(jsonDoc, receivedJsonString);
+
+        UnmapViewOfFile(pBuffer);
+
+        if (!wParam)
+        {
+            CloseHandle(hMapFile);
+        }
+
+        const char* clientName = jsonDoc["client_name"];
+        ClientHandle = ::FindWindowA(NULL, clientName);
+
+        if (!ClientHandle)
+        {
+            return FALSE;
         }
     }
+    break;
+
+    case WM_REQUEST:
+    {
+        JsonDocument jsonDoc;
+        ProcessRequest(ClientHandle, wParam, jsonDoc);
+    }
+    break;
+
+    case WM_REQUEST_WITH_DATA:
+    {
+        HANDLE hMapFile = OpenFileMapping(FILE_MAP_ALL_ACCESS, FALSE, SHARED_MEM);
+        if (!hMapFile)
+        {
+            return FALSE;
+        }
+
+        LPVOID pBuffer = MapViewOfFile(hMapFile, FILE_MAP_ALL_ACCESS, 0, 0, BUFFER_SIZE);
+        if (!pBuffer)
+        {
+            CloseHandle(hMapFile);
+            return FALSE;
+        }
+
+        auto receivedJsonString = (const char*)pBuffer;
+        if (!receivedJsonString)
+        {
+            UnmapViewOfFile(pBuffer);
+            CloseHandle(hMapFile);
+            return FALSE;
+        }
+
+        JsonDocument jsonDoc;
+        deserializeJson(jsonDoc, receivedJsonString);
+
+        UnmapViewOfFile(pBuffer);
+        CloseHandle(hMapFile);
+
+        ProcessRequest(ClientHandle, wParam, jsonDoc);
+    }
+    break;
+
+    case WM_RESPONSE:
+    {
+        HANDLE hMapFile = OpenFileMapping(FILE_MAP_ALL_ACCESS, FALSE, SHARED_MEM);
+        if (!hMapFile)
+        {
+            return FALSE;
+        }
+
+        LPVOID pBuffer = MapViewOfFile(hMapFile, FILE_MAP_ALL_ACCESS, 0, 0, BUFFER_SIZE);
+        if (!pBuffer)
+        {
+            CloseHandle(hMapFile);
+            return FALSE;
+        }
+
+        auto receivedJsonString = (const char*)pBuffer;
+        if (!receivedJsonString)
+        {
+            UnmapViewOfFile(pBuffer);
+            CloseHandle(hMapFile);
+            return FALSE;
+        }
+
+        JsonDocument jsonDoc;
+        deserializeJson(jsonDoc, receivedJsonString);
+        sys_host::JsonResponse.SetValue(jsonDoc);
+
+        UnmapViewOfFile(pBuffer);
+        CloseHandle(hMapFile);
+    }
+    break;
+
+    case WM_QUIT:
+    case WM_DESTROY:
+    case WM_NCDESTROY:
+        ::SetWindowLongPtr(hwnd, GWLP_WNDPROC, (LONG_PTR)OriginalWndProc);
+        break;
+
+    default:
+        break;
+    }
+
+    return CallWindowProc(OriginalWndProc, hwnd, uMsg, wParam, lParam);
 }
 
 int WINAPI wWinMain(
@@ -136,7 +163,7 @@ int WINAPI wWinMain(
     bool allow_dpi_override = false;
     bool simulator_mode = false;
     lv_display_t* display = ::lv_windows_create_display(
-        L"LVGL Windows Application Display",
+        CLIENT_NAME,
         320,
         240,
         zoom_level,
@@ -188,17 +215,26 @@ int WINAPI wWinMain(
         return -1;
     }
 
+    OriginalWndProc = (WNDPROC)::SetWindowLongPtr(window_handle, GWLP_WNDPROC, (LONG_PTR)MyNewWinProc);
+    if (!OriginalWndProc)
+    {
+        return -1;
+    }
+
+    // Create UI
     ui_init();
 
-    InitCDataFromFakeTimer();
+    // Init service
+    InitData();
 
+    // Init GUI
     Init();
 
     while (true)
     {
         ::lv_timer_handler();
+        ProcessData();
         AutoUpdate();
-        DataProcess();
         UpdateAll();
         ::Sleep(10);
     }
