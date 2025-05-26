@@ -21,45 +21,45 @@ std::vector<lv_obj_t*> listSelect;
 #include <cstdlib>
 #include <ctime>
 
-// Hàm kiểm tra tần suất xuất hiện của các phần tử trong mảng
+// H�m ki?m tra t?n su?t xu?t hi?n c?a c�c ph?n t? trong m?ng
 void countFrequency(int arr[], int size) {
-    // Mảng frequency để đếm số lần xuất hiện của các giá trị từ 1 đến 4
-    int frequency[5] = { 0 }; // Chỉ cần 5 phần tử, vì giá trị lớn nhất là 4
+    // M?ng frequency d? d?m s? l?n xu?t hi?n c?a c�c gi� tr? t? 1 d?n 4
+    int frequency[5] = { 0 }; // Ch? c?n 5 ph?n t?, v� gi� tr? l?n nh?t l� 4
 
-    // Đếm số lần xuất hiện của từng giá trị trong mảng
+    // �?m s? l?n xu?t hi?n c?a t?ng gi� tr? trong m?ng
     for (int i = 0; i < size; ++i) {
-        frequency[arr[i]]++; // Tăng tần suất cho giá trị tương ứng
+        frequency[arr[i]]++; // Tang t?n su?t cho gi� tr? tuong ?ng
     }
 
-    // In ra tần suất xuất hiện của từng giá trị
+    // In ra t?n su?t xu?t hi?n c?a t?ng gi� tr?
     for (int i = 1; i <= 4; ++i) {
-        std::cout << "Giá trị " << i << " xuất hiện " << frequency[i] << " lần.\n";
+        std::cout << "Gi� tr? " << i << " xu?t hi?n " << frequency[i] << " l?n.\n";
     }
 }
 
 int main() {
-    // Khởi tạo seed cho hàm random
+    // Kh?i t?o seed cho h�m random
     srand(static_cast<unsigned int>(time(0)));
 
-    // Tạo độ dài mảng ngẫu nhiên từ 3 đến 6
-    int size = rand() % 4 + 3; // Rand từ 0 đến 3, cộng thêm 3 để có giá trị từ 3 đến 6
+    // T?o d? d�i m?ng ng?u nhi�n t? 3 d?n 6
+    int size = rand() % 4 + 3; // Rand t? 0 d?n 3, c?ng th�m 3 d? c� gi� tr? t? 3 d?n 6
 
-    // Tạo mảng với số lượng phần tử ngẫu nhiên
+    // T?o m?ng v?i s? lu?ng ph?n t? ng?u nhi�n
     int* arr = new int[size];
 
-    // Gán giá trị ngẫu nhiên từ 1 đến 4 cho mỗi phần tử trong mảng
+    // G�n gi� tr? ng?u nhi�n t? 1 d?n 4 cho m?i ph?n t? trong m?ng
     for (int i = 0; i < size; ++i) {
-        arr[i] = rand() % 4 + 1; // Rand từ 1 đến 4
+        arr[i] = rand() % 4 + 1; // Rand t? 1 d?n 4
     }
 
-    // In ra mảng để kiểm tra
-    std::cout << "Mảng ngẫu nhiên có " << size << " phần tử: ";
+    // In ra m?ng d? ki?m tra
+    std::cout << "M?ng ng?u nhi�n c� " << size << " ph?n t?: ";
     for (int i = 0; i < size; ++i) {
         std::cout << arr[i] << " ";
     }
     std::cout << std::endl;
 
-    // Kiểm tra và tính toán tần suất của các phần tử
+    // Ki?m tra v� t�nh to�n t?n su?t c?a c�c ph?n t?
     countFrequency(arr, size);
 
     return 0;
