@@ -167,6 +167,7 @@
     <ClCompile Include="..\..\ESP32\src\CommonData.cpp" />
     <ClCompile Include="..\..\ESP32\src\CommonDataType.cpp" />
     <ClCompile Include="..\..\ESP32\src\CommonLibrary.cpp" />
+    <ClCompile Include="..\..\ESP32\src\CommonService.cpp" />
     <ClCompile Include="..\..\ESP32\src\ui\ui.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_comp_hook.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_events.cpp" />
@@ -188,6 +189,7 @@
     <ClCompile Include="..\..\ESP32\src\ui\ui_TimerSetting.c" />
     <ClCompile Include="Test\GUI_Test.cpp" />
     <ClCompile Include="Test\Library_Test.cpp" />
+    <ClCompile Include="Test\Service_Test.cpp" />
     <None Include="..\LvglPlatform\lvgl\env_support\pikascript\pika_lvgl.c" />
     <None Include="..\LvglPlatform\lvgl\env_support\pikascript\pika_lvgl_indev_t.c" />
     <None Include="..\LvglPlatform\lvgl\env_support\pikascript\pika_lvgl_lv_event.c" />
@@ -530,10 +532,12 @@
     <None Include="..\LvglPlatform\lvgl\src\others\fragment\README.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\ESP32\src\ArduinoJson-v7.4.1.h" />
     <ClInclude Include="..\..\ESP32\src\CData.h" />
     <ClInclude Include="..\..\ESP32\src\CommonData.h" />
     <ClInclude Include="..\..\ESP32\src\CommonDataType.h" />
     <ClInclude Include="..\..\ESP32\src\CommonLibrary.h" />
+    <ClInclude Include="..\..\ESP32\src\CommonService.h" />
     <ClInclude Include="..\..\ESP32\src\ui\ui.h" />
     <ClInclude Include="..\..\ESP32\src\ui\ui_events.h" />
     <ClInclude Include="..\..\ESP32\src\ui\ui_helpers.h" />
