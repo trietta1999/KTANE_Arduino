@@ -34,7 +34,7 @@ public:
         OnButtonNormalClick(NULL);
 
         Assert::IsTrue(Button2Value.GetValue() == 1);
-        Assert::IsTrue(sys_gui::StrikeState.GetValue() == true);
+        Assert::IsTrue(sys_host::StrikeState.GetValue() == true);
     }
 
     TEST_METHOD(TEST_OnArcChange)

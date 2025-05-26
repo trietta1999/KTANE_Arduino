@@ -110,7 +110,7 @@ void OnButtonNormalClick(lv_event_t* e)
     // TODO: Perform logic processing related to the component
 
     Button2Value.SetValue(1);
-    sys_gui::StrikeState.SetValue(true);
+    sys_host::StrikeState.SetValue(true);
 }
 
 void OnButtonToggleClick(lv_event_t* e)
