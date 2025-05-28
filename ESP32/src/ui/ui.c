@@ -30,9 +30,9 @@ lv_obj_t * ui_swSelect5;
 lv_obj_t * ui_barWire6;
 void ui_event_swSelect6(lv_event_t * e);
 lv_obj_t * ui_swSelect6;
+lv_obj_t * ui_imgResult;
 void ui_event_sldBrightness(lv_event_t * e);
 lv_obj_t * ui_sldBrightness;
-lv_obj_t * ui_imgResult;
 // CUSTOM VARIABLES
 
 // EVENTS

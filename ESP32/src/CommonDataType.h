@@ -25,9 +25,6 @@
 #define STATE_CHECKED 3
 #define STATE_UNCHECK 2
 
-#define COLOR uint32_t
-#define NON_COLOR 0x000001
-
 #define TO_ENUM(enum_name, item) item,
 #define TO_STRING(enum_name, item) { enum_name::item, #item },
 
@@ -61,14 +58,6 @@
         CREATE(e, Serial) \
         CREATE(e, Stereo_RCA) \
 
-#define DEF_WIRECOLOR_TYPE(e, CREATE) \
-        CREATE(e, RED) \
-        CREATE(e, WHITE) \
-        CREATE(e, BLUE) \
-        CREATE(e, YELLOW) \
-        CREATE(e, BLACK) \
-        CREATE(e, PINK) \
-
 enum class LABEL_INDICATOR
 {
     DEF_LABEL_INDICATOR(LABEL_INDICATOR, TO_ENUM)
@@ -87,23 +76,34 @@ enum class COMPORT_TYPE
     MAX
 };
 
+EXTERN_MAP_ENUM_STR(LABEL_INDICATOR)
+EXTERN_MAP_ENUM_STR(BATTERY_TYPE)
+EXTERN_MAP_ENUM_STR(COMPORT_TYPE)
+
+#pragma endregion
+
+// Allow modification
+#pragma region Custom_datatype
+#define COLOR uint32_t
+#define NON_COLOR 0x000001
+
+#define DEF_WIRECOLOR_TYPE(e, CREATE) \
+        CREATE(e, RED) \
+        CREATE(e, WHITE) \
+        CREATE(e, BLUE) \
+        CREATE(e, YELLOW) \
+        CREATE(e, BLACK) \
+        CREATE(e, PINK) \
+
 enum class WIRECOLOR_TYPE
 {
     MIN,
     DEF_WIRECOLOR_TYPE(WIRECOLOR_TYPE, TO_ENUM)
     MAX
 };
-
-EXTERN_MAP_ENUM_STR(LABEL_INDICATOR)
-EXTERN_MAP_ENUM_STR(BATTERY_TYPE)
-EXTERN_MAP_ENUM_STR(COMPORT_TYPE)
 EXTERN_MAP_ENUM_STR(WIRECOLOR_TYPE)
 
 extern std::unordered_map<WIRECOLOR_TYPE, COLOR> mapColor;
-#pragma endregion
-
-// Allow modification
-#pragma region Custom_datatype
 
 #pragma endregion
 
