@@ -36,6 +36,9 @@ void ui_Main_screen_init(void)
     lv_obj_set_y(ui_btnText, -47);
     lv_obj_set_align(ui_btnText, LV_ALIGN_CENTER);
     lv_label_set_text(ui_btnText, "Detonate");
+    lv_obj_remove_flag(ui_btnText, LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE |
+                       LV_OBJ_FLAG_SNAPPABLE | LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_SCROLL_ELASTIC | LV_OBJ_FLAG_SCROLL_MOMENTUM |
+                       LV_OBJ_FLAG_SCROLL_CHAIN);     /// Flags
     lv_obj_set_style_text_color(ui_btnText, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_opa(ui_btnText, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_font(ui_btnText, &lv_font_montserrat_38, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -57,6 +60,8 @@ void ui_Main_screen_init(void)
     lv_obj_set_x(ui_barColor, 58);
     lv_obj_set_y(ui_barColor, -56);
     lv_obj_set_align(ui_barColor, LV_ALIGN_CENTER);
+    lv_obj_remove_flag(ui_barColor, LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE |
+                       LV_OBJ_FLAG_SNAPPABLE);     /// Flags
     lv_obj_set_style_radius(ui_barColor, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_border_color(ui_barColor, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_border_opa(ui_barColor, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -72,6 +77,17 @@ void ui_Main_screen_init(void)
     //Compensating for LVGL9.1 draw crash with bar/slider max value when top-padding is nonzero and right-padding is 0
     if(lv_obj_get_style_pad_top(ui_barColor, LV_PART_MAIN) > 0) lv_obj_set_style_pad_right(ui_barColor,
                                                                                                lv_obj_get_style_pad_right(ui_barColor, LV_PART_MAIN) + 1, LV_PART_MAIN);
+    ui_imgResult = lv_image_create(ui_Main);
+    lv_obj_set_width(ui_imgResult, 320);
+    lv_obj_set_height(ui_imgResult, 240);
+    lv_obj_set_align(ui_imgResult, LV_ALIGN_CENTER);
+    lv_obj_add_flag(ui_imgResult, LV_OBJ_FLAG_HIDDEN | LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_FLOATING);     /// Flags
+    lv_obj_remove_flag(ui_imgResult, LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE |
+                       LV_OBJ_FLAG_SNAPPABLE | LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_SCROLL_ELASTIC | LV_OBJ_FLAG_SCROLL_MOMENTUM |
+                       LV_OBJ_FLAG_SCROLL_CHAIN);     /// Flags
+    lv_obj_set_style_bg_image_src(ui_imgResult, &ui_img_success_png, LV_PART_MAIN | LV_STATE_CHECKED);
+    lv_obj_set_style_bg_image_src(ui_imgResult, &ui_img_fail_png, LV_PART_MAIN | LV_STATE_DISABLED);
+
     ui_sldBrightness = lv_slider_create(ui_Main);
     lv_slider_set_range(ui_sldBrightness, 10, 255);
     lv_slider_set_value(ui_sldBrightness, 0, LV_ANIM_OFF);
@@ -97,17 +113,6 @@ void ui_Main_screen_init(void)
     //Compensating for LVGL9.1 draw crash with bar/slider max value when top-padding is nonzero and right-padding is 0
     if(lv_obj_get_style_pad_top(ui_sldBrightness, LV_PART_MAIN) > 0) lv_obj_set_style_pad_right(ui_sldBrightness,
                                                                                                     lv_obj_get_style_pad_right(ui_sldBrightness, LV_PART_MAIN) + 1, LV_PART_MAIN);
-    ui_imgResult = lv_image_create(ui_Main);
-    lv_obj_set_width(ui_imgResult, 320);
-    lv_obj_set_height(ui_imgResult, 240);
-    lv_obj_set_align(ui_imgResult, LV_ALIGN_CENTER);
-    lv_obj_add_flag(ui_imgResult, LV_OBJ_FLAG_HIDDEN | LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_FLOATING);     /// Flags
-    lv_obj_remove_flag(ui_imgResult, LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE |
-                       LV_OBJ_FLAG_SNAPPABLE | LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_SCROLL_ELASTIC | LV_OBJ_FLAG_SCROLL_MOMENTUM |
-                       LV_OBJ_FLAG_SCROLL_CHAIN);     /// Flags
-    lv_obj_set_style_bg_image_src(ui_imgResult, &ui_img_success_png, LV_PART_MAIN | LV_STATE_CHECKED);
-    lv_obj_set_style_bg_image_src(ui_imgResult, &ui_img_fail_png, LV_PART_MAIN | LV_STATE_DISABLED);
-
     lv_obj_add_event_cb(ui_btnButton, ui_event_btnButton, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_sldBrightness, ui_event_sldBrightness, LV_EVENT_ALL, NULL);
 

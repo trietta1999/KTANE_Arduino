@@ -33,9 +33,9 @@ extern lv_obj_t * ui_btnButton;
 extern lv_obj_t * ui_btnText;
 extern lv_obj_t * ui_Label1;
 extern lv_obj_t * ui_barColor;
+extern lv_obj_t * ui_imgResult;
 void ui_event_sldBrightness(lv_event_t * e);
 extern lv_obj_t * ui_sldBrightness;
-extern lv_obj_t * ui_imgResult;
 // CUSTOM VARIABLES
 
 // EVENTS

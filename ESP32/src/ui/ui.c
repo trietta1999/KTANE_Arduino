@@ -17,9 +17,9 @@ lv_obj_t * ui_btnButton;
 lv_obj_t * ui_btnText;
 lv_obj_t * ui_Label1;
 lv_obj_t * ui_barColor;
+lv_obj_t * ui_imgResult;
 void ui_event_sldBrightness(lv_event_t * e);
 lv_obj_t * ui_sldBrightness;
-lv_obj_t * ui_imgResult;
 // CUSTOM VARIABLES
 
 // EVENTS
