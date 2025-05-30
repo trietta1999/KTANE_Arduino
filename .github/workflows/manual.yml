@@ -1,17 +1,13 @@
-name: CI/CD C++ Visual Studio - Branch build
+name: CI/CD C++ Visual Studio - Host Timer build
 
 on:
   workflow_dispatch: # Manual trigger
-    inputs:
-      branch_name:
-        description: 'Branch name'
-        required: true
-        default: 'feature_Host_Timer' # Default branch
 
 env:
   SOLUTION_FILE: Simulator/LVGL.sln
   BUILD_CONFIG: Debug
   PLATFORM: x64
+  BRANCH_NAME: feature_Host_Timer
 
 jobs:
   build:
@@ -21,7 +17,7 @@ jobs:
       - name: Checkout repository from specified branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.inputs.branch_name }} # Use branch name
+          ref: ${{ env.BRANCH_NAME }} # Use branch name
 
       - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@v2
@@ -35,5 +31,5 @@ jobs:
       - name: Upload build artifacts (Optional)
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.BUILD_CONFIG }}-${{ env.PLATFORM }}-${{ github.event.inputs.branch_name }} # Thêm tên branch vào tên artifact
+          name: ${{ env.BUILD_CONFIG }}-${{ env.PLATFORM }}-${{ env.BRANCH_NAME }} # Add branch name to artifact name
           path: Simulator/Output/Binaries/${{ env.BUILD_CONFIG }}/${{ env.PLATFORM }}/**
