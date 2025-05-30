@@ -6,6 +6,7 @@
 #include "ui.h"
 #include "../CommonData.h"
 #include "../CommonLibrary.h"
+#include "../CommonService.h"
 
 void Init()
 {
@@ -111,6 +112,14 @@ void OnButtonNormalClick(lv_event_t* e)
 
     Button2Value.SetValue(1);
     sys_host::StrikeState.SetValue(true);
+
+#ifdef _WIN64
+    auto jsonDoc = CommonGetRequest(WM_TIMER_GET);
+    char jsonDocStr[MAX_SIZE] = { 0 };
+    serializeJson(jsonDoc, jsonDocStr);
+
+    ::MessageBoxA(NULL, jsonDocStr, "", MB_OK);
+#endif
 }
 
 void OnButtonToggleClick(lv_event_t* e)

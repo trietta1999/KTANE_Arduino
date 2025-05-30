@@ -17,7 +17,7 @@
 #define CLIENT_NAME_FOR_JSON "LVGL_example"
 #else
 #define HOST_NAME map_MODULE_NAME[MODULE_NAME::HostTimer].c_str()
-#define CLIENT_NAME map_MODULE_NAME[MODULE_NAME::HostTimer].c_str()
+#define CLIENT_NAME "LVGL_example"
 #endif
 
 #ifdef _WIN64
@@ -108,7 +108,6 @@ enum
 
 #define DEF_MODULE_NAME(e, CREATE) \
         CREATE(e, HostTimer) \
-        CREATE(e, HostTimer1) \
         CREATE(e, Wires) \
         CREATE(e, TheButton) \
         CREATE(e, Keypads) \
