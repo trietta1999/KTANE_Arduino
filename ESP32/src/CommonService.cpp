@@ -32,6 +32,7 @@ BluetoothSerial SerialBT;
 
 void RunTimer()
 {
+#ifdef HOST_TIMER
 #ifdef _WIN64
     while (!sys_gui::IsStarted.GetValue())
     {
@@ -109,10 +110,12 @@ void RunTimer()
         }
     }
 #endif
+#endif
 }
 
 void InitData()
 {
+#ifdef HOST_TIMER
 #ifdef _WIN64
     uint32_t seed = time(0);
 #else
@@ -134,6 +137,19 @@ void InitData()
     sys_host::TimeOut.SetValue(false);
     sys_gui::SuccessState.SetValue(INCORRECT);
     sys_gui::IsStarted.SetValue(false);
+#else
+    auto jsonDoc = CommonGetRequest(WM_SYSINIT_GET);
+
+    sys_host::RandomSeed.SetValue(jsonDoc[STR(RandomSeed)].as<uint32_t>());
+    sys_host::LabelIndicator.SetValue((LABEL_INDICATOR)jsonDoc[STR(LabelIndicator)].as<uint8_t>());
+    sys_host::BatteryType.SetValue((BATTERY_TYPE)jsonDoc[STR(BatteryType)].as<uint8_t>());
+    sys_host::ComPortType.SetValue((COMPORT_TYPE)jsonDoc[STR(ComPortType)].as<uint8_t>());
+    sys_host::BatteryNum.SetValue(jsonDoc[STR(BatteryNum)].as<uint8_t>());
+    sys_host::SerialNum.SetValue(jsonDoc[STR(SerialNum)].as<const char*>());
+    sys_host::StrikeNum.SetValue(jsonDoc[STR(StrikeNum)].as<uint8_t>());
+    sys_gui::IsStarted.SetValue(jsonDoc[STR(IsStarted)].as<bool>());
+    sys_gui::SuccessState.SetValue(INCORRECT);
+#endif
 
 #ifdef _WIN64
     AttachConsoleWindow();
@@ -149,9 +165,11 @@ void InitData()
     debug_println("SerialNum: " + sys_host::SerialNum.GetValue());
     debug_println("==================================");
 
+#ifdef HOST_TIMER
     std::thread([]() {
         RunTimer();
         }).detach();
+#endif
 #endif
 }
 
@@ -174,6 +192,7 @@ void ProcessData()
     }
 #endif
 
+#ifdef HOST_TIMER
     if (sys_host::StrikeState.GetState())
     {
         sys_host::StrikeNum.SetValue(sys_host::StrikeNum.GetValue() + 1);
@@ -203,13 +222,18 @@ void ProcessData()
 #endif
     }
 
-    if (sys_host::TimeOut.GetState())
+    if (sys_host::TimeOut.GetState()
+#ifdef _WIN64
+        || (sys_host::StrikeNum.GetValue() >= STRIKE_NUM_MAX)
+#endif
+        )
     {
         if (sys_gui::SuccessState.GetValue() == INCORRECT)
         {
             sys_gui::SuccessState.SetValue(STATE_UNCHECK);
 #ifdef _WIN64
             ::Beep(BEEP_FRE, BEEP_TIMEOUT);
+            sys_host::StrikeNum.SetValue(STRIKE_NUM_MAX - 1);
 #endif
         }
         else
@@ -222,10 +246,16 @@ void ProcessData()
         sys_host::TimeOut.SetValue(false);
         sys_gui::IsStarted.SetValue(false);
     }
+#endif
+
+#ifndef HOST_TIMER
+    // Client process
+#endif
 }
 
 void ProcessRequest(HWND hwnd, uint32_t msg, JsonDocument jsonDocIn)
 {
+#ifdef HOST_TIMER
 #ifdef _WIN64
     JsonDocument jsonDoc;
 
@@ -322,6 +352,9 @@ void ProcessRequest(HWND hwnd, uint32_t msg, JsonDocument jsonDocIn)
     ::SendMessage(hwnd, WM_RESPONSE, NULL, NULL);
 #else
     // Arduino process
+#endif
+#else
+    // Client process
 #endif
 }
 
