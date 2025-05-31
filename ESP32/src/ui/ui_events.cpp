@@ -28,7 +28,7 @@ void AutoUpdate()
             }
             else
             {
-                sys_gui::StrikeState.SetValue(true);
+                sys_host::StrikeState.SetValue(true);
             }
 
             TempEvent.SetValue(std::make_tuple(0, 0, 0));
