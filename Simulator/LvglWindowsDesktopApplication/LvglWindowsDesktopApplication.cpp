@@ -19,6 +19,7 @@ LRESULT CALLBACK MyNewWinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 {
     switch (uMsg)
     {
+#ifdef HOST_TIMER
     case WM_SET_CLIENT_HANDLE:
     {
         HANDLE hMapFile = OpenFileMapping(FILE_MAP_ALL_ACCESS, FALSE, SHARED_MEM);
@@ -101,7 +102,7 @@ LRESULT CALLBACK MyNewWinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam
         ProcessRequest(ClientHandle, wParam, jsonDoc);
     }
     break;
-
+#endif
     case WM_RESPONSE:
     {
         HANDLE hMapFile = OpenFileMapping(FILE_MAP_ALL_ACCESS, FALSE, SHARED_MEM);
