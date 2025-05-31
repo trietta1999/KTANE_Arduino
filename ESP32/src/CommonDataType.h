@@ -13,8 +13,8 @@
 
 #ifdef _WIN64
 #define HOST_NAME mapWstr_MODULE_NAME[MODULE_NAME::HostTimer].c_str()
-#define CLIENT_NAME L"LVGL_example"
-#define CLIENT_NAME_FOR_JSON "LVGL_example"
+#define CLIENT_NAME mapWstr_MODULE_NAME[MODULE_NAME::Wires].c_str()
+#define CLIENT_NAME_FOR_JSON map_MODULE_NAME[MODULE_NAME::Wires].c_str()
 #else
 #define HOST_NAME map_MODULE_NAME[MODULE_NAME::HostTimer].c_str()
 #define CLIENT_NAME map_MODULE_NAME[MODULE_NAME::Wires].c_str()
@@ -108,7 +108,6 @@ enum
 
 #define DEF_MODULE_NAME(e, CREATE) \
         CREATE(e, HostTimer) \
-        CREATE(e, HostTimer1) \
         CREATE(e, Wires) \
         CREATE(e, TheButton) \
         CREATE(e, Keypads) \

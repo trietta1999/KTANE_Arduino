@@ -127,6 +127,6 @@ void OnWireSelect(lv_event_t* e)
     }
     else
     {
-        sys_gui::StrikeState.SetValue(true);
+        sys_host::StrikeState.SetValue(true);
     }
 }
