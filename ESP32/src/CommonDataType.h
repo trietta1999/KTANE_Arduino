@@ -5,6 +5,10 @@
 #ifndef _COMMON_DATATYPE_H
 #define _COMMON_DATATYPE_H
 
+#ifdef ARDUINO // Temporary Service for Arduino
+#define HOST_TIMER
+#endif
+
 #include <cstdint>
 #include <string>
 #include <unordered_map>
