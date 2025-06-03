@@ -57,24 +57,49 @@ extern lv_obj_t * ui_sldBrightness;
 // SCREEN: ui_Setting
 void ui_Setting_screen_init(void);
 extern lv_obj_t * ui_Setting;
+extern lv_obj_t * ui_Panel2;
 extern lv_obj_t * ui_Label6;
-extern lv_obj_t * ui_btnSettingModule1;
-extern lv_obj_t * ui_btnSettingModule2;
-extern lv_obj_t * ui_btnSettingModule3;
-extern lv_obj_t * ui_btnSettingModule4;
-extern lv_obj_t * ui_btnSettingModule5;
-extern lv_obj_t * ui_btnSettingModule6;
-extern lv_obj_t * ui_btnSettingModule7;
-extern lv_obj_t * ui_btnSettingModule8;
-extern lv_obj_t * ui_btnSettingModule9;
-extern lv_obj_t * ui_btnSettingModule10;
-extern lv_obj_t * ui_btnSettingModule11;
+extern lv_obj_t * ui_Container1;
+void ui_event_cbSettingModule1(lv_event_t * e);
+extern lv_obj_t * ui_cbSettingModule1;
+void ui_event_cbSettingModule2(lv_event_t * e);
+extern lv_obj_t * ui_cbSettingModule2;
+void ui_event_cbSettingModule3(lv_event_t * e);
+extern lv_obj_t * ui_cbSettingModule3;
+void ui_event_cbSettingModule4(lv_event_t * e);
+extern lv_obj_t * ui_cbSettingModule4;
+void ui_event_cbSettingModule5(lv_event_t * e);
+extern lv_obj_t * ui_cbSettingModule5;
+void ui_event_cbSettingModule6(lv_event_t * e);
+extern lv_obj_t * ui_cbSettingModule6;
+extern lv_obj_t * ui_Container2;
+void ui_event_cbSettingModule7(lv_event_t * e);
+extern lv_obj_t * ui_cbSettingModule7;
+void ui_event_cbSettingModule8(lv_event_t * e);
+extern lv_obj_t * ui_cbSettingModule8;
+void ui_event_cbSettingModule9(lv_event_t * e);
+extern lv_obj_t * ui_cbSettingModule9;
+void ui_event_cbSettingModule10(lv_event_t * e);
+extern lv_obj_t * ui_cbSettingModule10;
+void ui_event_cbSettingModule11(lv_event_t * e);
+extern lv_obj_t * ui_cbSettingModule11;
+extern lv_obj_t * ui_Panel1;
 extern lv_obj_t * ui_Label3;
-extern lv_obj_t * ui_btnSettingNeedyModule1;
-extern lv_obj_t * ui_btnSettingNeedyModule2;
-extern lv_obj_t * ui_btnSettingNeedyModule3;
-void ui_event_btnBack(lv_event_t * e);
-extern lv_obj_t * ui_btnBack;
+extern lv_obj_t * ui_Container3;
+void ui_event_cbSettingNeedyModule1(lv_event_t * e);
+extern lv_obj_t * ui_cbSettingNeedyModule1;
+void ui_event_cbSettingNeedyModule2(lv_event_t * e);
+extern lv_obj_t * ui_cbSettingNeedyModule2;
+extern lv_obj_t * ui_Container4;
+void ui_event_cbSettingNeedyModule3(lv_event_t * e);
+extern lv_obj_t * ui_cbSettingNeedyModule3;
+void ui_event_btnSettingBack(lv_event_t * e);
+extern lv_obj_t * ui_btnSettingBack;
+extern lv_obj_t * ui_wndSettingTransparent;
+extern lv_obj_t * ui_lblModuleDesc;
+extern lv_obj_t * ui_imgReview;
+void ui_event_btnImgReviewBack(lv_event_t * e);
+extern lv_obj_t * ui_btnImgReviewBack;
 // CUSTOM VARIABLES
 
 // SCREEN: ui_TimerSetting
@@ -106,7 +131,7 @@ extern lv_obj_t * ui_Label9;
 extern lv_obj_t * ui_Label12;
 void ui_event_rlScoreOrder(lv_event_t * e);
 extern lv_obj_t * ui_rlScoreOrder;
-extern lv_obj_t * ui_rlScoreModuleCount;
+extern lv_obj_t * ui_rlScoreModuleNum;
 extern lv_obj_t * ui_rlScoreCompletionTime;
 extern lv_obj_t * ui_rlScoreResult;
 // CUSTOM VARIABLES
@@ -123,7 +148,22 @@ LV_IMG_DECLARE(ui_img_leaderboard_png);    // assets/leaderboard.png
 LV_IMG_DECLARE(ui_img_restart_png);    // assets/restart.png
 LV_IMG_DECLARE(ui_img_success_png);    // assets/success.png
 LV_IMG_DECLARE(ui_img_fail_png);    // assets/fail.png
+LV_IMG_DECLARE(ui_img_wirecomponent_png);    // assets/WireComponent.png
+LV_IMG_DECLARE(ui_img_buttoncomponent_png);    // assets/ButtonComponent.png
+LV_IMG_DECLARE(ui_img_keypadcomponent_png);    // assets/KeypadComponent.png
+LV_IMG_DECLARE(ui_img_simoncomponent_png);    // assets/SimonComponent.png
+LV_IMG_DECLARE(ui_img_whosonfirstcomponent_png);    // assets/WhosOnFirstComponent.png
+LV_IMG_DECLARE(ui_img_memorycomponent_png);    // assets/MemoryComponent.png
+LV_IMG_DECLARE(ui_img_morsecodecomponent_png);    // assets/MorseCodeComponent.png
+LV_IMG_DECLARE(ui_img_vennwirecomponent_png);    // assets/VennWireComponent.png
+LV_IMG_DECLARE(ui_img_wiresequencecomponent_png);    // assets/WireSequenceComponent.png
+LV_IMG_DECLARE(ui_img_mazecomponent_png);    // assets/MazeComponent.png
+LV_IMG_DECLARE(ui_img_passwordcomponent_png);    // assets/PasswordComponent.png
+LV_IMG_DECLARE(ui_img_needyventcomponent_png);    // assets/NeedyVentComponent.png
+LV_IMG_DECLARE(ui_img_needydischargecomponent_png);    // assets/NeedyDischargeComponent.png
+LV_IMG_DECLARE(ui_img_needyknobcomponent_png);    // assets/NeedyKnobComponent.png
 LV_IMG_DECLARE(ui_img_back_png);    // assets/back.png
+LV_IMG_DECLARE(ui_img_exit_png);    // assets/exit.png
 
 // FONTS
 LV_FONT_DECLARE(ui_font_Digit);

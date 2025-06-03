@@ -15,7 +15,7 @@ void ui_Main_screen_init(void)
     lv_obj_set_style_bg_opa(ui_Main, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_lblStrike = lv_label_create(ui_Main);
-    lv_obj_set_width(ui_lblStrike, 150);
+    lv_obj_set_width(ui_lblStrike, 140);
     lv_obj_set_height(ui_lblStrike, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_x(ui_lblStrike, -31);
     lv_obj_set_y(ui_lblStrike, -61);
@@ -23,7 +23,7 @@ void ui_Main_screen_init(void)
     lv_label_set_text(ui_lblStrike, "xxx");
     lv_obj_set_style_text_color(ui_lblStrike, lv_color_hex(0xFF0000), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_opa(ui_lblStrike, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_align(ui_lblStrike, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_align(ui_lblStrike, LV_TEXT_ALIGN_LEFT, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_font(ui_lblStrike, &ui_font_XFail, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_color(ui_lblStrike, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(ui_lblStrike, 255, LV_PART_MAIN | LV_STATE_DEFAULT);

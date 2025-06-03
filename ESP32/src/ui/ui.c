@@ -43,24 +43,49 @@ lv_obj_t * ui_sldBrightness;
 // SCREEN: ui_Setting
 void ui_Setting_screen_init(void);
 lv_obj_t * ui_Setting;
+lv_obj_t * ui_Panel2;
 lv_obj_t * ui_Label6;
-lv_obj_t * ui_btnSettingModule1;
-lv_obj_t * ui_btnSettingModule2;
-lv_obj_t * ui_btnSettingModule3;
-lv_obj_t * ui_btnSettingModule4;
-lv_obj_t * ui_btnSettingModule5;
-lv_obj_t * ui_btnSettingModule6;
-lv_obj_t * ui_btnSettingModule7;
-lv_obj_t * ui_btnSettingModule8;
-lv_obj_t * ui_btnSettingModule9;
-lv_obj_t * ui_btnSettingModule10;
-lv_obj_t * ui_btnSettingModule11;
+lv_obj_t * ui_Container1;
+void ui_event_cbSettingModule1(lv_event_t * e);
+lv_obj_t * ui_cbSettingModule1;
+void ui_event_cbSettingModule2(lv_event_t * e);
+lv_obj_t * ui_cbSettingModule2;
+void ui_event_cbSettingModule3(lv_event_t * e);
+lv_obj_t * ui_cbSettingModule3;
+void ui_event_cbSettingModule4(lv_event_t * e);
+lv_obj_t * ui_cbSettingModule4;
+void ui_event_cbSettingModule5(lv_event_t * e);
+lv_obj_t * ui_cbSettingModule5;
+void ui_event_cbSettingModule6(lv_event_t * e);
+lv_obj_t * ui_cbSettingModule6;
+lv_obj_t * ui_Container2;
+void ui_event_cbSettingModule7(lv_event_t * e);
+lv_obj_t * ui_cbSettingModule7;
+void ui_event_cbSettingModule8(lv_event_t * e);
+lv_obj_t * ui_cbSettingModule8;
+void ui_event_cbSettingModule9(lv_event_t * e);
+lv_obj_t * ui_cbSettingModule9;
+void ui_event_cbSettingModule10(lv_event_t * e);
+lv_obj_t * ui_cbSettingModule10;
+void ui_event_cbSettingModule11(lv_event_t * e);
+lv_obj_t * ui_cbSettingModule11;
+lv_obj_t * ui_Panel1;
 lv_obj_t * ui_Label3;
-lv_obj_t * ui_btnSettingNeedyModule1;
-lv_obj_t * ui_btnSettingNeedyModule2;
-lv_obj_t * ui_btnSettingNeedyModule3;
-void ui_event_btnBack(lv_event_t * e);
-lv_obj_t * ui_btnBack;
+lv_obj_t * ui_Container3;
+void ui_event_cbSettingNeedyModule1(lv_event_t * e);
+lv_obj_t * ui_cbSettingNeedyModule1;
+void ui_event_cbSettingNeedyModule2(lv_event_t * e);
+lv_obj_t * ui_cbSettingNeedyModule2;
+lv_obj_t * ui_Container4;
+void ui_event_cbSettingNeedyModule3(lv_event_t * e);
+lv_obj_t * ui_cbSettingNeedyModule3;
+void ui_event_btnSettingBack(lv_event_t * e);
+lv_obj_t * ui_btnSettingBack;
+lv_obj_t * ui_wndSettingTransparent;
+lv_obj_t * ui_lblModuleDesc;
+lv_obj_t * ui_imgReview;
+void ui_event_btnImgReviewBack(lv_event_t * e);
+lv_obj_t * ui_btnImgReviewBack;
 // CUSTOM VARIABLES
 
 
@@ -94,7 +119,7 @@ lv_obj_t * ui_Label9;
 lv_obj_t * ui_Label12;
 void ui_event_rlScoreOrder(lv_event_t * e);
 lv_obj_t * ui_rlScoreOrder;
-lv_obj_t * ui_rlScoreModuleCount;
+lv_obj_t * ui_rlScoreModuleNum;
 lv_obj_t * ui_rlScoreCompletionTime;
 lv_obj_t * ui_rlScoreResult;
 // CUSTOM VARIABLES
@@ -182,13 +207,191 @@ void ui_event_sldBrightness(lv_event_t * e)
     }
 }
 
-void ui_event_btnBack(lv_event_t * e)
+void ui_event_cbSettingModule1(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_CLICKED) {
+        _ui_state_modify(ui_cbSettingModule1, LV_STATE_CHECKED, _UI_MODIFY_STATE_ADD);
+    }
+    if(event_code == LV_EVENT_LONG_PRESSED) {
+        _ui_flag_modify(ui_wndSettingTransparent, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+        _ui_image_set_property(ui_imgReview, _UI_IMAGE_PROPERTY_IMAGE, & ui_img_wirecomponent_png);
+        _ui_label_set_property(ui_lblModuleDesc, _UI_LABEL_PROPERTY_TEXT,
+                               "Wires are the lifeblood of electronics! Wait, no, electricity is the lifeblood. Wires are more like the arteries. The veins? No matter...");
+    }
+}
+
+void ui_event_cbSettingModule2(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_LONG_PRESSED) {
+        _ui_flag_modify(ui_wndSettingTransparent, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+        _ui_image_set_property(ui_imgReview, _UI_IMAGE_PROPERTY_IMAGE, & ui_img_buttoncomponent_png);
+        _ui_label_set_property(ui_lblModuleDesc, _UI_LABEL_PROPERTY_TEXT,
+                               "You might think that a button telling you to press it is pretty straightforward.\nThat`s the kind of thinking that gets people exploded.");
+    }
+}
+
+void ui_event_cbSettingModule3(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_LONG_PRESSED) {
+        _ui_flag_modify(ui_wndSettingTransparent, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+        _ui_image_set_property(ui_imgReview, _UI_IMAGE_PROPERTY_IMAGE, & ui_img_keypadcomponent_png);
+        _ui_label_set_property(ui_lblModuleDesc, _UI_LABEL_PROPERTY_TEXT,
+                               "I`m not sure what these symbols are, but I suspect they have something to do with occult.");
+    }
+}
+
+void ui_event_cbSettingModule4(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_LONG_PRESSED) {
+        _ui_flag_modify(ui_wndSettingTransparent, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+        _ui_image_set_property(ui_imgReview, _UI_IMAGE_PROPERTY_IMAGE, & ui_img_simoncomponent_png);
+        _ui_label_set_property(ui_lblModuleDesc, _UI_LABEL_PROPERTY_TEXT,
+                               "This is like one of those toys you played with as a kid where you have to match the pattern that appears, except this one is a knockoff that was probably purchased at a dollar store.");
+    }
+}
+
+void ui_event_cbSettingModule5(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_LONG_PRESSED) {
+        _ui_flag_modify(ui_wndSettingTransparent, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+        _ui_image_set_property(ui_imgReview, _UI_IMAGE_PROPERTY_IMAGE, & ui_img_whosonfirstcomponent_png);
+        _ui_label_set_property(ui_lblModuleDesc, _UI_LABEL_PROPERTY_TEXT,
+                               "This contraption is like something out of a sketch comedy routine, which might be funny if it wasn`t connected to a bomb. I`ll keep this brief, as words only complicate matters.");
+    }
+}
+
+void ui_event_cbSettingModule6(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_LONG_PRESSED) {
+        _ui_flag_modify(ui_wndSettingTransparent, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+        _ui_image_set_property(ui_imgReview, _UI_IMAGE_PROPERTY_IMAGE, & ui_img_memorycomponent_png);
+        _ui_label_set_property(ui_lblModuleDesc, _UI_LABEL_PROPERTY_TEXT,
+                               "Memory is a fragile thing but so is everything else when a bomb goes off, so pay attention!");
+    }
+}
+
+void ui_event_cbSettingModule7(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_LONG_PRESSED) {
+        _ui_flag_modify(ui_wndSettingTransparent, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+        _ui_image_set_property(ui_imgReview, _UI_IMAGE_PROPERTY_IMAGE, & ui_img_morsecodecomponent_png);
+        _ui_label_set_property(ui_lblModuleDesc, _UI_LABEL_PROPERTY_TEXT,
+                               "An antiquated form of naval communication? What next? At least it`s genuine Morse Code, so pay attention and you might just learn something.");
+    }
+}
+
+void ui_event_cbSettingModule8(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_LONG_PRESSED) {
+        _ui_flag_modify(ui_wndSettingTransparent, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+        _ui_image_set_property(ui_imgReview, _UI_IMAGE_PROPERTY_IMAGE, & ui_img_vennwirecomponent_png);
+        _ui_label_set_property(ui_lblModuleDesc, _UI_LABEL_PROPERTY_TEXT,
+                               "These wires aren`t like the others. Some have stripes! That makes them completely different. The good news is that we`ve found a concise set of instructions on what to do about it! Maybe too concise...");
+    }
+}
+
+void ui_event_cbSettingModule9(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_LONG_PRESSED) {
+        _ui_flag_modify(ui_wndSettingTransparent, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+        _ui_image_set_property(ui_imgReview, _UI_IMAGE_PROPERTY_IMAGE, & ui_img_wiresequencecomponent_png);
+        _ui_label_set_property(ui_lblModuleDesc, _UI_LABEL_PROPERTY_TEXT,
+                               "It`s hard to say how this mechanism works. The engineering is pretty impressive, but there must have been an easier way to manage nine wires.");
+    }
+}
+
+void ui_event_cbSettingModule10(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_LONG_PRESSED) {
+        _ui_flag_modify(ui_wndSettingTransparent, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+        _ui_image_set_property(ui_imgReview, _UI_IMAGE_PROPERTY_IMAGE, & ui_img_mazecomponent_png);
+        _ui_label_set_property(ui_lblModuleDesc, _UI_LABEL_PROPERTY_TEXT,
+                               "This seems to be some kind of maze, probably stolen off of a restaurant placemat.");
+    }
+}
+
+void ui_event_cbSettingModule11(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_LONG_PRESSED) {
+        _ui_flag_modify(ui_wndSettingTransparent, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+        _ui_image_set_property(ui_imgReview, _UI_IMAGE_PROPERTY_IMAGE, & ui_img_passwordcomponent_png);
+    }
+}
+
+void ui_event_cbSettingNeedyModule1(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_LONG_PRESSED) {
+        _ui_flag_modify(ui_wndSettingTransparent, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+        _ui_image_set_property(ui_imgReview, _UI_IMAGE_PROPERTY_IMAGE, & ui_img_needyventcomponent_png);
+        _ui_label_set_property(ui_lblModuleDesc, _UI_LABEL_PROPERTY_TEXT,
+                               "Computer hacking is hard work! Well, it usually is. This job could probably be performed by a simple drinking bird pressing the same key over and over again.");
+    }
+}
+
+void ui_event_cbSettingNeedyModule2(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_LONG_PRESSED) {
+        _ui_flag_modify(ui_wndSettingTransparent, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+        _ui_image_set_property(ui_imgReview, _UI_IMAGE_PROPERTY_IMAGE, & ui_img_needydischargecomponent_png);
+        _ui_label_set_property(ui_lblModuleDesc, _UI_LABEL_PROPERTY_TEXT,
+                               "I`m going to guess that this is just meant to occupy your attention, because otherwise this is some shoddy electronics work.");
+    }
+}
+
+void ui_event_cbSettingNeedyModule3(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_LONG_PRESSED) {
+        _ui_flag_modify(ui_wndSettingTransparent, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_REMOVE);
+        _ui_image_set_property(ui_imgReview, _UI_IMAGE_PROPERTY_IMAGE, & ui_img_needyknobcomponent_png);
+        _ui_label_set_property(ui_lblModuleDesc, _UI_LABEL_PROPERTY_TEXT,
+                               "Needlessly complicated and endlessly needy. Imagine if such expertise were used to make something other than diabolical puzzles.");
+    }
+}
+
+void ui_event_btnSettingBack(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
 
     if(event_code == LV_EVENT_CLICKED) {
         _ui_screen_change(&ui_Main, LV_SCR_LOAD_ANIM_MOVE_RIGHT, 100, 0, &ui_Main_screen_init);
         Setting_OnButtonBackClick(e);
+    }
+}
+
+void ui_event_btnImgReviewBack(lv_event_t * e)
+{
+    lv_event_code_t event_code = lv_event_get_code(e);
+
+    if(event_code == LV_EVENT_CLICKED) {
+        _ui_flag_modify(ui_wndSettingTransparent, LV_OBJ_FLAG_HIDDEN, _UI_MODIFY_FLAG_ADD);
     }
 }
 

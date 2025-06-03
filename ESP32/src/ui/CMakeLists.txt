@@ -14,7 +14,22 @@ SET(SOURCES ui_Login.c
     ui_img_restart_png.c
     ui_img_success_png.c
     ui_img_fail_png.c
+    ui_img_wirecomponent_png.c
+    ui_img_buttoncomponent_png.c
+    ui_img_keypadcomponent_png.c
+    ui_img_simoncomponent_png.c
+    ui_img_whosonfirstcomponent_png.c
+    ui_img_memorycomponent_png.c
+    ui_img_morsecodecomponent_png.c
+    ui_img_vennwirecomponent_png.c
+    ui_img_wiresequencecomponent_png.c
+    ui_img_mazecomponent_png.c
+    ui_img_passwordcomponent_png.c
+    ui_img_needyventcomponent_png.c
+    ui_img_needydischargecomponent_png.c
+    ui_img_needyknobcomponent_png.c
     ui_img_back_png.c
+    ui_img_exit_png.c
     fonts/ui_font_Digit.c
     fonts/ui_font_XFail.c)
 

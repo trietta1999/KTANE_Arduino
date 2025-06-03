@@ -54,3 +54,7 @@ def Score_OnScrollOrderChange(event_struct):
 def Score_OnRollerOrderChange(event_struct):
     return
 
+
+def Setting_OnScreenBack(event_struct):
+    return
+

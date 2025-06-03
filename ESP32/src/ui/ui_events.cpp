@@ -8,8 +8,7 @@
 #include "../CommonData.h"
 #include "../CommonLibrary.h"
 
-std::vector<std::pair<lv_obj_t*, uint8_t>> listBtnSettingModule = { };
-std::vector<std::pair<lv_obj_t*, uint8_t>> listBtnSettingNeedyModule = { };
+std::vector<std::pair<std::string, lv_obj_t*>> listCbSettingModule = { };
 
 void Init()
 {
@@ -17,24 +16,21 @@ void Init()
     sys_gui::Brightness.SetValue(100);
     lv_slider_set_value(ui_sldBrightness, sys_gui::Brightness.GetValue(), LV_ANIM_OFF);
 
-    listBtnSettingModule = {
-        std::make_pair(ui_btnSettingModule1, lv_obj_get_state(ui_btnSettingModule1)),
-        std::make_pair(ui_btnSettingModule2, lv_obj_get_state(ui_btnSettingModule2)),
-        std::make_pair(ui_btnSettingModule3, lv_obj_get_state(ui_btnSettingModule3)),
-        std::make_pair(ui_btnSettingModule4, lv_obj_get_state(ui_btnSettingModule4)),
-        std::make_pair(ui_btnSettingModule5, lv_obj_get_state(ui_btnSettingModule5)),
-        std::make_pair(ui_btnSettingModule6, lv_obj_get_state(ui_btnSettingModule6)),
-        std::make_pair(ui_btnSettingModule7, lv_obj_get_state(ui_btnSettingModule7)),
-        std::make_pair(ui_btnSettingModule8, lv_obj_get_state(ui_btnSettingModule8)),
-        std::make_pair(ui_btnSettingModule9, lv_obj_get_state(ui_btnSettingModule9)),
-        std::make_pair(ui_btnSettingModule10, lv_obj_get_state(ui_btnSettingModule10)),
-        std::make_pair(ui_btnSettingModule11, lv_obj_get_state(ui_btnSettingModule11)),
-    };
-
-    listBtnSettingNeedyModule = {
-        std::make_pair(ui_btnSettingNeedyModule1, lv_obj_get_state(ui_btnSettingNeedyModule1)),
-        std::make_pair(ui_btnSettingNeedyModule2, lv_obj_get_state(ui_btnSettingNeedyModule2)),
-        std::make_pair(ui_btnSettingNeedyModule3, lv_obj_get_state(ui_btnSettingNeedyModule3)),
+    listCbSettingModule = {
+        std::make_pair(map_MODULE_NAME[MODULE_NAME::Wires], ui_cbSettingModule1),
+        std::make_pair(map_MODULE_NAME[MODULE_NAME::TheButton], ui_cbSettingModule2),
+        std::make_pair(map_MODULE_NAME[MODULE_NAME::Keypads], ui_cbSettingModule3),
+        std::make_pair(map_MODULE_NAME[MODULE_NAME::SimonSays], ui_cbSettingModule4),
+        std::make_pair(map_MODULE_NAME[MODULE_NAME::WhosOnFirst], ui_cbSettingModule5),
+        std::make_pair(map_MODULE_NAME[MODULE_NAME::Memory], ui_cbSettingModule6),
+        std::make_pair(map_MODULE_NAME[MODULE_NAME::MorseCode], ui_cbSettingModule7),
+        std::make_pair(map_MODULE_NAME[MODULE_NAME::ComplicatedWires], ui_cbSettingModule8),
+        std::make_pair(map_MODULE_NAME[MODULE_NAME::WireSequences], ui_cbSettingModule9),
+        std::make_pair(map_MODULE_NAME[MODULE_NAME::Mazes], ui_cbSettingModule10),
+        std::make_pair(map_MODULE_NAME[MODULE_NAME::Passwords], ui_cbSettingModule11),
+        std::make_pair(map_MODULE_NAME[MODULE_NAME::VentingGas], ui_cbSettingNeedyModule1),
+        std::make_pair(map_MODULE_NAME[MODULE_NAME::CapacitorDischarge], ui_cbSettingNeedyModule2),
+        std::make_pair(map_MODULE_NAME[MODULE_NAME::Knobs], ui_cbSettingNeedyModule3),
     };
 
     TimerSetting_OnButtonSaveClick(nullptr);
@@ -70,7 +66,7 @@ void OnBrightnessChange(lv_event_t* e)
     sys_gui::Brightness.SetValue(lv_slider_get_value(ui_sldBrightness));
 }
 
-void Login_OnTextAreaEdit(lv_event_t * e)
+void Login_OnTextAreaEdit(lv_event_t* e)
 {
     std::string text(lv_textarea_get_text(ui_TextArea));
 
@@ -96,12 +92,12 @@ void Login_OnTextAreaEdit(lv_event_t * e)
     }
 }
 
-void Main_OnButtonPlayClick(lv_event_t * e)
+void Main_OnButtonPlayClick(lv_event_t* e)
 {
     sys_gui::IsStarted.SetValue(true);
 }
 
-void Main_OnButtonRestartClick(lv_event_t * e)
+void Main_OnButtonRestartClick(lv_event_t* e)
 {
 #ifdef _WIN64
     //exit(0);
@@ -110,12 +106,7 @@ void Main_OnButtonRestartClick(lv_event_t * e)
 #endif
 }
 
-void Setting_OnButtonBackClick(lv_event_t * e)
-{
-	// Your code here
-}
-
-void TimerSetting_OnButtonSaveClick(lv_event_t * e)
+void TimerSetting_OnButtonSaveClick(lv_event_t* e)
 {
     char bufMinute[3] = { 0 }, bufSecond[3] = { 0 };
 
@@ -125,20 +116,39 @@ void TimerSetting_OnButtonSaveClick(lv_event_t * e)
     sys_host::TimeClock.SetValue(std::make_pair(std::stoi(bufMinute), std::stoi(bufSecond)));
 }
 
-void Score_OnLoaded(lv_event_t * e)
+void Score_OnLoaded(lv_event_t* e)
 {
 #ifdef _WIN64
-    
+
 #else
 
 #endif
 }
 
-void Score_OnRollerOrderChange(lv_event_t * e)
+void Score_OnRollerOrderChange(lv_event_t* e)
 {
     uint32_t index = lv_roller_get_selected(ui_rlScoreOrder);
 
-    lv_roller_set_selected(ui_rlScoreModuleCount, index, LV_ANIM_ON);
+    lv_roller_set_selected(ui_rlScoreModuleNum, index, LV_ANIM_ON);
     lv_roller_set_selected(ui_rlScoreCompletionTime, index, LV_ANIM_ON);
     lv_roller_set_selected(ui_rlScoreResult, index, LV_ANIM_ON);
+}
+
+void Setting_OnButtonBackClick(lv_event_t* e)
+{
+    auto moduleStatusMap = sys_gui::ModuleStatusMap.GetValue();
+    moduleStatusMap.clear();
+    sys_gui::ModuleStatusMap.SetValue(moduleStatusMap);
+
+    for (const auto& cbSettingModule : listCbSettingModule)
+    {
+        if (lv_obj_get_state(std::get<1>(cbSettingModule)) == STATE_CHECKED)
+        {
+            moduleStatusMap.insert(std::make_pair(std::get<0>(cbSettingModule), MODULE_STATUS::ENABLE));
+        }
+        else if (lv_obj_get_state(std::get<1>(cbSettingModule)) == STATE_UNCHECK)
+        {
+            moduleStatusMap.insert(std::make_pair(std::get<0>(cbSettingModule), MODULE_STATUS::DISABLE));
+        }
+    }
 }

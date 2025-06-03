@@ -11,12 +11,14 @@ void ui_Score_screen_init(void)
     lv_obj_remove_flag(ui_Score, LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_SCROLL_ELASTIC |
                        LV_OBJ_FLAG_SCROLL_MOMENTUM);     /// Flags
     lv_obj_set_flex_flow(ui_Score, LV_FLEX_FLOW_ROW_WRAP);
-    lv_obj_set_flex_align(ui_Score, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_START);
+    lv_obj_set_flex_align(ui_Score, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_END, LV_FLEX_ALIGN_CENTER);
     lv_obj_set_style_bg_color(ui_Score, lv_color_hex(0xBEBEBE), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(ui_Score, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_row(ui_Score, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_column(ui_Score, 3, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_Label7 = lv_label_create(ui_Score);
-    lv_obj_set_width(ui_Label7, 40);
+    lv_obj_set_width(ui_Label7, 45);
     lv_obj_set_height(ui_Label7, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_x(ui_Label7, -78);
     lv_obj_set_y(ui_Label7, -54);
@@ -26,20 +28,18 @@ void ui_Score_screen_init(void)
                        LV_OBJ_FLAG_SNAPPABLE | LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_SCROLL_ELASTIC | LV_OBJ_FLAG_SCROLL_MOMENTUM |
                        LV_OBJ_FLAG_SCROLL_CHAIN);     /// Flags
     lv_obj_set_style_text_align(ui_Label7, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_font(ui_Label7, &lv_font_montserrat_18, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_Label13 = lv_label_create(ui_Score);
-    lv_obj_set_width(ui_Label13, 70);
+    lv_obj_set_width(ui_Label13, 65);
     lv_obj_set_height(ui_Label13, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_x(ui_Label13, -78);
     lv_obj_set_y(ui_Label13, -54);
     lv_obj_set_align(ui_Label13, LV_ALIGN_CENTER);
-    lv_label_set_text(ui_Label13, "Module count");
+    lv_label_set_text(ui_Label13, "Num of modules");
     lv_obj_remove_flag(ui_Label13, LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE |
                        LV_OBJ_FLAG_SNAPPABLE | LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_SCROLL_ELASTIC | LV_OBJ_FLAG_SCROLL_MOMENTUM |
                        LV_OBJ_FLAG_SCROLL_CHAIN);     /// Flags
     lv_obj_set_style_text_align(ui_Label13, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_font(ui_Label13, &lv_font_montserrat_18, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_Label9 = lv_label_create(ui_Score);
     lv_obj_set_width(ui_Label9, 130);
@@ -52,10 +52,9 @@ void ui_Score_screen_init(void)
                        LV_OBJ_FLAG_SNAPPABLE | LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_SCROLL_ELASTIC | LV_OBJ_FLAG_SCROLL_MOMENTUM |
                        LV_OBJ_FLAG_SCROLL_CHAIN);     /// Flags
     lv_obj_set_style_text_align(ui_Label9, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_font(ui_Label9, &lv_font_montserrat_18, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_Label12 = lv_label_create(ui_Score);
-    lv_obj_set_width(ui_Label12, 56);
+    lv_obj_set_width(ui_Label12, 50);
     lv_obj_set_height(ui_Label12, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_x(ui_Label12, -78);
     lv_obj_set_y(ui_Label12, -54);
@@ -65,17 +64,16 @@ void ui_Score_screen_init(void)
                        LV_OBJ_FLAG_SNAPPABLE | LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_SCROLL_ELASTIC | LV_OBJ_FLAG_SCROLL_MOMENTUM |
                        LV_OBJ_FLAG_SCROLL_CHAIN);     /// Flags
     lv_obj_set_style_text_align(ui_Label12, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_text_font(ui_Label12, &lv_font_montserrat_18, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_rlScoreOrder = lv_roller_create(ui_Score);
-    lv_roller_set_options(ui_rlScoreOrder, "1\n2\n3", LV_ROLLER_MODE_NORMAL);
-    lv_obj_set_width(ui_rlScoreOrder, 40);
-    lv_obj_set_height(ui_rlScoreOrder, 191);
+    lv_roller_set_options(ui_rlScoreOrder, "1\n2\n3\n4\n5\n6", LV_ROLLER_MODE_NORMAL);
+    lv_obj_set_width(ui_rlScoreOrder, 45);
+    lv_obj_set_height(ui_rlScoreOrder, 205);
     lv_obj_set_x(ui_rlScoreOrder, -37);
     lv_obj_set_y(ui_rlScoreOrder, -90);
     lv_obj_set_align(ui_rlScoreOrder, LV_ALIGN_CENTER);
-    lv_obj_add_flag(ui_rlScoreOrder, LV_OBJ_FLAG_EVENT_BUBBLE);     /// Flags
-    lv_obj_remove_flag(ui_rlScoreOrder, LV_OBJ_FLAG_SNAPPABLE);      /// Flags
+    lv_obj_remove_flag(ui_rlScoreOrder, LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE |
+                       LV_OBJ_FLAG_SNAPPABLE);     /// Flags
     lv_obj_set_style_border_color(ui_rlScoreOrder, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_border_opa(ui_rlScoreOrder, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_border_width(ui_rlScoreOrder, 1, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -84,28 +82,29 @@ void ui_Score_screen_init(void)
     lv_obj_set_style_border_opa(ui_rlScoreOrder, 255, LV_PART_SELECTED | LV_STATE_DEFAULT);
     lv_obj_set_style_border_width(ui_rlScoreOrder, 1, LV_PART_SELECTED | LV_STATE_DEFAULT);
 
-    ui_rlScoreModuleCount = lv_roller_create(ui_Score);
-    lv_roller_set_options(ui_rlScoreModuleCount, "2\n3\n4", LV_ROLLER_MODE_NORMAL);
-    lv_obj_set_width(ui_rlScoreModuleCount, 70);
-    lv_obj_set_height(ui_rlScoreModuleCount, 191);
-    lv_obj_set_x(ui_rlScoreModuleCount, -37);
-    lv_obj_set_y(ui_rlScoreModuleCount, -90);
-    lv_obj_set_align(ui_rlScoreModuleCount, LV_ALIGN_CENTER);
-    lv_obj_remove_flag(ui_rlScoreModuleCount,
+    ui_rlScoreModuleNum = lv_roller_create(ui_Score);
+    lv_roller_set_options(ui_rlScoreModuleNum, "2\n3\n4\n7\n9\n10", LV_ROLLER_MODE_NORMAL);
+    lv_obj_set_width(ui_rlScoreModuleNum, 65);
+    lv_obj_set_height(ui_rlScoreModuleNum, 205);
+    lv_obj_set_x(ui_rlScoreModuleNum, -37);
+    lv_obj_set_y(ui_rlScoreModuleNum, -90);
+    lv_obj_set_align(ui_rlScoreModuleNum, LV_ALIGN_CENTER);
+    lv_obj_remove_flag(ui_rlScoreModuleNum,
                        LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE |
                        LV_OBJ_FLAG_SNAPPABLE);     /// Flags
-    lv_obj_set_style_border_color(ui_rlScoreModuleCount, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_border_opa(ui_rlScoreModuleCount, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_border_width(ui_rlScoreModuleCount, 1, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_color(ui_rlScoreModuleNum, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_opa(ui_rlScoreModuleNum, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_width(ui_rlScoreModuleNum, 1, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    lv_obj_set_style_border_color(ui_rlScoreModuleCount, lv_color_hex(0x000000), LV_PART_SELECTED | LV_STATE_DEFAULT);
-    lv_obj_set_style_border_opa(ui_rlScoreModuleCount, 255, LV_PART_SELECTED | LV_STATE_DEFAULT);
-    lv_obj_set_style_border_width(ui_rlScoreModuleCount, 1, LV_PART_SELECTED | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_color(ui_rlScoreModuleNum, lv_color_hex(0x000000), LV_PART_SELECTED | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_opa(ui_rlScoreModuleNum, 255, LV_PART_SELECTED | LV_STATE_DEFAULT);
+    lv_obj_set_style_border_width(ui_rlScoreModuleNum, 1, LV_PART_SELECTED | LV_STATE_DEFAULT);
 
     ui_rlScoreCompletionTime = lv_roller_create(ui_Score);
-    lv_roller_set_options(ui_rlScoreCompletionTime, "00m 00s 00ms\n00m 00s 00ms\n00m 00s 00ms", LV_ROLLER_MODE_NORMAL);
+    lv_roller_set_options(ui_rlScoreCompletionTime,
+                          "00m 00s 00ms\n00m 00s 00ms\n00m 00s 00ms\n00m 00s 00ms\n00m 00s 00ms\n00m 00s 00ms", LV_ROLLER_MODE_NORMAL);
     lv_obj_set_width(ui_rlScoreCompletionTime, 130);
-    lv_obj_set_height(ui_rlScoreCompletionTime, 191);
+    lv_obj_set_height(ui_rlScoreCompletionTime, 205);
     lv_obj_set_x(ui_rlScoreCompletionTime, -37);
     lv_obj_set_y(ui_rlScoreCompletionTime, -90);
     lv_obj_set_align(ui_rlScoreCompletionTime, LV_ALIGN_CENTER);
@@ -121,9 +120,9 @@ void ui_Score_screen_init(void)
     lv_obj_set_style_border_width(ui_rlScoreCompletionTime, 1, LV_PART_SELECTED | LV_STATE_DEFAULT);
 
     ui_rlScoreResult = lv_roller_create(ui_Score);
-    lv_roller_set_options(ui_rlScoreResult, "PASS\nFAIL\nPASS", LV_ROLLER_MODE_NORMAL);
-    lv_obj_set_width(ui_rlScoreResult, 56);
-    lv_obj_set_height(ui_rlScoreResult, 191);
+    lv_roller_set_options(ui_rlScoreResult, "PASS\nFAIL\nPASS\nPASS\nFAIL\nPASS", LV_ROLLER_MODE_NORMAL);
+    lv_obj_set_width(ui_rlScoreResult, 50);
+    lv_obj_set_height(ui_rlScoreResult, 205);
     lv_obj_set_x(ui_rlScoreResult, -37);
     lv_obj_set_y(ui_rlScoreResult, -90);
     lv_obj_set_align(ui_rlScoreResult, LV_ALIGN_CENTER);
