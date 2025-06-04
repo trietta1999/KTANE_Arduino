@@ -149,6 +149,8 @@ void InitData()
     sys_host::StrikeNum.SetValue(jsonDoc[STR(StrikeNum)].as<uint8_t>());
     sys_gui::IsStarted.SetValue(jsonDoc[STR(IsStarted)].as<bool>());
     sys_gui::SuccessState.SetValue(INCORRECT);
+
+    srand(sys_host::RandomSeed.GetValue());
 #endif
 
 #ifdef _WIN64
