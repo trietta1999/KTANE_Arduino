@@ -149,6 +149,8 @@ void InitData()
     sys_host::StrikeNum.SetValue(jsonDoc[STR(StrikeNum)].as<uint8_t>());
     sys_gui::IsStarted.SetValue(jsonDoc[STR(IsStarted)].as<bool>());
     sys_gui::SuccessState.SetValue(INCORRECT);
+
+    srand(sys_host::RandomSeed.GetValue());
 #endif
 
 #ifdef _WIN64
@@ -188,6 +190,17 @@ void ProcessData()
             debug_println("BatteryNum: " + std::to_string(sys_host::BatteryNum.GetValue()));
             debug_println("SerialNum: " + sys_host::SerialNum.GetValue());
             debug_println("==================================");
+        }
+        else if (read == "gui_correct")
+        {
+            auto orderIndex = OrderIndex.GetValue();
+            debug_println("ColumnIndex: " + std::to_string(ColumnIndex.GetValue()));
+            debug_println("OrderIndex:");
+
+            for (uint8_t i = 0; i < orderIndex.size(); i++)
+            {
+                debug_println(std::to_string(orderIndex[i]));
+            }
         }
     }
 #endif

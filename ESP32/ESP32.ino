@@ -85,6 +85,7 @@ void IOProcessData() {
 }
 
 void loop() {
+  lv_timer_handler();
   lv_task_handler();
   RunTimer();
   ProcessData();

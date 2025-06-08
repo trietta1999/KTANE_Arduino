@@ -3,49 +3,178 @@
 // LVGL version: 9.1.0
 // Project name: SquareLine_Project
 
+#ifdef _WIN64
+#include <iostream>
+#endif
+#include <tuple>
+#include <algorithm>
 #include "ui.h"
 #include "../CommonData.h"
 #include "../CommonLibrary.h"
+#include "../CommonService.h"
+
+bool isCorrectKey = false;
+bool isIncorrect = false;
+uint8_t currentKeyIndex = 0;
+lv_obj_t* currentKeypad = nullptr;
+std::vector<std::tuple<lv_obj_t*, lv_obj_t*, uint8_t>> listKeypad = { };
+
+/* Set image to column list, from left to right, top to bottom in each column.
+   Refer [On the Subject of Keypads] */
+lv_image_dsc_t listImage[MAX_COL][MAX_ITEM] = {
+    {
+        ui_img_balloon_png,
+        ui_img_at_png,
+        ui_img_upsidedowny_png,
+        ui_img_squigglyn_png,
+        ui_img_squidknife_png,
+        ui_img_hookn_png,
+        ui_img_leftc_png,
+    },
+    {
+        ui_img_euro_png,
+        ui_img_balloon_png,
+        ui_img_leftc_png,
+        ui_img_cursive_png,
+        ui_img_hollowstar_png,
+        ui_img_hookn_png,
+        ui_img_questionmark_png,
+    },
+    {
+        ui_img_copyright_png,
+        ui_img_pumpkin_png,
+        ui_img_cursive_png,
+        ui_img_doublek_png,
+        ui_img_meltedthree_png,
+        ui_img_upsidedowny_png,
+        ui_img_hollowstar_png,
+    },
+    {
+        ui_img_six_png,
+        ui_img_paragraph_png,
+        ui_img_bt_png,
+        ui_img_squidknife_png,
+        ui_img_doublek_png,
+        ui_img_questionmark_png,
+        ui_img_smileyface_png,
+    },
+    {
+        ui_img_pitchfork_png,
+        ui_img_smileyface_png,
+        ui_img_bt_png,
+        ui_img_rightc_png,
+        ui_img_paragraph_png,
+        ui_img_dragon_png,
+        ui_img_filledstar_png,
+    },
+    {
+        ui_img_six_png,
+        ui_img_euro_png,
+        ui_img_tracks_png,
+        ui_img_ae_png,
+        ui_img_pitchfork_png,
+        ui_img_nwithhat_png,
+        ui_img_omega_png,
+    },
+};
 
 void Init()
 {
     // Brightness
     sys_gui::Brightness.SetValue(100);
     lv_slider_set_value(ui_sldBrightness, sys_gui::Brightness.GetValue(), LV_ANIM_OFF);
+
+    // Mapping key with image
+    listKeypad = {
+        { ui_btnKey1, ui_imgKey1, 0 },
+        { ui_btnKey2, ui_imgKey2, 0 },
+        { ui_btnKey3, ui_imgKey3, 0 },
+        { ui_btnKey4, ui_imgKey4, 0 },
+    };
+
+#ifndef UNIT_TEST
+    // Choose random column
+    auto columnIndex = RandomRange(0, MAX_COL);
+    ColumnIndex.SetValue(columnIndex);
+
+    // Get random 4 item (keep ordering) in column
+    auto orderIndex = ShuffleIndex(MAX_ITEM, KEYPAD_MAX_NUM);
+    OrderIndex.SetValue(orderIndex);
+#else
+    auto columnIndex = ColumnIndex.GetValue();
+    auto orderIndex = OrderIndex.GetValue();
+#endif
+
+    for (uint8_t i = 0; i < KEYPAD_MAX_NUM; i++)
+    {
+        // Set image of each order to button
+        //auto a = &listImage[columnIndex][orderIndex[i]];
+        lv_image_set_src(std::get<IMAGE_POS>(listKeypad[i]), &listImage[columnIndex][orderIndex[i]]);
+        // Update order index to keypad
+        std::get<INDEX_POS>(listKeypad[i]) = orderIndex[i];
+    }
+
+    // Sort keypad order from smallest to largest
+    std::sort(listKeypad.begin(), listKeypad.end(),
+        [](const auto& a, const auto& b) {
+            return std::get<INDEX_POS>(a) < std::get<INDEX_POS>(b);
+        });
+
+
+#if defined(_WIN64) && !defined(UNIT_TEST)
+    debug_println("ColumnIndex: " + std::to_string(ColumnIndex.GetValue()));
+    debug_println("OrderIndex:");
+
+    for (uint8_t i = 0; i < orderIndex.size(); i++)
+    {
+        debug_println(std::to_string(orderIndex[i]));
+    }
+#endif
 }
 
 void AutoUpdate()
 {
-    if (TempEvent.GetState())
+    // Update correct keypad
+    if (isCorrectKey)
     {
-        auto tempEvent = TempEvent.GetValue();
+        lv_obj_set_style_bg_color(currentKeypad, lv_color_hex(mapColor[COLOR_TYPE::GREEN]), LV_PART_MAIN | LV_STATE_DEFAULT);
+        lv_obj_remove_flag(currentKeypad, LV_OBJ_FLAG_CLICKABLE);
 
-        if (std::get<FIRST_EVENT>(tempEvent) && std::get<SECOND_EVENT>(tempEvent))
-        {
-            if (tempEvent == CorrectEvent.GetValue())
-            {
-                sys_gui::SuccessState.SetValue(true);
-            }
-            else
-            {
-                sys_host::StrikeState.SetValue(true);
-            }
-
-            TempEvent.SetValue(std::make_tuple(0, 0, 0));
-        }
+        // Reset flag
+        isCorrectKey = false;
     }
 
-    if (sys_gui::SuccessState.GetValue() != INCORRECT)
+    // Update incorrect keypad
+    if (isIncorrect)
     {
-        lv_obj_clear_flag(ui_imgResult, LV_OBJ_FLAG_HIDDEN);
+        // Change to red color
+        lv_obj_remove_flag(ui_wndTransparent, LV_OBJ_FLAG_HIDDEN);
+        lv_obj_set_style_bg_color(currentKeypad, lv_color_hex(mapColor[COLOR_TYPE::RED]), LV_PART_MAIN | LV_STATE_DEFAULT);
 
-        if (sys_gui::SuccessState.GetValue() == STATE_UNCHECK)
+        // Create timer for non-blocking other task
+        lv_timer_create([](lv_timer_t* timer) {
+            // Change to default color
+            lv_obj_set_style_bg_color(currentKeypad, lv_color_hex(mapColor[COLOR_TYPE::DEFAULT_COLOR]), LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_add_flag(ui_wndTransparent, LV_OBJ_FLAG_HIDDEN);
+            }, 1000, NULL)->repeat_count = 1;
+
+        // Reset error flag
+        isIncorrect = false;
+    }
+
+    if (sys_gui::SuccessState.GetState()) {
+        if (sys_gui::SuccessState.GetValue() != INCORRECT)
         {
-            lv_obj_add_state(ui_imgResult, LV_STATE_DISABLED);
-        }
-        else if (sys_gui::SuccessState.GetValue() == STATE_CHECKED)
-        {
-            lv_obj_add_state(ui_imgResult, LV_STATE_CHECKED);
+            lv_obj_clear_flag(ui_imgResult, LV_OBJ_FLAG_HIDDEN);
+
+            if (sys_gui::SuccessState.GetValue() == STATE_UNCHECK)
+            {
+                lv_obj_add_state(ui_imgResult, LV_STATE_DISABLED);
+            }
+            else if (sys_gui::SuccessState.GetValue() == STATE_CHECKED)
+            {
+                lv_obj_add_state(ui_imgResult, LV_STATE_CHECKED);
+            }
         }
     }
 }
@@ -55,31 +184,33 @@ void OnBrightnessChange(lv_event_t* e)
     sys_gui::Brightness.SetValue(lv_slider_get_value(ui_sldBrightness));
 }
 
-void OnButtonPress(lv_event_t * e)
+void OnButtonKeypadClick(lv_event_t* e)
 {
-    auto tempEvent = TempEvent.GetValue();
-    std::get<FIRST_EVENT>(tempEvent) = LV_EVENT_LONG_PRESSED;
+    currentKeypad = reinterpret_cast<lv_obj_t*>(e->current_target);
 
-    TempEvent.SetValue(tempEvent);
-}
-
-void OnButtonClick(lv_event_t * e)
-{
-    auto tempEvent = TempEvent.GetValue();
-    auto firstEvent = std::get<FIRST_EVENT>(tempEvent);
-
-    if (firstEvent != LV_EVENT_LONG_PRESSED)
+    // Current button is mapped with current order
+    if (currentKeypad == std::get<KEYPAD_POS>(listKeypad[currentKeyIndex]))
     {
-        std::get<FIRST_EVENT>(tempEvent) = LV_EVENT_CLICKED;
+        // Check next button later
+        currentKeyIndex++;
+
+        // Update correct keypad
+        isCorrectKey = true;
+    }
+    else
+    {
+        // Set error flag
+        isIncorrect = true;
+
+#ifndef UNIT_TEST
+        // Send error to Host
+        CommonGetRequest(WM_STRIKESTATE_SET);
+#endif
     }
 
-    TempEvent.SetValue(tempEvent);
-}
-
-void OnButtonRelease(lv_event_t * e)
-{
-    auto tempEvent = TempEvent.GetValue();
-    std::get<SECOND_EVENT>(tempEvent) = LV_EVENT_RELEASED;
-
-    TempEvent.SetValue(tempEvent);
+    // All button is corrected with order
+    if (currentKeyIndex >= KEYPAD_MAX_NUM)
+    {
+        sys_gui::SuccessState.SetValue(STATE_CHECKED);
+    }
 }

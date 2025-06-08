@@ -3,7 +3,7 @@
  */
 
 #include <algorithm>
-#include <vector>
+#include <random>
 #include "CommonLibrary.h"
 #include "CommonData.h"
 
@@ -72,5 +72,24 @@ bool NumberCheckInTimer(uint8_t num)
 
 // Allow modification
 #pragma region Custom_function
+std::vector<uint8_t> ShuffleIndex(uint8_t size, uint8_t take_num)
+{
+    std::vector<uint8_t> indexes(size);
+    std::vector<uint8_t> selectedIndexes(take_num);
 
+    for (uint8_t i = 0; i < size; i++) {
+        indexes[i] = i;
+    }
+
+    std::mt19937 generator(sys_host::RandomSeed.GetValue());
+    std::shuffle(indexes.begin(), indexes.end(), generator);
+
+    for (uint8_t i = 0; i < take_num; i++)
+    {
+        selectedIndexes[i] = indexes[i];
+    }
+    //std::sort(selectedIndexes.begin(), selectedIndexes.end());
+
+    return selectedIndexes;
+}
 #pragma endregion
