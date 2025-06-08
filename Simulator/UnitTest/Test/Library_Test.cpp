@@ -101,4 +101,11 @@ public:
         sys_host::TimeClock.SetValue(std::make_pair(22, 22));
         Assert::IsTrue(NumberCheckInTimer(2) == true);
     }
+
+    TEST_METHOD(TEST_ShuffleIndex)
+    {
+        auto result = ShuffleIndex(MAX_ITEM, KEYPAD_MAX_NUM);
+
+        Assert::IsTrue(result.size() == KEYPAD_MAX_NUM);
+    }
 };

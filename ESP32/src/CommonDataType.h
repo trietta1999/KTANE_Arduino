@@ -17,11 +17,11 @@
 
 #ifdef _WIN64
 #define HOST_NAME mapWstr_MODULE_NAME[MODULE_NAME::HostTimer].c_str()
-#define CLIENT_NAME mapWstr_MODULE_NAME[MODULE_NAME::TheButton].c_str()
-#define CLIENT_NAME_FOR_JSON map_MODULE_NAME[MODULE_NAME::TheButton].c_str()
+#define CLIENT_NAME mapWstr_MODULE_NAME[MODULE_NAME::Keypads].c_str()
+#define CLIENT_NAME_FOR_JSON map_MODULE_NAME[MODULE_NAME::Keypads].c_str()
 #else
 #define HOST_NAME map_MODULE_NAME[MODULE_NAME::HostTimer].c_str()
-#define CLIENT_NAME map_MODULE_NAME[MODULE_NAME::TheButton].c_str()
+#define CLIENT_NAME map_MODULE_NAME[MODULE_NAME::Keypads].c_str()
 #endif
 
 #ifdef _WIN64
@@ -86,7 +86,7 @@ enum
 #define EXTERN_MAP_ENUM_WSTR(enum_name) extern std::unordered_map<enum_name, std::wstring> mapWstr_##enum_name;
 #endif
 
- // Do not modify
+// Do not modify
 #pragma region System_datatype
 #define DEF_LABEL_INDICATOR(e, CREATE) \
         CREATE(e, SND) \
@@ -178,35 +178,26 @@ EXTERN_MAP_ENUM_WSTR(MODULE_NAME)
 #define SPECIAL_NUM 2
 
 #define DEF_COLOR_TYPE(e, CREATE) \
+        CREATE(e, DEFAULT_COLOR) \
         CREATE(e, RED) \
-        CREATE(e, WHITE) \
-        CREATE(e, BLUE) \
-        CREATE(e, YELLOW) \
-        CREATE(e, PINK) \
-        CREATE(e, BLACK) \
-
-#define DEF_BTN_LABEL_TYPE(e, CREATE) \
-        CREATE(e, Abort) \
-        CREATE(e, Detonate) \
-        CREATE(e, Hold) \
-        CREATE(e, Press) \
+        CREATE(e, GREEN) \
 
 enum class COLOR_TYPE
 {
-    MIN,
     DEF_COLOR_TYPE(COLOR_TYPE, TO_ENUM)
     MAX
 };
 
-enum class BTN_LABEL_TYPE
-{
-    MIN,
-    DEF_BTN_LABEL_TYPE(BTN_LABEL_TYPE, TO_ENUM)
-    MAX
-};
-
 EXTERN_MAP_ENUM_STR(COLOR_TYPE)
-EXTERN_MAP_ENUM_STR(BTN_LABEL_TYPE)
+
+extern std::unordered_map<COLOR_TYPE, COLOR> mapColor;
+
+#define KEYPAD_MAX_NUM 4
+#define MAX_COL 6
+#define MAX_ITEM 7
+#define KEYPAD_POS 0
+#define IMAGE_POS 1
+#define INDEX_POS 2
 #pragma endregion
 
 #endif // !_COMMON_DATATYPE_H
