@@ -17,11 +17,11 @@
 
 #ifdef _WIN64
 #define HOST_NAME mapWstr_MODULE_NAME[MODULE_NAME::HostTimer].c_str()
-#define CLIENT_NAME mapWstr_MODULE_NAME[MODULE_NAME::TheButton].c_str()
-#define CLIENT_NAME_FOR_JSON map_MODULE_NAME[MODULE_NAME::TheButton].c_str()
+#define CLIENT_NAME mapWstr_MODULE_NAME[MODULE_NAME::SimonSays].c_str()
+#define CLIENT_NAME_FOR_JSON map_MODULE_NAME[MODULE_NAME::SimonSays].c_str()
 #else
 #define HOST_NAME map_MODULE_NAME[MODULE_NAME::HostTimer].c_str()
-#define CLIENT_NAME map_MODULE_NAME[MODULE_NAME::TheButton].c_str()
+#define CLIENT_NAME map_MODULE_NAME[MODULE_NAME::SimonSays].c_str()
 #endif
 
 #ifdef _WIN64
@@ -86,7 +86,7 @@ enum
 #define EXTERN_MAP_ENUM_WSTR(enum_name) extern std::unordered_map<enum_name, std::wstring> mapWstr_##enum_name;
 #endif
 
- // Do not modify
+// Do not modify
 #pragma region System_datatype
 #define DEF_LABEL_INDICATOR(e, CREATE) \
         CREATE(e, SND) \
@@ -173,23 +173,17 @@ EXTERN_MAP_ENUM_WSTR(MODULE_NAME)
 
 // Allow modification
 #pragma region Custom_datatype
-#define FIRST_EVENT 0
-#define SECOND_EVENT 1
-#define SPECIAL_NUM 2
+#define STAGE_NUM 5
+#define WITH_VOWEL STR(WITH_VOWEL)
+#define WITHOUT_VOWEL STR(WITHOUT_VOWEL)
+#define BLINK_PERIOD 500
+#define BLINK_REST 5000
 
 #define DEF_COLOR_TYPE(e, CREATE) \
-        CREATE(e, RED) \
-        CREATE(e, WHITE) \
         CREATE(e, BLUE) \
         CREATE(e, YELLOW) \
-        CREATE(e, PINK) \
-        CREATE(e, BLACK) \
-
-#define DEF_BTN_LABEL_TYPE(e, CREATE) \
-        CREATE(e, Abort) \
-        CREATE(e, Detonate) \
-        CREATE(e, Hold) \
-        CREATE(e, Press) \
+        CREATE(e, GREEN) \
+        CREATE(e, RED) \
 
 enum class COLOR_TYPE
 {
@@ -198,15 +192,9 @@ enum class COLOR_TYPE
     MAX
 };
 
-enum class BTN_LABEL_TYPE
-{
-    MIN,
-    DEF_BTN_LABEL_TYPE(BTN_LABEL_TYPE, TO_ENUM)
-    MAX
-};
-
 EXTERN_MAP_ENUM_STR(COLOR_TYPE)
-EXTERN_MAP_ENUM_STR(BTN_LABEL_TYPE)
+
+extern std::unordered_map<const char*, std::unordered_map<COLOR_TYPE, std::unordered_map<uint8_t, COLOR_TYPE>>> mapColorSequence;
 #pragma endregion
 
 #endif // !_COMMON_DATATYPE_H

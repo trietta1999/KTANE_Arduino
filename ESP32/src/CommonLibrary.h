@@ -5,6 +5,7 @@
 #ifndef _COMMON_LIBRARY_H
 #define _COMMON_LIBRARY_H
 
+#include <vector>
 #include "CommonDataType.h"
 
  // Do not delete or rename
@@ -20,7 +21,8 @@ bool NumberCheckInTimer(uint8_t);
 
 // Allow modification
 #pragma region Custom_function
-
+std::vector<COLOR_TYPE> StageGenerator(uint8_t);
+std::vector<COLOR_TYPE> SequenceGenerator();
 #pragma endregion
 
 #endif // !_COMMON_LIBRARY_H
