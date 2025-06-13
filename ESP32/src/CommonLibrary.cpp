@@ -3,9 +3,10 @@
  */
 
 #include <algorithm>
-#include <vector>
+#include <iterator>
 #include "CommonLibrary.h"
 #include "CommonData.h"
+#include "CommonService.h"
 
  // Do not delete or rename
 #pragma region System_function
@@ -72,5 +73,43 @@ bool NumberCheckInTimer(uint8_t num)
 
 // Allow modification
 #pragma region Custom_function
+std::vector<COLOR_TYPE> StageGenerator(uint8_t stage_num)
+{
+    std::vector<COLOR_TYPE> listColor = { };
+    std::vector<COLOR_TYPE> listSelectColor(stage_num);
 
+    std::transform(map_COLOR_TYPE.begin(), map_COLOR_TYPE.end(),
+        std::back_inserter(listColor),
+        [](const auto& pair) { return pair.first; });
+
+    std::generate_n(listSelectColor.begin(), stage_num, [&]() {
+        return (COLOR_TYPE)RandomRange(((uint8_t)COLOR_TYPE::MIN) + 1, (uint8_t)COLOR_TYPE::MAX);
+        });
+
+    return listSelectColor;
+}
+
+std::vector<COLOR_TYPE> SequenceGenerator()
+{
+    std::vector<COLOR_TYPE> sequence = { };
+    auto stageNum = CurrentStage.GetValue();
+#ifndef UNIT_TEST
+    auto strikeNum = CommonGetRequest(WM_STRIKENUM_GET)[STR(StrikeNum)].as<uint8_t>();
+#else
+    auto strikeNum = sys_host::StrikeNum.GetValue();
+#endif
+    auto colorList = ColorList.GetValue();
+
+    for (uint8_t i = 0; i < stageNum; i++)
+    {
+        auto currentColorMap = mapColorSequence.begin()->second;
+        auto resultColor = currentColorMap[colorList[i]][strikeNum];
+
+        sequence.push_back(resultColor);
+    }
+
+    CorrectSequence.SetValue(sequence);
+
+    return sequence;
+}
 #pragma endregion

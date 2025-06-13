@@ -8,14 +8,38 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 TEST_CLASS(Library_Test)
 {
 public:
+    decltype(mapColorSequence) mapColorSequence_backup;
+
     TEST_CLASS_INITIALIZE(TESTCLASS_Init)
     {
-
+        CurrentStage.SetValue(4);
+        ColorList.SetValue({ COLOR_TYPE::RED, COLOR_TYPE::BLUE, COLOR_TYPE::GREEN, COLOR_TYPE::YELLOW });
     }
 
     TEST_CLASS_CLEANUP(TESTCLASS_Cleanup)
     {
 
+    }
+
+    void ChooseTable()
+    {
+        mapColorSequence_backup = mapColorSequence;
+
+        if (VowelCheck(sys_host::SerialNum.GetValue()))
+        {
+            mapColorSequence.erase(WITHOUT_VOWEL);
+        }
+        else
+        {
+            mapColorSequence.erase(WITH_VOWEL);
+        }
+    }
+
+    void ResetTable()
+    {
+        mapColorSequence.clear();
+        mapColorSequence = mapColorSequence_backup;
+        mapColorSequence_backup.clear();
     }
 
     TEST_METHOD(TEST_RandomRange_1)
@@ -100,5 +124,114 @@ public:
     {
         sys_host::TimeClock.SetValue(std::make_pair(22, 22));
         Assert::IsTrue(NumberCheckInTimer(2) == true);
+    }
+
+    TEST_METHOD(TEST_StageGenerator)
+    {
+        auto result = StageGenerator(10);
+
+        Assert::IsTrue(result.size() == 10);
+    }
+
+    TEST_METHOD(TEST_SequenceGenerator_1)
+    {
+        sys_host::SerialNum.SetValue("KA2");
+        sys_host::StrikeNum.SetValue(0);
+
+        ChooseTable();
+
+        auto result = SequenceGenerator();
+
+        Assert::IsTrue(result[0] == COLOR_TYPE::BLUE);
+        Assert::IsTrue(result[1] == COLOR_TYPE::RED);
+        Assert::IsTrue(result[2] == COLOR_TYPE::YELLOW);
+        Assert::IsTrue(result[3] == COLOR_TYPE::GREEN);
+
+        ResetTable();
+    }
+
+    TEST_METHOD(TEST_SequenceGenerator_2)
+    {
+        sys_host::SerialNum.SetValue("KA2");
+        sys_host::StrikeNum.SetValue(1);
+
+        ChooseTable();
+
+        auto result = SequenceGenerator();
+
+        Assert::IsTrue(result[0] == COLOR_TYPE::YELLOW);
+        Assert::IsTrue(result[1] == COLOR_TYPE::GREEN);
+        Assert::IsTrue(result[2] == COLOR_TYPE::BLUE);
+        Assert::IsTrue(result[3] == COLOR_TYPE::RED);
+
+        ResetTable();
+    }
+
+    TEST_METHOD(TEST_SequenceGenerator_3)
+    {
+        sys_host::SerialNum.SetValue("KA2");
+        sys_host::StrikeNum.SetValue(2);
+
+        ChooseTable();
+
+        auto result = SequenceGenerator();
+
+        Assert::IsTrue(result[0] == COLOR_TYPE::GREEN);
+        Assert::IsTrue(result[1] == COLOR_TYPE::RED);
+        Assert::IsTrue(result[2] == COLOR_TYPE::YELLOW);
+        Assert::IsTrue(result[3] == COLOR_TYPE::BLUE);
+
+        ResetTable();
+    }
+
+    TEST_METHOD(TEST_SequenceGenerator_4)
+    {
+        sys_host::SerialNum.SetValue("KX2");
+        sys_host::StrikeNum.SetValue(0);
+
+        ChooseTable();
+
+        auto result = SequenceGenerator();
+
+        Assert::IsTrue(result[0] == COLOR_TYPE::BLUE);
+        Assert::IsTrue(result[1] == COLOR_TYPE::YELLOW);
+        Assert::IsTrue(result[2] == COLOR_TYPE::GREEN);
+        Assert::IsTrue(result[3] == COLOR_TYPE::RED);
+
+        ResetTable();
+    }
+
+    TEST_METHOD(TEST_SequenceGenerator_5)
+    {
+        sys_host::SerialNum.SetValue("KX2");
+        sys_host::StrikeNum.SetValue(1);
+
+        ChooseTable();
+
+        auto result = SequenceGenerator();
+
+        Assert::IsTrue(result[0] == COLOR_TYPE::RED);
+        Assert::IsTrue(result[1] == COLOR_TYPE::BLUE);
+        Assert::IsTrue(result[2] == COLOR_TYPE::YELLOW);
+        Assert::IsTrue(result[3] == COLOR_TYPE::GREEN);
+
+        ResetTable();
+    }
+
+    TEST_METHOD(TEST_SequenceGenerator_6)
+    {
+        sys_host::SerialNum.SetValue("KX2");
+        sys_host::StrikeNum.SetValue(2);
+
+        ChooseTable();
+
+        auto result = SequenceGenerator();
+
+        Assert::IsTrue(result[0] == COLOR_TYPE::YELLOW);
+        Assert::IsTrue(result[1] == COLOR_TYPE::GREEN);
+        Assert::IsTrue(result[2] == COLOR_TYPE::BLUE);
+        Assert::IsTrue(result[3] == COLOR_TYPE::RED);
+
+        ResetTable();
     }
 };

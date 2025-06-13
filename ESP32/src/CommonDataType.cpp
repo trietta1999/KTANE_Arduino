@@ -14,14 +14,84 @@ MAP_ENUM_WSTR(MODULE_NAME, DEF_MODULE_NAME)
 #endif
 
 MAP_ENUM_STR(COLOR_TYPE, DEF_COLOR_TYPE)
-MAP_ENUM_STR(BTN_LABEL_TYPE, DEF_BTN_LABEL_TYPE)
 
-std::unordered_map<COLOR_TYPE, COLOR> mapColor =
-{
-    { COLOR_TYPE::RED, 0xFF0000 },
-    { COLOR_TYPE::WHITE, 0xFFFFFF },
-    { COLOR_TYPE::BLUE, 0x0000FF },
-    { COLOR_TYPE::YELLOW, 0xE3EB09 },
-    { COLOR_TYPE::PINK, 0xE80CAD },
-    { COLOR_TYPE::BLACK, 0x000000 },
+/* Color map
+   Refer [On the Subject of Simon Says] */
+std::unordered_map<const char*, std::unordered_map<COLOR_TYPE, std::unordered_map<uint8_t, COLOR_TYPE>>> mapColorSequence = {
+    // Table 1: If the serial number contains a vowel
+    {
+        WITH_VOWEL,
+        {
+            {
+                COLOR_TYPE::RED,
+                {
+                    { 0, COLOR_TYPE::BLUE },
+                    { 1, COLOR_TYPE::YELLOW },
+                    { 2, COLOR_TYPE::GREEN },
+                }
+            },
+            {
+                COLOR_TYPE::BLUE,
+                {
+                    { 0, COLOR_TYPE::RED },
+                    { 1, COLOR_TYPE::GREEN },
+                    { 2, COLOR_TYPE::RED },
+                }
+            },
+            {
+                COLOR_TYPE::GREEN,
+                {
+                    { 0, COLOR_TYPE::YELLOW },
+                    { 1, COLOR_TYPE::BLUE },
+                    { 2, COLOR_TYPE::YELLOW },
+                }
+            },
+            {
+                COLOR_TYPE::YELLOW,
+                {
+                    { 0, COLOR_TYPE::GREEN },
+                    { 1, COLOR_TYPE::RED },
+                    { 2, COLOR_TYPE::BLUE },
+                }
+            }
+        }
+    },
+    // Table 2: If the serial number does not contain a vowel
+    {
+        WITHOUT_VOWEL,
+        {
+            {
+                COLOR_TYPE::RED,
+                {
+                    { 0, COLOR_TYPE::BLUE },
+                    { 1, COLOR_TYPE::RED },
+                    { 2, COLOR_TYPE::YELLOW },
+                }
+            },
+            {
+                COLOR_TYPE::BLUE,
+                {
+                    { 0, COLOR_TYPE::YELLOW },
+                    { 1, COLOR_TYPE::BLUE },
+                    { 2, COLOR_TYPE::GREEN },
+                }
+            },
+            {
+                COLOR_TYPE::GREEN,
+                {
+                    { 0, COLOR_TYPE::GREEN },
+                    { 1, COLOR_TYPE::YELLOW },
+                    { 2, COLOR_TYPE::BLUE },
+                }
+            },
+            {
+                COLOR_TYPE::YELLOW,
+                {
+                    { 0, COLOR_TYPE::RED },
+                    { 1, COLOR_TYPE::GREEN },
+                    { 2, COLOR_TYPE::RED },
+                }
+            }
+        }
+    },
 };

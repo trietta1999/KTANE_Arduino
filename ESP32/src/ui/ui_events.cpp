@@ -3,51 +3,211 @@
 // LVGL version: 9.1.0
 // Project name: SquareLine_Project
 
+#ifdef _WIN64
+#include <iostream>
+#endif
+#include <algorithm>
+#include <tuple>
 #include "ui.h"
 #include "../CommonData.h"
 #include "../CommonLibrary.h"
+#include "../CommonService.h"
+
+// For blinking
+uint8_t currentButonIndex = 0;
+bool blinkState = false;
+bool isResting = false;
+lv_timer_t* sequentialBlinkTimer = nullptr;
+
+// For checking
+bool isIncorrectButton = false;
+uint8_t currentSelectButtonIndex = 0;
+
+// For mapping
+std::unordered_map<COLOR_TYPE, std::tuple<lv_obj_t*, uint16_t>> mapButton = { };
+std::vector<std::tuple<COLOR_TYPE, lv_obj_t*, bool>> listButtonOrder = { };
+
+void DeleteTimer()
+{
+    // Turn off all button
+    for (const auto& item : mapButton)
+    {
+        lv_obj_remove_state(std::get<0>(item.second), LV_STATE_EDITED);
+    }
+
+    // Delete old timer
+    lv_timer_del(sequentialBlinkTimer);
+    sequentialBlinkTimer = NULL;
+    isResting = true;
+}
+
+void CreateTimer()
+{
+    // Create new timer
+    sequentialBlinkTimer = lv_timer_create([](lv_timer_t* timer) {
+        auto colorList = ColorList.GetValue();
+
+        // Check resting
+        if (isResting) {
+            // Reset button index
+            currentButonIndex = 0;
+            isResting = false;
+            blinkState = false;
+
+            // Reset select button index
+            // Start re-checking when resting
+            currentSelectButtonIndex = 0;
+
+            // Reset period
+            lv_timer_set_period(timer, BLINK_PERIOD);
+
+            // Show transparent window
+            lv_obj_remove_flag(ui_wndTransparent, LV_OBJ_FLAG_HIDDEN);
+
+            return;
+        }
+
+        // Blink current button
+        if (currentButonIndex < listButtonOrder.size())
+        {
+            auto button = std::get<0>(mapButton[colorList[currentButonIndex]]);
+            auto beepFre = std::get<1>(mapButton[colorList[currentButonIndex]]);
+
+            // Change blink state
+            blinkState = !blinkState;
+
+            // Turn on
+            if (blinkState)
+            {
+                lv_obj_add_state(button, LV_STATE_EDITED);
+#ifdef _WIN64
+                ::Beep(beepFre, BEEP_INCREASE_DURATION);
+                ::Sleep(BEEP_INCREASE_DURATION);
+#endif
+            }
+            // Turn off
+            else
+            {
+                lv_obj_remove_state(button, LV_STATE_EDITED);
+                currentButonIndex++;
+            }
+        }
+        // Rest
+        else
+        {
+            isResting = true;
+            lv_timer_set_period(timer, BLINK_REST);
+
+            // Hide transparent window
+            lv_obj_add_flag(ui_wndTransparent, LV_OBJ_FLAG_HIDDEN);
+        }
+        }, BLINK_PERIOD, nullptr);
+}
 
 void Init()
 {
     // Brightness
     sys_gui::Brightness.SetValue(100);
     lv_slider_set_value(ui_sldBrightness, sys_gui::Brightness.GetValue(), LV_ANIM_OFF);
+
+    // Create button map with color
+    mapButton = {
+        { COLOR_TYPE::BLUE, { ui_btnBlue, 654 } },
+        { COLOR_TYPE::YELLOW, { ui_btnYellow, 734 } },
+        { COLOR_TYPE::GREEN, { ui_btnGreen, 824 } },
+        { COLOR_TYPE::RED, { ui_btnRed, 873 } },
+    };
+
+#ifndef UNIT_TEST
+    // Get random color list with stage number
+    auto colorList = StageGenerator(STAGE_NUM);
+    ColorList.SetValue(colorList);
+#else
+    auto colorList = ColorList.GetValue();
+#endif
+
+#ifndef UNIT_TEST
+    // Choose correct table
+    if (VowelCheck(sys_host::SerialNum.GetValue()))
+    {
+        mapColorSequence.erase(WITHOUT_VOWEL);
+    }
+    else
+    {
+        mapColorSequence.erase(WITH_VOWEL);
+    }
+
+    // Set stage #1
+    CurrentStage.SetValue(1);
+
+    // Init empty timer
+    sequentialBlinkTimer = lv_timer_create([](lv_timer_t* timer) { return; }, 0, nullptr);
+#endif
 }
 
 void AutoUpdate()
 {
-    if (TempEvent.GetState())
+#ifndef UNIT_TEST
+    if (CurrentStage.GetState() || isIncorrectButton)
     {
-        auto tempEvent = TempEvent.GetValue();
+#endif
+        // Reset button order list
+        listButtonOrder.clear();
 
-        if (std::get<FIRST_EVENT>(tempEvent) && std::get<SECOND_EVENT>(tempEvent))
+        // Create correct stage sequence
+        auto sequence = SequenceGenerator();
+
+        // Set sequence order to button list
+        for (uint8_t i = 0; i < CurrentStage.GetValue(); i++)
         {
-            if (tempEvent == CorrectEvent.GetValue())
+            auto targetButton = std::get<0>(mapButton[sequence[i]]);
+            listButtonOrder.push_back(std::make_tuple(sequence[i], targetButton, false));
+        }
+
+#ifndef UNIT_TEST
+        // Re-create timer
+        if (sequentialBlinkTimer != NULL) {
+            DeleteTimer();
+            CreateTimer();
+        }
+#endif
+
+        // Reset error flag
+        if (isIncorrectButton)
+        {
+            isIncorrectButton = false;
+        }
+
+#ifdef _WIN64
+        debug_println("Stage: " + std::to_string(CurrentStage.GetValue()));
+        for (uint8_t i = 0; i < sequence.size(); i++)
+        {
+            debug_println(map_COLOR_TYPE[sequence[i]]);
+        }
+#endif
+#ifndef UNIT_TEST
+    }
+#endif
+
+#ifndef UNIT_TEST
+    if (sys_gui::SuccessState.GetState()) {
+        if (sys_gui::SuccessState.GetValue() != INCORRECT)
+        {
+            lv_obj_clear_flag(ui_imgResult, LV_OBJ_FLAG_HIDDEN);
+
+            if (sys_gui::SuccessState.GetValue() == STATE_UNCHECK)
             {
-                sys_gui::SuccessState.SetValue(true);
+                lv_obj_add_state(ui_imgResult, LV_STATE_DISABLED);
             }
-            else
+            else if (sys_gui::SuccessState.GetValue() == STATE_CHECKED)
             {
-                sys_host::StrikeState.SetValue(true);
+                lv_obj_add_state(ui_imgResult, LV_STATE_CHECKED);
             }
 
-            TempEvent.SetValue(std::make_tuple(0, 0, 0));
+            DeleteTimer();
         }
     }
-
-    if (sys_gui::SuccessState.GetValue() != INCORRECT)
-    {
-        lv_obj_clear_flag(ui_imgResult, LV_OBJ_FLAG_HIDDEN);
-
-        if (sys_gui::SuccessState.GetValue() == STATE_UNCHECK)
-        {
-            lv_obj_add_state(ui_imgResult, LV_STATE_DISABLED);
-        }
-        else if (sys_gui::SuccessState.GetValue() == STATE_CHECKED)
-        {
-            lv_obj_add_state(ui_imgResult, LV_STATE_CHECKED);
-        }
-    }
+#endif
 }
 
 void OnBrightnessChange(lv_event_t* e)
@@ -55,31 +215,65 @@ void OnBrightnessChange(lv_event_t* e)
     sys_gui::Brightness.SetValue(lv_slider_get_value(ui_sldBrightness));
 }
 
-void OnButtonPress(lv_event_t * e)
+void OnButtonKeypadClick(lv_event_t* e)
 {
-    auto tempEvent = TempEvent.GetValue();
-    std::get<FIRST_EVENT>(tempEvent) = LV_EVENT_LONG_PRESSED;
+    auto currentButton = reinterpret_cast<lv_obj_t*>(e->current_target);
+    auto find = std::find_if(mapButton.begin(), mapButton.end(),
+        [currentButton](const std::pair<COLOR_TYPE, std::tuple<lv_obj_t*, uint16_t>>& pair) {
+            return std::get<0>(pair.second) == currentButton;
+        });
+    auto result = find->second;
+    auto beepFre = std::get<1>(result);
 
-    TempEvent.SetValue(tempEvent);
-}
+#if defined(_WIN64) && !defined(UNIT_TEST)
+    ::Beep(beepFre, BEEP_INCREASE_DURATION);
+    ::Sleep(BEEP_INCREASE_DURATION);
+#endif
 
-void OnButtonClick(lv_event_t * e)
-{
-    auto tempEvent = TempEvent.GetValue();
-    auto firstEvent = std::get<FIRST_EVENT>(tempEvent);
-
-    if (firstEvent != LV_EVENT_LONG_PRESSED)
+    // Current button is mapped with current order
+    if (currentButton == std::get<1>(listButtonOrder[currentSelectButtonIndex]))
     {
-        std::get<FIRST_EVENT>(tempEvent) = LV_EVENT_CLICKED;
+        // Check next button later
+        currentSelectButtonIndex++;
+    }
+    else
+    {
+#ifndef UNIT_TEST
+        // Send error to Host
+        CommonGetRequest(WM_STRIKESTATE_SET);
+
+#ifdef _WIN64
+        ::MessageBox(NULL, L"Turn off error message in HostTimer first", L"", MB_ICONERROR);
+#endif
+#endif
+
+        // Set error flag
+        isIncorrectButton = true;
+
+        // Reset select button index
+        currentSelectButtonIndex = 0;
+
     }
 
-    TempEvent.SetValue(tempEvent);
-}
+#ifndef UNIT_TEST
+    // All button is corrected with order
+    if (currentSelectButtonIndex == listButtonOrder.size())
+    {
+        auto stage = CurrentStage.GetValue();
 
-void OnButtonRelease(lv_event_t * e)
-{
-    auto tempEvent = TempEvent.GetValue();
-    std::get<SECOND_EVENT>(tempEvent) = LV_EVENT_RELEASED;
+        if (stage < STAGE_NUM)
+        {
+            // Set to next stage
+            CurrentStage.SetValue(stage + 1);
 
-    TempEvent.SetValue(tempEvent);
+            // Reset select button index
+            currentSelectButtonIndex = 0;
+        }
+        else
+        {
+            // Finish
+            sys_gui::SuccessState.SetValue(STATE_CHECKED);
+        }
+    }
+#endif
 }

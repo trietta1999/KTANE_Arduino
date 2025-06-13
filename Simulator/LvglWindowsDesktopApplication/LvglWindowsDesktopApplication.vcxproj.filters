@@ -800,6 +800,12 @@
     <ClInclude Include="..\..\ESP32\src\CommonDataType.h">
       <Filter>Library\CommonData</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\ESP32\src\CommonService.h">
+      <Filter>Library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ESP32\src\ArduinoJson-v7.4.1.h">
+      <Filter>Library</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\ESP32\src\ui\ui.h">
       <Filter>UI</Filter>
     </ClInclude>
@@ -808,12 +814,6 @@
     </ClInclude>
     <ClInclude Include="..\..\ESP32\src\ui\ui_helpers.h">
       <Filter>UI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ESP32\src\CommonService.h">
-      <Filter>Library</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ESP32\src\ArduinoJson-v7.4.1.h">
-      <Filter>Library</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1439,6 +1439,9 @@
     <ClCompile Include="..\..\ESP32\src\CommonDataType.cpp">
       <Filter>Library\CommonData</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\CommonService.cpp">
+      <Filter>Library</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\ESP32\src\ui\ui.c">
       <Filter>UI</Filter>
     </ClCompile>
@@ -1451,17 +1454,14 @@
     <ClCompile Include="..\..\ESP32\src\ui\ui_helpers.c">
       <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ESP32\src\ui\ui_Main.c">
-      <Filter>UI</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ESP32\src\ui\ui_img_fail_png.c">
       <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ESP32\src\ui\ui_img_success_png.c">
       <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ESP32\src\CommonService.cpp">
-      <Filter>Library</Filter>
+    <ClCompile Include="..\..\ESP32\src\ui\ui_Main.c">
+      <Filter>UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
