@@ -3,51 +3,123 @@
 // LVGL version: 9.1.0
 // Project name: SquareLine_Project
 
+#ifdef _WIN64
+#include <iostream>
+#endif
 #include "ui.h"
 #include "../CommonData.h"
 #include "../CommonLibrary.h"
+#include "../CommonService.h"
+
+bool regenerate = false;
+bool isIncorrectButton = false;
+std::vector<std::tuple<lv_obj_t*, lv_obj_t*, TEXT_LABEL>> listButton = { };
+
+#ifdef UNIT_TEST
+std::tuple<TEXT_DISPLAY, uint8_t> displayInfo = { };
+std::vector<TEXT_LABEL> listTextLabel = { };
+#endif
 
 void Init()
 {
     // Brightness
     sys_gui::Brightness.SetValue(100);
     lv_slider_set_value(ui_sldBrightness, sys_gui::Brightness.GetValue(), LV_ANIM_OFF);
+
+    // Create list button
+    listButton = {
+        { ui_Button1, ui_lblButtonText1, TEXT_LABEL::MIN },
+        { ui_Button2, ui_lblButtonText2, TEXT_LABEL::MIN },
+        { ui_Button3, ui_lblButtonText3, TEXT_LABEL::MIN },
+        { ui_Button4, ui_lblButtonText4, TEXT_LABEL::MIN },
+        { ui_Button5, ui_lblButtonText5, TEXT_LABEL::MIN },
+        { ui_Button6, ui_lblButtonText6, TEXT_LABEL::MIN },
+    };
+
+    CurrentStage.SetValue(1);
 }
 
 void AutoUpdate()
 {
-    if (TempEvent.GetState())
+#ifndef UNIT_TEST
+    if (CurrentStage.GetState() || isIncorrectButton || regenerate)
     {
-        auto tempEvent = TempEvent.GetValue();
+#endif
+#ifndef UNIT_TEST
+        auto displayInfo = GetRandomTextDisplay();
+        auto listTextLabel = GetTextLabelListFromMap(BUTTON_NUM);
+#endif
 
-        if (std::get<FIRST_EVENT>(tempEvent) && std::get<SECOND_EVENT>(tempEvent))
+        // Set display
+        auto textDisplay = std::get<TEXT_POS>(displayInfo);
+        auto textDisplayStr = std::get<TEXT_POS>(map_TextDisplayWithFocusPostion[textDisplay]);
+        lv_label_set_text(ui_lblDisplay, textDisplayStr.c_str());
+
+        // Set button label
+        for (uint8_t i = 0; i < listButton.size(); i++)
         {
-            if (tempEvent == CorrectEvent.GetValue())
-            {
-                sys_gui::SuccessState.SetValue(true);
-            }
-            else
-            {
-                sys_host::StrikeState.SetValue(true);
-            }
+            auto& item = listButton[i];
+            auto textLabel = listTextLabel[i];
+            auto textLabelStr = map_TextLabel[textLabel];
 
-            TempEvent.SetValue(std::make_tuple(0, 0, 0));
+            // Set text label to button list
+            std::get<2>(item) = textLabel;
+
+            // Set text label
+            lv_label_set_text(std::get<1>(item), textLabelStr.c_str());
+        }
+
+        // Set correct text label
+        auto focusPos = std::get<FOCUSPOS_POS>(displayInfo);
+        auto correctLabel = SetCorrectTextLabel(focusPos, listTextLabel);
+
+        if (map_TextLabel[correctLabel] == "")
+        {
+            // Re-genrate correct label when it's empty
+            regenerate = true;
+
+#ifdef _WIN64
+            debug_println("Re-generate...");
+#endif
+        }
+        else
+        {
+            // Set correct label
+            CorrectTextLabel.SetValue(correctLabel);
+            regenerate = false;
+
+#ifdef _WIN64
+        debug_println("Stage: " + std::to_string(CurrentStage.GetValue()));
+        debug_println("Corect label: " + map_TextLabel[CorrectTextLabel.GetValue()]);
+#endif
+        }
+
+        // Reset error flag
+        if (isIncorrectButton)
+        {
+            isIncorrectButton = false;
+        }
+#ifndef UNIT_TEST
+    }
+#endif
+
+#ifndef UNIT_TEST
+    if (sys_gui::SuccessState.GetState()) {
+        if (sys_gui::SuccessState.GetValue() != INCORRECT)
+        {
+            lv_obj_clear_flag(ui_imgResult, LV_OBJ_FLAG_HIDDEN);
+
+            if (sys_gui::SuccessState.GetValue() == STATE_UNCHECK)
+            {
+                lv_obj_add_state(ui_imgResult, LV_STATE_DISABLED);
+            }
+            else if (sys_gui::SuccessState.GetValue() == STATE_CHECKED)
+            {
+                lv_obj_add_state(ui_imgResult, LV_STATE_CHECKED);
+            }
         }
     }
-
-    if (sys_gui::SuccessState.GetValue() != INCORRECT)
-    {
-        lv_obj_clear_flag(ui_imgResult, LV_OBJ_FLAG_HIDDEN);
-
-        if (sys_gui::SuccessState.GetValue() == STATE_UNCHECK)
-        {
-            lv_obj_add_state(ui_imgResult, LV_STATE_DISABLED);
-        }
-        else if (sys_gui::SuccessState.GetValue() == STATE_CHECKED)
-        {
-            lv_obj_add_state(ui_imgResult, LV_STATE_CHECKED);
-        }
-    }
+#endif
 }
 
 void OnBrightnessChange(lv_event_t* e)
@@ -55,31 +127,40 @@ void OnBrightnessChange(lv_event_t* e)
     sys_gui::Brightness.SetValue(lv_slider_get_value(ui_sldBrightness));
 }
 
-void OnButtonPress(lv_event_t * e)
-{
-    auto tempEvent = TempEvent.GetValue();
-    std::get<FIRST_EVENT>(tempEvent) = LV_EVENT_LONG_PRESSED;
-
-    TempEvent.SetValue(tempEvent);
-}
-
 void OnButtonClick(lv_event_t * e)
 {
-    auto tempEvent = TempEvent.GetValue();
-    auto firstEvent = std::get<FIRST_EVENT>(tempEvent);
+    auto currentButton = reinterpret_cast<lv_obj_t*>(e->current_target);
+    auto find = std::find_if(listButton.begin(), listButton.end(),
+        [currentButton](const std::tuple<lv_obj_t*, lv_obj_t*, TEXT_LABEL>& item) {
+            return std::get<0>(item) == currentButton;
+        });
 
-    if (firstEvent != LV_EVENT_LONG_PRESSED)
+    auto textLabel = std::get<2>(*find);
+
+    if (textLabel == CorrectTextLabel.GetValue())
     {
-        std::get<FIRST_EVENT>(tempEvent) = LV_EVENT_CLICKED;
+        auto stage = CurrentStage.GetValue();
+
+        // Update bar stage
+        lv_bar_set_value(ui_barStage, stage, LV_ANIM_ON);
+
+        if (stage < STAGE_NUM)
+        {
+            // Set to next stage
+            CurrentStage.SetValue(stage + 1);
+        }
+        else
+        {
+            // Finish
+            sys_gui::SuccessState.SetValue(STATE_CHECKED);
+        }
     }
+    else
+    {
+        // Set error flag
+        isIncorrectButton = true;
 
-    TempEvent.SetValue(tempEvent);
-}
-
-void OnButtonRelease(lv_event_t * e)
-{
-    auto tempEvent = TempEvent.GetValue();
-    std::get<SECOND_EVENT>(tempEvent) = LV_EVENT_RELEASED;
-
-    TempEvent.SetValue(tempEvent);
+        // Send error to Host
+        CommonGetRequest(WM_STRIKESTATE_SET);
+    }
 }

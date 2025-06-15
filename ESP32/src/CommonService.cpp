@@ -149,6 +149,8 @@ void InitData()
     sys_host::StrikeNum.SetValue(jsonDoc[STR(StrikeNum)].as<uint8_t>());
     sys_gui::IsStarted.SetValue(jsonDoc[STR(IsStarted)].as<bool>());
     sys_gui::SuccessState.SetValue(INCORRECT);
+
+    srand(sys_host::RandomSeed.GetValue());
 #endif
 
 #ifdef _WIN64
@@ -188,6 +190,10 @@ void ProcessData()
             debug_println("BatteryNum: " + std::to_string(sys_host::BatteryNum.GetValue()));
             debug_println("SerialNum: " + sys_host::SerialNum.GetValue());
             debug_println("==================================");
+        }
+        else if (read == "gui_correct")
+        {
+            debug_println("Corect label: " + map_TextLabel[CorrectTextLabel.GetValue()]);
         }
     }
 #endif

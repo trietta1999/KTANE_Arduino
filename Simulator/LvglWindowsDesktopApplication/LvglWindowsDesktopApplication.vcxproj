@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Label="Globals">
-    <ProjectName>SquareLine_Project</ProjectName>
+    <ProjectName>WhosOnFirst</ProjectName>
     <ProjectGuid>{7148D2C8-4594-4054-95F2-6211DA069D8F}</ProjectGuid>
     <RootNamespace>LVGL</RootNamespace>
     <MileProjectType>WindowsApplication</MileProjectType>
