@@ -8,7 +8,6 @@
 #ifdef _WIN64
 #include "ArduinoJson-v7.4.1.h"
 #endif
-#include <tuple>
 #include "CommonDataType.h"
 #include "CData.h"
 
@@ -47,11 +46,8 @@ namespace sys_gui // GUI read/write -> Send data to HOST
 
 // Allow modification
 #pragma region Custom_data
-extern CData<COLOR> ButtonColor;
-extern CData<std::string> ButtonLabel;
-extern CData<COLOR> StripColor;
-extern CData<std::tuple<uint32_t, uint32_t, uint32_t>> CorrectEvent;
-extern CData<std::tuple<uint32_t, uint32_t, uint32_t>> TempEvent;
+extern CData<uint8_t> CurrentStage;
+extern CData<TEXT_LABEL> CorrectTextLabel;
 #pragma endregion
 
 void UpdateAll();

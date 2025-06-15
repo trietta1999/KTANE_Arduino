@@ -10,6 +10,8 @@
 #endif
 
 #include <cstdint>
+#include <tuple>
+#include <vector>
 #include <string>
 #include <unordered_map>
 
@@ -17,11 +19,11 @@
 
 #ifdef _WIN64
 #define HOST_NAME mapWstr_MODULE_NAME[MODULE_NAME::HostTimer].c_str()
-#define CLIENT_NAME mapWstr_MODULE_NAME[MODULE_NAME::TheButton].c_str()
-#define CLIENT_NAME_FOR_JSON map_MODULE_NAME[MODULE_NAME::TheButton].c_str()
+#define CLIENT_NAME mapWstr_MODULE_NAME[MODULE_NAME::WhosOnFirst].c_str()
+#define CLIENT_NAME_FOR_JSON map_MODULE_NAME[MODULE_NAME::WhosOnFirst].c_str()
 #else
 #define HOST_NAME map_MODULE_NAME[MODULE_NAME::HostTimer].c_str()
-#define CLIENT_NAME map_MODULE_NAME[MODULE_NAME::TheButton].c_str()
+#define CLIENT_NAME map_MODULE_NAME[MODULE_NAME::WhosOnFirst].c_str()
 #endif
 
 #ifdef _WIN64
@@ -86,7 +88,7 @@ enum
 #define EXTERN_MAP_ENUM_WSTR(enum_name) extern std::unordered_map<enum_name, std::wstring> mapWstr_##enum_name;
 #endif
 
- // Do not modify
+// Do not modify
 #pragma region System_datatype
 #define DEF_LABEL_INDICATOR(e, CREATE) \
         CREATE(e, SND) \
@@ -173,40 +175,88 @@ EXTERN_MAP_ENUM_WSTR(MODULE_NAME)
 
 // Allow modification
 #pragma region Custom_datatype
-#define FIRST_EVENT 0
-#define SECOND_EVENT 1
-#define SPECIAL_NUM 2
+#define STAGE_NUM 3
+#define BUTTON_NUM 6
+#define TEXT_POS 0
+#define FOCUSPOS_POS 1
 
-#define DEF_COLOR_TYPE(e, CREATE) \
-        CREATE(e, RED) \
-        CREATE(e, WHITE) \
-        CREATE(e, BLUE) \
-        CREATE(e, YELLOW) \
-        CREATE(e, PINK) \
-        CREATE(e, BLACK) \
+#define DEF_TEXT_LABEL(e, CREATE) \
+        CREATE(e, E_READY) \
+        CREATE(e, E_FIRST) \
+        CREATE(e, E_NO) \
+        CREATE(e, E_BLANK) \
+        CREATE(e, E_NOTHING) \
+        CREATE(e, E_YES) \
+        CREATE(e, E_WHAT) \
+        CREATE(e, E_UHHH) \
+        CREATE(e, E_LEFT) \
+        CREATE(e, E_RIGHT) \
+        CREATE(e, E_MIDDLE) \
+        CREATE(e, E_OKAY) \
+        CREATE(e, E_WAIT) \
+        CREATE(e, E_PRESS) \
+        CREATE(e, E_YOU) \
+        CREATE(e, E_YOU_ARE) \
+        CREATE(e, E_YOUR) \
+        CREATE(e, E_YOURE) \
+        CREATE(e, E_UR) \
+        CREATE(e, E_U) \
+        CREATE(e, E_UH_HUH) \
+        CREATE(e, E_UH_UH) \
+        CREATE(e, E_WHAT_QMARK) \
+        CREATE(e, E_DONE) \
+        CREATE(e, E_NEXT) \
+        CREATE(e, E_HOLD) \
+        CREATE(e, E_SURE) \
+        CREATE(e, E_LIKE) \
 
-#define DEF_BTN_LABEL_TYPE(e, CREATE) \
-        CREATE(e, Abort) \
-        CREATE(e, Detonate) \
-        CREATE(e, Hold) \
-        CREATE(e, Press) \
+#define DEF_TEXT_DISPLAY(e, CREATE) \
+        CREATE(e, E_YES) \
+        CREATE(e, E_FIRST) \
+        CREATE(e, E_DISPLAY) \
+        CREATE(e, E_OKAY) \
+        CREATE(e, E_SAYS) \
+        CREATE(e, E_NOTHING) \
+        CREATE(e, E_EMPTY) \
+        CREATE(e, E_BLANK) \
+        CREATE(e, E_NO) \
+        CREATE(e, E_LED) \
+        CREATE(e, E_LEAD) \
+        CREATE(e, E_READ) \
+        CREATE(e, E_RED) \
+        CREATE(e, E_REED) \
+        CREATE(e, E_LEED) \
+        CREATE(e, E_HOLD_ON) \
+        CREATE(e, E_YOU) \
+        CREATE(e, E_YOU_ARE) \
+        CREATE(e, E_YOUR) \
+        CREATE(e, E_YOURE) \
+        CREATE(e, E_UR) \
+        CREATE(e, E_THERE) \
+        CREATE(e, E_THEYRE) \
+        CREATE(e, E_THEIR) \
+        CREATE(e, E_THEY_ARE) \
+        CREATE(e, E_SEE) \
+        CREATE(e, E_C) \
+        CREATE(e, E_CEE) \
 
-enum class COLOR_TYPE
+enum class TEXT_LABEL
 {
     MIN,
-    DEF_COLOR_TYPE(COLOR_TYPE, TO_ENUM)
+    DEF_TEXT_LABEL(TEXT_LABEL, TO_ENUM)
     MAX
 };
 
-enum class BTN_LABEL_TYPE
+enum class TEXT_DISPLAY
 {
     MIN,
-    DEF_BTN_LABEL_TYPE(BTN_LABEL_TYPE, TO_ENUM)
+    DEF_TEXT_DISPLAY(TEXT_DISPLAY, TO_ENUM)
     MAX
 };
 
-EXTERN_MAP_ENUM_STR(COLOR_TYPE)
-EXTERN_MAP_ENUM_STR(BTN_LABEL_TYPE)
+extern std::unordered_map<TEXT_LABEL, std::string> map_TextLabel;
+extern std::unordered_map<TEXT_DISPLAY, std::tuple<std::string, uint8_t>> map_TextDisplayWithFocusPostion;
+extern std::unordered_map<TEXT_LABEL, std::vector<TEXT_LABEL>> map_TextLabelList;
 #pragma endregion
 
 #endif // !_COMMON_DATATYPE_H

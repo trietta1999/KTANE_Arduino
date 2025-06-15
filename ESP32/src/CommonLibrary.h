@@ -20,7 +20,9 @@ bool NumberCheckInTimer(uint8_t);
 
 // Allow modification
 #pragma region Custom_function
-
+std::tuple<TEXT_DISPLAY, uint8_t> GetRandomTextDisplay();
+std::vector<TEXT_LABEL> GetTextLabelListFromMap(uint8_t);
+TEXT_LABEL SetCorrectTextLabel(uint8_t, std::vector<TEXT_LABEL>);
 #pragma endregion
 
 #endif // !_COMMON_LIBRARY_H
