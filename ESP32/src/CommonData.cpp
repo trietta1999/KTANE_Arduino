@@ -1,4 +1,5 @@
 /**
+ * @file  CommonData.cpp
  * @brief Common data
  */
 
@@ -38,9 +39,9 @@ namespace sys_gui
 
 // Allow modification
 #pragma region Custom_data
-CData<COLOR> ButtonColor;
+CData<COLOR_TYPE> ButtonColor;
 CData<std::string> ButtonLabel;
-CData<COLOR> StripColor;
+CData<COLOR_TYPE> StripColor;
 CData<std::tuple<uint32_t, uint32_t, uint32_t>> CorrectEvent;
 CData<std::tuple<uint32_t, uint32_t, uint32_t>> TempEvent;
 #pragma endregion
