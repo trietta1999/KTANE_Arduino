@@ -240,7 +240,7 @@ void OnButtonKeypadClick(lv_event_t* e)
     {
 #ifndef UNIT_TEST
         // Send error to Host
-        CommonGetRequest(WM_STRIKESTATE_SET);
+        CommonSendRequest(WM_STRIKESTATE_SET);
 
 #ifdef _WIN64
         ::MessageBox(NULL, L"Turn off error message in HostTimer first", L"", MB_ICONERROR);
@@ -273,6 +273,11 @@ void OnButtonKeypadClick(lv_event_t* e)
         {
             // Finish
             sys_gui::SuccessState.SetValue(STATE_CHECKED);
+
+#ifndef UNIT_TEST
+            // Send success to Host
+            CommonSendRequest(WM_SUCCESSSTATE_SET);
+#endif
         }
     }
 #endif

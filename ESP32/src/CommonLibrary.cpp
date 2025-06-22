@@ -94,7 +94,7 @@ std::vector<COLOR_TYPE> SequenceGenerator()
     std::vector<COLOR_TYPE> sequence = { };
     auto stageNum = CurrentStage.GetValue();
 #ifndef UNIT_TEST
-    auto strikeNum = CommonGetRequest(WM_STRIKENUM_GET)[STR(StrikeNum)].as<uint8_t>();
+    auto strikeNum = CommonSendRequest(WM_STRIKENUM_GET)[STR(StrikeNum)].as<uint8_t>();
 #else
     auto strikeNum = sys_host::StrikeNum.GetValue();
 #endif
