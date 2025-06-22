@@ -298,6 +298,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LvglPlatform\lvgl\src\widgets\textarea\lv_textarea.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LvglPlatform\lvgl\src\widgets\tileview\lv_tileview.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)..\LvglPlatform\lvgl\src\widgets\win\lv_win.h" />
+    <ClInclude Include="..\..\ESP32\Hardware.h" />
     <ClInclude Include="..\..\ESP32\src\ArduinoJson-v7.4.1.h" />
     <ClInclude Include="..\..\ESP32\src\CData.h" />
     <ClInclude Include="..\..\ESP32\src\CommonData.h" />
