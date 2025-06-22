@@ -52,7 +52,7 @@ void InitData()
     sys_gui::IsStarted.SetValue(false);
 #else
     // Get init data from HostTimer
-    auto jsonDoc = CommonGetRequest(WM_SYSINIT_GET);
+    auto jsonDoc = CommonSendRequest(WM_SYSINIT_GET);
 
     // Set init data
     sys_host::RandomSeed.SetValue(jsonDoc[STR(RandomSeed)].as<uint32_t>());
