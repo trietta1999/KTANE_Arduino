@@ -5,17 +5,13 @@
 #ifdef _WIN64
 #include <iostream>
 #include <iomanip>
-#include <thread>
 #else
 #include <esp_random.h>
+#include "../Hardware.h"
 #endif
 #include "CommonService.h"
 #include "CommonData.h"
 #include "CommonLibrary.h"
-
-int8_t minute = 0, second = 0;
-uint64_t currentTime = 0;
-bool timerFlag = false;
 
 #ifdef _WIN64
 void AttachConsoleWindow()
@@ -25,93 +21,7 @@ void AttachConsoleWindow()
     freopen_s(&fp, "CONOUT$", "w", stdout);
     freopen_s(&fp, "CONOUT$", "w", stderr);
 }
-#else
-#include <BluetoothSerial.h>
-BluetoothSerial SerialBT;
 #endif
-
-void RunTimer()
-{
-#ifdef HOST_TIMER
-#ifdef _WIN64
-    while (!sys_gui::IsStarted.GetValue())
-    {
-        ::Sleep(10);
-    }
-
-    CONSOLE_SCREEN_BUFFER_INFO csbi;
-    HANDLE hConsole = ::GetStdHandle(STD_OUTPUT_HANDLE);
-    minute = std::get<MINUTE_POS>(sys_host::TimeClock.GetValue());
-    second = std::get<SECOND_POS>(sys_host::TimeClock.GetValue());
-
-    if (GetConsoleScreenBufferInfo(hConsole, &csbi)) {
-        while ((minute >= 0) && (sys_gui::SuccessState.GetValue() != STATE_CHECKED) && (sys_host::StrikeNum.GetValue() < STRIKE_NUM_MAX))
-        {
-            while ((second >= 0) && (sys_gui::SuccessState.GetValue() != STATE_CHECKED) && (sys_host::StrikeNum.GetValue() < STRIKE_NUM_MAX))
-            {
-                ::Beep(BEEP_FRE, BEEP_INCREASE_DURATION);
-
-                SetConsoleCursorPosition(hConsole, csbi.dwCursorPosition);
-                std::cout << std::setfill('0') << std::setw(2) << std::to_string(minute) << ":"
-                    << std::setw(2) << std::to_string(second);
-
-                sys_host::TimeClock.SetValue(std::make_pair(minute, second));
-
-                second--;
-
-                ::Sleep(sys_host::TimeCycle.GetValue());
-            }
-
-            minute--;
-            second = 59;
-        }
-
-        sys_host::TimeOut.SetValue(true);
-    }
-#else
-    if (sys_gui::IsStarted.GetValue())
-    {
-        if (!timerFlag)
-        {
-            //minute = std::get<MINUTE_POS>(sys_host::TimeClock.GetValue());
-            second = std::get<SECOND_POS>(sys_host::TimeClock.GetValue());
-            minute = 1;
-            currentTime = millis();
-            timerFlag = true;
-        }
-
-        if ((sys_gui::SuccessState.GetValue() != STATE_CHECKED) && (sys_host::StrikeNum.GetValue() < STRIKE_NUM_MAX) && !sys_host::TimeOut.GetValue())
-        {
-            if (millis() - currentTime >= sys_host::TimeCycle.GetValue())
-            {
-                if (minute >= 0)
-                {
-                    sys_host::TimeClock.SetValue(std::make_pair(minute, second));
-
-                    second--;
-
-                    if (second < 0)
-                    {
-                        minute--;
-                        second = 59;
-                    }
-                }
-                else
-                {
-                    sys_host::TimeOut.SetValue(true);
-                }
-
-                currentTime = millis();
-            }
-        }
-        else
-        {
-            sys_host::TimeOut.SetValue(true);
-        }
-    }
-#endif
-#endif
-}
 
 void InitData()
 {
@@ -121,25 +31,30 @@ void InitData()
 #else
     uint32_t seed = esp_random();
 
-    SerialBT.begin(CLIENT_NAME);
+    serial::setup();
+    ble::setup();
 #endif
+    // Set random seed
     srand(seed);
 
+    // Create random init data
     sys_host::RandomSeed.SetValue(seed);
     sys_host::LabelIndicator.SetValue((LABEL_INDICATOR)RandomRange(0, (uint8_t)LABEL_INDICATOR::MAX));
     sys_host::BatteryType.SetValue((BATTERY_TYPE)RandomRange(0, (uint8_t)BATTERY_TYPE::MAX));
     sys_host::ComPortType.SetValue((COMPORT_TYPE)RandomRange(0, (uint8_t)COMPORT_TYPE::MAX));
     sys_host::BatteryNum.SetValue(RandomRange(1, 5));
     sys_host::SerialNum.SetValue(GenerateSerialNumber());
+    sys_host::EndlessTimeClock.SetValue(std::make_tuple(0, 0, 0));
 
     sys_host::StrikeNum.SetValue(0);
     sys_host::TimeCycle.SetValue(TIMECYCLE_0);
-    sys_host::TimeOut.SetValue(false);
     sys_gui::SuccessState.SetValue(INCORRECT);
     sys_gui::IsStarted.SetValue(false);
 #else
+    // Get init data from HostTimer
     auto jsonDoc = CommonGetRequest(WM_SYSINIT_GET);
 
+    // Set init data
     sys_host::RandomSeed.SetValue(jsonDoc[STR(RandomSeed)].as<uint32_t>());
     sys_host::LabelIndicator.SetValue((LABEL_INDICATOR)jsonDoc[STR(LabelIndicator)].as<uint8_t>());
     sys_host::BatteryType.SetValue((BATTERY_TYPE)jsonDoc[STR(BatteryType)].as<uint8_t>());
@@ -150,6 +65,7 @@ void InitData()
     sys_gui::IsStarted.SetValue(jsonDoc[STR(IsStarted)].as<bool>());
     sys_gui::SuccessState.SetValue(INCORRECT);
 
+    // Set random seed
     srand(sys_host::RandomSeed.GetValue());
 #endif
 
@@ -157,6 +73,7 @@ void InitData()
     AttachConsoleWindow();
 #endif
 
+    // Print init data
 #ifdef _WIN64
     debug_println("===== Dummy Data Initialized =====");
     debug_println("RandomSeed: " + std::to_string(sys_host::RandomSeed.GetValue()));
@@ -166,21 +83,17 @@ void InitData()
     debug_println("BatteryNum: " + std::to_string(sys_host::BatteryNum.GetValue()));
     debug_println("SerialNum: " + sys_host::SerialNum.GetValue());
     debug_println("==================================");
-
-#ifdef HOST_TIMER
-    std::thread([]() {
-        RunTimer();
-        }).detach();
-#endif
 #endif
 }
 
 void ProcessData()
 {
 #ifndef _WIN64
+    // Read data from serial bluetooth
     if (SerialBT.available()) {
         String read = SerialBT.readStringUntil('\n');
 
+        // Print init data
         if (read == "sys_data") {
             debug_println("===== Dummy Data Initialized =====");
             debug_println("RandomSeed: " + std::to_string(sys_host::RandomSeed.GetValue()));
@@ -206,11 +119,13 @@ void ProcessData()
 #endif
 
 #ifdef HOST_TIMER
-    if (sys_host::StrikeState.GetState())
+    // Update strike num
+    if (sys_host::StrikeState.GetValue())
     {
-        sys_host::StrikeNum.SetValue(sys_host::StrikeNum.GetValue() + 1);
+        auto strikeNum = sys_host::StrikeNum.GetValue() + 1;
 
-        switch (sys_host::StrikeNum.GetValue())
+        // Update time cycle
+        switch (strikeNum)
         {
         case 0:
             sys_host::TimeCycle.SetValue(TIMECYCLE_0);
@@ -221,47 +136,21 @@ void ProcessData()
         case 2:
             sys_host::TimeCycle.SetValue(TIMECYCLE_2);
             break;
-        case 3:
-            sys_host::TimeCycle.SetValue(TIMECYCLE_3);
-            break;
         default:
             break;
         }
 
+        // Update strike num
+        sys_host::StrikeNum.SetValue(strikeNum);
+
+        // Reset strike state flag
         sys_host::StrikeState.SetValue(false);
 
 #ifdef _WIN64
         ::MessageBox(NULL, L"", L"", MB_ICONERROR);
 #endif
     }
-
-    if (sys_host::TimeOut.GetState()
-#ifdef _WIN64
-        || (sys_host::StrikeNum.GetValue() >= STRIKE_NUM_MAX)
-#endif
-        )
-    {
-        if (sys_gui::SuccessState.GetValue() == INCORRECT)
-        {
-            sys_gui::SuccessState.SetValue(STATE_UNCHECK);
-#ifdef _WIN64
-            ::Beep(BEEP_FRE, BEEP_TIMEOUT);
-            sys_host::StrikeNum.SetValue(STRIKE_NUM_MAX - 1);
-#endif
-        }
-        else
-        {
-#ifdef _WIN64
-            ::MessageBox(NULL, L"", L"", MB_ICONINFORMATION);
-#endif
-        }
-
-        sys_host::TimeOut.SetValue(false);
-        sys_gui::IsStarted.SetValue(false);
-    }
-#endif
-
-#ifndef HOST_TIMER
+#else
     // Client process
 #endif
 }
@@ -269,11 +158,33 @@ void ProcessData()
 void ProcessRequest(HWND hwnd, uint32_t msg, JsonDocument jsonDocIn)
 {
 #ifdef HOST_TIMER
-#ifdef _WIN64
     JsonDocument jsonDoc;
 
     switch (msg)
     {
+    case WM_SET_CLIENTSTATE:
+    {
+        auto mapModuleStatus = sys_gui::ModuleStatusMap.GetValue();
+
+        if (mapModuleStatus[jsonDocIn["module"].as<const char*>()] == MODULE_STATUS::ON)
+        {
+            jsonDocIn["state"] = (uint8_t)MODULE_STATUS::ON;
+        }
+        else
+        {
+            jsonDocIn["state"] = (uint8_t)MODULE_STATUS::OFF;
+        }
+
+        jsonDoc = jsonDocIn;
+    }
+    break;
+
+    case WM_START_ALL:
+    {
+        jsonDoc["start"] = (uint8_t)MODULE_STATUS::START;
+    }
+    break;
+
     case WM_TIMER_GET:
     {
         auto time = sys_host::TimeClock.GetValue();
@@ -292,6 +203,19 @@ void ProcessRequest(HWND hwnd, uint32_t msg, JsonDocument jsonDocIn)
     case WM_STRIKESTATE_SET:
     {
         sys_host::StrikeState.SetValue(true);
+    }
+    break;
+
+    case WM_SUCCESSSTATE_SET:
+    {
+        auto mapModuleStatus = sys_gui::ModuleStatusMap.GetValue();
+
+        if (mapModuleStatus[jsonDocIn["module"].as<const char*>()] == MODULE_STATUS::ON)
+        {
+            mapModuleStatus[jsonDocIn["module"].as<const char*>()] = MODULE_STATUS::SUCCESS;
+
+            sys_gui::ModuleStatusMap.SetValue(mapModuleStatus);
+        }
     }
     break;
 
@@ -314,29 +238,6 @@ void ProcessRequest(HWND hwnd, uint32_t msg, JsonDocument jsonDocIn)
     }
     break;
 
-    case WM_START:
-    {
-        auto mapModuleStatus = sys_gui::ModuleStatusMap.GetValue();
-
-        if (mapModuleStatus[jsonDocIn["module"].as<const char*>()] == MODULE_STATUS::ENABLE)
-        {
-            jsonDocIn["status"] = (uint8_t)MODULE_STATUS::ENABLE;
-        }
-        else
-        {
-            jsonDocIn["status"] = (uint8_t)MODULE_STATUS::DISABLE;
-        }
-
-        jsonDoc = jsonDocIn;
-    }
-    break;
-
-    case WM_READY:
-    {
-        jsonDoc["ready"] = true;
-    }
-    break;
-
     default:
         break;
     }
@@ -345,6 +246,7 @@ void ProcessRequest(HWND hwnd, uint32_t msg, JsonDocument jsonDocIn)
 
     serializeJson(jsonDoc, jsonDocStr);
 
+#ifdef _WIN64
     HANDLE hMapFile = CreateFileMapping(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, BUFFER_SIZE, SHARED_MEM);
     if (!hMapFile)
     {
@@ -364,17 +266,18 @@ void ProcessRequest(HWND hwnd, uint32_t msg, JsonDocument jsonDocIn)
 
     ::SendMessage(hwnd, WM_RESPONSE, NULL, NULL);
 #else
-    // Arduino process
+    serial::send_message(reinterpret_cast<const char*>(hwnd), WM_RESPONSE, 0, jsonDocStr);
 #endif
 #else
     // Client process
 #endif
 }
 
-JsonDocument CommonGetRequest(uint32_t msg)
+JsonDocument CommonSendRequest(uint32_t msg)
 {
 #ifdef _WIN64
     JsonDocument jsonDoc;
+
     jsonDoc["client_name"] = CLIENT_NAME_FOR_JSON;
     char jsonDocStr[MAX_SIZE] = { 0 };
 
@@ -401,21 +304,17 @@ JsonDocument CommonGetRequest(uint32_t msg)
 
     ::SendMessage(hwnd, WM_SET_CLIENT_HANDLE, NULL, NULL);
     ::SendMessage(hwnd, WM_REQUEST, msg, NULL);
+#else
+    serial::send_message(HOST_NAME, WM_REQUEST, msg, nullptr);
+#endif
 
     return sys_host::JsonResponse.GetValue();
-#else
-    // Arduino process
-    JsonDocument jsonDoc;
-    return jsonDoc;
-#endif
 }
 
-JsonDocument CommonGetRequestWithData(uint32_t msg, JsonDocument jsonValue)
+JsonDocument CommonSendRequestWithData(uint32_t msg, JsonDocument jsonValue)
 {
 #ifdef _WIN64
-    JsonDocument jsonDoc;
     char jsonDocStr[MAX_SIZE] = { 0 };
-
     jsonValue["client_name"] = CLIENT_NAME_FOR_JSON;
 
     serializeJson(jsonValue, jsonDocStr);
@@ -423,14 +322,14 @@ JsonDocument CommonGetRequestWithData(uint32_t msg, JsonDocument jsonValue)
     HANDLE hMapFile = CreateFileMapping(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, BUFFER_SIZE, SHARED_MEM);
     if (!hMapFile)
     {
-        return jsonDoc;
+        return JsonDocument();
     }
 
     LPVOID pBuffer = MapViewOfFile(hMapFile, FILE_MAP_ALL_ACCESS, 0, 0, BUFFER_SIZE);
     if (!pBuffer)
     {
         CloseHandle(hMapFile);
-        return jsonDoc;
+        return JsonDocument();
     }
 
     strcpy((char*)pBuffer, jsonDocStr);
@@ -441,11 +340,11 @@ JsonDocument CommonGetRequestWithData(uint32_t msg, JsonDocument jsonValue)
 
     ::SendMessage(hwnd, WM_SET_CLIENT_HANDLE, msg, NULL);
     ::SendMessage(hwnd, WM_REQUEST_WITH_DATA, msg, NULL);
+#else
+    char jsonDocStr[MAX_SIZE] = { 0 };
+    serializeJson(jsonValue, jsonDocStr);
+    serial::send_message(HOST_NAME, WM_REQUEST_WITH_DATA, msg, jsonDocStr);
+#endif
 
     return sys_host::JsonResponse.GetValue();
-#else
-    // Arduino process
-    JsonDocument jsonDoc;
-    return jsonDoc;
-#endif
 }
