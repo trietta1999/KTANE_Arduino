@@ -5,9 +5,7 @@
 #ifndef _COMMON_DATA_H
 #define _COMMON_DATA_H
 
-#ifdef _WIN64
 #include "ArduinoJson-v7.4.1.h"
-#endif
 #include <vector>
 #include "CommonDataType.h"
 #include "CData.h"
@@ -27,13 +25,12 @@ namespace sys_host // GUI read only, received from HOST
     extern CData<uint8_t> BatteryNum;
     extern CData<uint32_t> RandomSeed;
     extern CData<std::pair<uint8_t, uint8_t>> TimeClock;
+    extern CData<std::tuple<uint16_t, uint16_t, uint16_t>> EndlessTimeClock;
     extern CData<uint8_t> StrikeNum;
     extern CData<uint16_t> TimeCycle;
     extern CData<bool> StrikeState;
-    extern CData<bool> TimeOut;
-#ifdef _WIN64
     extern CData<JsonDocument> JsonResponse;
-#endif
+    extern CData<bool> ModuleStatus;
 }
 
 namespace sys_gui // GUI read/write -> Send data to HOST

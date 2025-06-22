@@ -815,6 +815,7 @@
     <ClInclude Include="..\..\ESP32\src\ui\ui_helpers.h">
       <Filter>UI</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\ESP32\Hardware.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)..\LvglPlatform\lvgl\.typos.toml">
