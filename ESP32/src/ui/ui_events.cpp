@@ -3,13 +3,81 @@
 // LVGL version: 9.1.0
 // Project name: SquareLine_Project
 
-#include <vector>
 #include "ui.h"
 #include "../CommonData.h"
 #include "../CommonLibrary.h"
 
-std::vector<std::pair<lv_obj_t*, uint8_t>> listBtnSettingModule = { };
-std::vector<std::pair<lv_obj_t*, uint8_t>> listBtnSettingNeedyModule = { };
+std::unordered_map<MODULE_NAME, lv_obj_t*> mapCbSettingModule = { };
+std::unordered_map<MODULE_NAME, lv_obj_t*> mapCbOPModule = { };
+std::string strikeValue = "";
+
+struct e_timer_t
+{
+    lv_timer_t* timer;
+    uint8_t minute;
+    uint8_t second;
+    uint64_t startTime;
+    char str[10];
+} countdownTimer, endlessTimer;
+
+void CreateTimer()
+{
+    auto time = sys_host::TimeClock.GetValue();
+
+    // Get current timer time
+    countdownTimer.minute = std::get<MINUTE_POS>(time);
+    countdownTimer.second = std::get<SECOND_POS>(time);
+
+    countdownTimer.timer = lv_timer_create([](lv_timer_t* timer) {
+        // Change sleep period
+        if (sys_host::TimeCycle.GetState())
+        {
+            lv_timer_set_period(timer, sys_host::TimeCycle.GetValue());
+            sys_host::TimeCycle.ResetState();
+        }
+
+        // Stop and delete timer
+        if ((countdownTimer.minute == 0 && countdownTimer.second == 0)
+            || (sys_gui::SuccessState.GetValue() == STATE_CHECKED)
+            || (sys_host::StrikeNum.GetValue() >= STRIKE_NUM_MAX)
+            )
+        {
+            sys_gui::SuccessState.SetValue(STATE_UNCHECK);
+            sys_gui::IsStarted.SetValue(false);
+
+            lv_timer_del(timer);
+            timer = nullptr;
+            countdownTimer.timer = nullptr;
+
+#ifdef _WIN64
+            ::Beep(BEEP_FRE, BEEP_TIMEOUT);
+#endif
+
+            return;
+        }
+
+        // Countdown
+        if (countdownTimer.second > 0)
+        {
+            countdownTimer.second--;
+        }
+        else
+        {
+            if (countdownTimer.minute > 0)
+            {
+                countdownTimer.minute--;
+                countdownTimer.second = 59;
+            }
+        }
+
+        // Update timer time
+        sys_host::TimeClock.SetValue(std::make_pair(countdownTimer.minute, countdownTimer.second));
+
+#ifdef _WIN64
+        ::Beep(BEEP_FRE, BEEP_INCREASE_DURATION);
+#endif
+        }, sys_host::TimeCycle.GetValue(), nullptr);
+}
 
 void Init()
 {
@@ -17,27 +85,45 @@ void Init()
     sys_gui::Brightness.SetValue(100);
     lv_slider_set_value(ui_sldBrightness, sys_gui::Brightness.GetValue(), LV_ANIM_OFF);
 
-    listBtnSettingModule = {
-        std::make_pair(ui_btnSettingModule1, lv_obj_get_state(ui_btnSettingModule1)),
-        std::make_pair(ui_btnSettingModule2, lv_obj_get_state(ui_btnSettingModule2)),
-        std::make_pair(ui_btnSettingModule3, lv_obj_get_state(ui_btnSettingModule3)),
-        std::make_pair(ui_btnSettingModule4, lv_obj_get_state(ui_btnSettingModule4)),
-        std::make_pair(ui_btnSettingModule5, lv_obj_get_state(ui_btnSettingModule5)),
-        std::make_pair(ui_btnSettingModule6, lv_obj_get_state(ui_btnSettingModule6)),
-        std::make_pair(ui_btnSettingModule7, lv_obj_get_state(ui_btnSettingModule7)),
-        std::make_pair(ui_btnSettingModule8, lv_obj_get_state(ui_btnSettingModule8)),
-        std::make_pair(ui_btnSettingModule9, lv_obj_get_state(ui_btnSettingModule9)),
-        std::make_pair(ui_btnSettingModule10, lv_obj_get_state(ui_btnSettingModule10)),
-        std::make_pair(ui_btnSettingModule11, lv_obj_get_state(ui_btnSettingModule11)),
+    // Map module name with checkbox
+    mapCbSettingModule = {
+        { MODULE_NAME::Wires             , ui_cbSettingModule1      },
+        { MODULE_NAME::TheButton         , ui_cbSettingModule2      },
+        { MODULE_NAME::Keypads           , ui_cbSettingModule3      },
+        { MODULE_NAME::SimonSays         , ui_cbSettingModule4      },
+        { MODULE_NAME::WhosOnFirst       , ui_cbSettingModule5      },
+        { MODULE_NAME::Memory            , ui_cbSettingModule6      },
+        { MODULE_NAME::MorseCode         , ui_cbSettingModule7      },
+        { MODULE_NAME::ComplicatedWires  , ui_cbSettingModule8      },
+        { MODULE_NAME::WireSequences     , ui_cbSettingModule9      },
+        { MODULE_NAME::Mazes             , ui_cbSettingModule10     },
+        { MODULE_NAME::Passwords         , ui_cbSettingModule11     },
+        { MODULE_NAME::VentingGas        , ui_cbSettingNeedyModule1 },
+        { MODULE_NAME::CapacitorDischarge, ui_cbSettingNeedyModule2 },
+        { MODULE_NAME::Knobs             , ui_cbSettingNeedyModule3 },
     };
 
-    listBtnSettingNeedyModule = {
-        std::make_pair(ui_btnSettingNeedyModule1, lv_obj_get_state(ui_btnSettingNeedyModule1)),
-        std::make_pair(ui_btnSettingNeedyModule2, lv_obj_get_state(ui_btnSettingNeedyModule2)),
-        std::make_pair(ui_btnSettingNeedyModule3, lv_obj_get_state(ui_btnSettingNeedyModule3)),
+    mapCbOPModule = {
+    { MODULE_NAME::Wires             , ui_cbOPModule1      },
+    { MODULE_NAME::TheButton         , ui_cbOPModule2      },
+    { MODULE_NAME::Keypads           , ui_cbOPModule3      },
+    { MODULE_NAME::SimonSays         , ui_cbOPModule4      },
+    { MODULE_NAME::WhosOnFirst       , ui_cbOPModule5      },
+    { MODULE_NAME::Memory            , ui_cbOPModule6      },
+    { MODULE_NAME::MorseCode         , ui_cbOPModule7      },
+    { MODULE_NAME::ComplicatedWires  , ui_cbOPModule8      },
+    { MODULE_NAME::WireSequences     , ui_cbOPModule9      },
+    { MODULE_NAME::Mazes             , ui_cbOPModule10     },
+    { MODULE_NAME::Passwords         , ui_cbOPModule11     },
+    { MODULE_NAME::VentingGas        , ui_cbOPNeedyModule1 },
+    { MODULE_NAME::CapacitorDischarge, ui_cbOPNeedyModule2 },
+    { MODULE_NAME::Knobs             , ui_cbOPNeedyModule3 },
     };
 
+    // Update first timer time
     TimerSetting_OnButtonSaveClick(nullptr);
+
+    sys_host::ModuleStatus.SetValue(true);
 }
 
 void AutoUpdate()
@@ -45,24 +131,57 @@ void AutoUpdate()
     if (sys_host::TimeClock.GetState())
     {
         auto time = sys_host::TimeClock.GetValue();
-        char text[6] = { 0 };
-        sprintf(text, "%02d:%02d", std::get<MINUTE_POS>(time), std::get<SECOND_POS>(time));
-        lv_label_set_text(ui_lblTimer, text);
+        sprintf(countdownTimer.str, "%02d:%02d", std::get<MINUTE_POS>(time), std::get<SECOND_POS>(time));
+        lv_label_set_text(ui_lblTimer, countdownTimer.str);
     }
 
-    if (sys_gui::SuccessState.GetValue() != INCORRECT)
+    if (sys_gui::IsStarted.GetValue())
     {
-        lv_obj_clear_flag(ui_imgResult, LV_OBJ_FLAG_HIDDEN);
+        // Get running time
+        auto currentTime = MILLISEC_GET - endlessTimer.startTime;
 
-        if (sys_gui::SuccessState.GetValue() == STATE_UNCHECK)
+        // Calculate the number of minutes
+        // Divide the total milliseconds by 60,000 (since 1 minute = 60 seconds = 60 * 1000 milliseconds) to get the total number of full minutes
+        uint8_t l_minute = currentTime / 60000;
+
+        // Calculate the remaining seconds after extracting minutes
+        // First, convert total_milliseconds to total seconds by dividing by 1000
+        // Then, use the modulo operator (%) with 60 to find the remainder when divided by 60
+        // This remainder the number of seconds that do not form a complete minute
+        uint8_t l_second = (currentTime / 1000) % 60;
+
+        // Calculate the remaining milliseconds after extracting seconds
+        // Use the modulo operator (%) with 1000 to find the remainder when total_milliseconds is divided by 1000.
+        // This remainder represents the milliseconds that do not form a complete second.
+        uint16_t l_milli = currentTime % 1000;
+
+        sprintf(endlessTimer.str, "%02d:%02d:%003d", l_minute, l_second, l_milli);
+        lv_label_set_text(ui_lblEndlessTimer, endlessTimer.str);
+    }
+
+    if (sys_host::StrikeState.GetState())
+    {
+        auto strikeNum = sys_host::StrikeNum.GetValue();
+        if ((strikeNum > 0) && (strikeNum < STRIKE_NUM_MAX))
         {
-            lv_obj_add_state(ui_imgResult, LV_STATE_DISABLED);
-        }
-        else if (sys_gui::SuccessState.GetValue() == STATE_CHECKED)
-        {
-            lv_obj_add_state(ui_imgResult, LV_STATE_CHECKED);
+            strikeValue += 'x';
+            lv_label_set_text(ui_lblStrike, strikeValue.c_str());
         }
     }
+
+    //if (sys_gui::SuccessState.GetValue() != INCORRECT)
+    //{
+    //    lv_obj_clear_flag(ui_imgResult, LV_OBJ_FLAG_HIDDEN);
+
+    //    if (sys_gui::SuccessState.GetValue() == STATE_UNCHECK)
+    //    {
+    //        lv_obj_add_state(ui_imgResult, LV_STATE_DISABLED);
+    //    }
+    //    else if (sys_gui::SuccessState.GetValue() == STATE_CHECKED)
+    //    {
+    //        lv_obj_add_state(ui_imgResult, LV_STATE_CHECKED);
+    //    }
+    //}
 }
 
 void OnBrightnessChange(lv_event_t* e)
@@ -70,75 +189,104 @@ void OnBrightnessChange(lv_event_t* e)
     sys_gui::Brightness.SetValue(lv_slider_get_value(ui_sldBrightness));
 }
 
-void Login_OnTextAreaEdit(lv_event_t * e)
+void Login_OnTextAreaEdit(lv_event_t* e)
 {
+    // Get text
     std::string text(lv_textarea_get_text(ui_TextArea));
 
     if (text.length() == lv_textarea_get_max_length(ui_TextArea))
     {
+        // Correct verify code
         if (text == VERIFY_CODE)
         {
+            // Change green background
             lv_obj_set_style_bg_color(ui_TextArea, lv_color_hex(COLOR_GREEN), LV_PART_MAIN | LV_STATE_DEFAULT);
 
+            // Press OK
             if (lv_event_get_code(e) == LV_EVENT_READY)
             {
+                // Change to main screen
                 _ui_screen_change(&ui_Main, LV_SCR_LOAD_ANIM_FADE_ON, 100, 0, &ui_Main_screen_init);
             }
         }
+        // Incorrect verify code
         else
         {
+            // Change red background
             lv_obj_set_style_bg_color(ui_TextArea, lv_color_hex(COLOR_RED), LV_PART_MAIN | LV_STATE_DEFAULT);
         }
     }
     else
     {
+        // Change default background
         lv_obj_set_style_bg_color(ui_TextArea, lv_color_hex(COLOR_WHITE), LV_PART_MAIN | LV_STATE_DEFAULT);
     }
 }
 
-void Main_OnButtonPlayClick(lv_event_t * e)
+void Main_OnButtonPlayClick(lv_event_t* e)
 {
     sys_gui::IsStarted.SetValue(true);
+    CreateTimer();
+
+    // Set start time from system time
+    endlessTimer.startTime = MILLISEC_GET;
 }
 
-void Main_OnButtonRestartClick(lv_event_t * e)
-{
-#ifdef _WIN64
-    //exit(0);
-#else
-
-#endif
-}
-
-void Setting_OnButtonBackClick(lv_event_t * e)
-{
-	// Your code here
-}
-
-void TimerSetting_OnButtonSaveClick(lv_event_t * e)
+void TimerSetting_OnButtonSaveClick(lv_event_t* e)
 {
     char bufMinute[3] = { 0 }, bufSecond[3] = { 0 };
 
+    // Get time value
     lv_roller_get_selected_str(ui_rlSettingMinute, bufMinute, sizeof(bufMinute));
     lv_roller_get_selected_str(ui_rlSettingSecond, bufSecond, sizeof(bufSecond));
 
+    // Update timer time
     sys_host::TimeClock.SetValue(std::make_pair(std::stoi(bufMinute), std::stoi(bufSecond)));
 }
 
-void Score_OnLoaded(lv_event_t * e)
+void Score_OnRollerOrderChange(lv_event_t* e)
+{
+    uint32_t index = lv_roller_get_selected(ui_rlScoreOrder);
+
+    lv_roller_set_selected(ui_rlScoreModuleNum, index, LV_ANIM_ON);
+    lv_roller_set_selected(ui_rlScoreCompletionTime, index, LV_ANIM_ON);
+    lv_roller_set_selected(ui_rlScoreResult, index, LV_ANIM_ON);
+}
+
+void Setting_OnButtonBackClick(lv_event_t* e)
+{
+    auto moduleStatusMap = sys_gui::ModuleStatusMap.GetValue();
+
+    // Clear module status map
+    moduleStatusMap.clear();
+
+    for (const auto& cbSettingModule : mapCbSettingModule)
+    {
+        // Set module status map
+        if (lv_obj_get_state(cbSettingModule.second) == STATE_CHECKED)
+        {
+            moduleStatusMap.insert(std::make_pair(map_MODULE_NAME[cbSettingModule.first], MODULE_STATUS::ON));
+        }
+        else if (lv_obj_get_state(cbSettingModule.second) == STATE_UNCHECK)
+        {
+            moduleStatusMap.insert(std::make_pair(map_MODULE_NAME[cbSettingModule.first], MODULE_STATUS::OFF));
+        }
+    }
+
+    // Update module status map
+    sys_gui::ModuleStatusMap.SetValue(moduleStatusMap);
+}
+
+void Score_OnLoaded(lv_event_t* e)
 {
 #ifdef _WIN64
-    
+
 #else
 
 #endif
 }
 
-void Score_OnRollerOrderChange(lv_event_t * e)
+void OrderPlay_OnLoaded(lv_event_t* e)
 {
-    uint32_t index = lv_roller_get_selected(ui_rlScoreOrder);
-
-    lv_roller_set_selected(ui_rlScoreModuleCount, index, LV_ANIM_ON);
-    lv_roller_set_selected(ui_rlScoreCompletionTime, index, LV_ANIM_ON);
-    lv_roller_set_selected(ui_rlScoreResult, index, LV_ANIM_ON);
+    // Your code here
 }

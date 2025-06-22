@@ -1440,6 +1440,9 @@
     <ClCompile Include="..\..\ESP32\src\CommonDataType.cpp">
       <Filter>Library\CommonData</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\CommonService.cpp">
+      <Filter>Library</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\ESP32\src\ui\ui.c">
       <Filter>UI</Filter>
     </ClCompile>
@@ -1461,6 +1464,9 @@
     <ClCompile Include="..\..\ESP32\src\ui\ui_img_back_png.c">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_exit_png.c">
+      <Filter>UI</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\ESP32\src\ui\ui_img_fail_png.c">
       <Filter>UI</Filter>
     </ClCompile>
@@ -1468,9 +1474,6 @@
       <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ESP32\src\ui\ui_img_play_png.c">
-      <Filter>UI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ESP32\src\ui\ui_img_restart_png.c">
       <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ESP32\src\ui\ui_img_setting_png.c">
@@ -1497,8 +1500,14 @@
     <ClCompile Include="..\..\ESP32\src\ui\ui_TimerSetting.c">
       <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ESP32\src\CommonService.cpp">
-      <Filter>Library</Filter>
+    <ClCompile Include="..\..\ESP32\src\ui\ui_font_Digit_45.c">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_order_play_png.c">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\ui\ui_OrderPlay.c">
+      <Filter>UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

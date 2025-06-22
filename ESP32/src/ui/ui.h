@@ -37,6 +37,7 @@ extern lv_obj_t * ui_Keyboard1;
 // SCREEN: ui_Main
 void ui_Main_screen_init(void);
 extern lv_obj_t * ui_Main;
+extern lv_obj_t * ui_Container5;
 extern lv_obj_t * ui_lblStrike;
 void ui_event_btnPlay(lv_event_t * e);
 extern lv_obj_t * ui_btnPlay;
@@ -46,8 +47,9 @@ void ui_event_btnTimerSetting(lv_event_t * e);
 extern lv_obj_t * ui_btnTimerSetting;
 void ui_event_btnEventNote(lv_event_t * e);
 extern lv_obj_t * ui_btnEventNote;
-void ui_event_btnRestart(lv_event_t * e);
-extern lv_obj_t * ui_btnRestart;
+void ui_event_btnEventNote1(lv_event_t * e);
+extern lv_obj_t * ui_btnEventNote1;
+extern lv_obj_t * ui_lblEndlessTimer;
 extern lv_obj_t * ui_lblTimer;
 extern lv_obj_t * ui_imgResult;
 void ui_event_sldBrightness(lv_event_t * e);
@@ -57,24 +59,31 @@ extern lv_obj_t * ui_sldBrightness;
 // SCREEN: ui_Setting
 void ui_Setting_screen_init(void);
 extern lv_obj_t * ui_Setting;
+extern lv_obj_t * ui_Panel2;
 extern lv_obj_t * ui_Label6;
-extern lv_obj_t * ui_btnSettingModule1;
-extern lv_obj_t * ui_btnSettingModule2;
-extern lv_obj_t * ui_btnSettingModule3;
-extern lv_obj_t * ui_btnSettingModule4;
-extern lv_obj_t * ui_btnSettingModule5;
-extern lv_obj_t * ui_btnSettingModule6;
-extern lv_obj_t * ui_btnSettingModule7;
-extern lv_obj_t * ui_btnSettingModule8;
-extern lv_obj_t * ui_btnSettingModule9;
-extern lv_obj_t * ui_btnSettingModule10;
-extern lv_obj_t * ui_btnSettingModule11;
+extern lv_obj_t * ui_Container1;
+void ui_event_cbSettingModule1(lv_event_t * e);
+extern lv_obj_t * ui_cbSettingModule1;
+extern lv_obj_t * ui_cbSettingModule2;
+extern lv_obj_t * ui_cbSettingModule3;
+extern lv_obj_t * ui_cbSettingModule4;
+extern lv_obj_t * ui_cbSettingModule5;
+extern lv_obj_t * ui_cbSettingModule6;
+extern lv_obj_t * ui_Container2;
+extern lv_obj_t * ui_cbSettingModule7;
+extern lv_obj_t * ui_cbSettingModule8;
+extern lv_obj_t * ui_cbSettingModule9;
+extern lv_obj_t * ui_cbSettingModule10;
+extern lv_obj_t * ui_cbSettingModule11;
+extern lv_obj_t * ui_Panel1;
 extern lv_obj_t * ui_Label3;
-extern lv_obj_t * ui_btnSettingNeedyModule1;
-extern lv_obj_t * ui_btnSettingNeedyModule2;
-extern lv_obj_t * ui_btnSettingNeedyModule3;
-void ui_event_btnBack(lv_event_t * e);
-extern lv_obj_t * ui_btnBack;
+extern lv_obj_t * ui_Container3;
+extern lv_obj_t * ui_cbSettingNeedyModule1;
+extern lv_obj_t * ui_cbSettingNeedyModule2;
+extern lv_obj_t * ui_Container4;
+extern lv_obj_t * ui_cbSettingNeedyModule3;
+void ui_event_btnSettingBack(lv_event_t * e);
+extern lv_obj_t * ui_btnSettingBack;
 // CUSTOM VARIABLES
 
 // SCREEN: ui_TimerSetting
@@ -106,9 +115,39 @@ extern lv_obj_t * ui_Label9;
 extern lv_obj_t * ui_Label12;
 void ui_event_rlScoreOrder(lv_event_t * e);
 extern lv_obj_t * ui_rlScoreOrder;
-extern lv_obj_t * ui_rlScoreModuleCount;
+extern lv_obj_t * ui_rlScoreModuleNum;
 extern lv_obj_t * ui_rlScoreCompletionTime;
 extern lv_obj_t * ui_rlScoreResult;
+// CUSTOM VARIABLES
+
+// SCREEN: ui_OrderPlay
+void ui_OrderPlay_screen_init(void);
+void ui_event_OrderPlay(lv_event_t * e);
+extern lv_obj_t * ui_OrderPlay;
+extern lv_obj_t * ui_Panel3;
+extern lv_obj_t * ui_Label8;
+extern lv_obj_t * ui_Container6;
+extern lv_obj_t * ui_cbOPModule1;
+extern lv_obj_t * ui_cbOPModule2;
+extern lv_obj_t * ui_cbOPModule3;
+extern lv_obj_t * ui_cbOPModule4;
+extern lv_obj_t * ui_cbOPModule5;
+extern lv_obj_t * ui_cbOPModule6;
+extern lv_obj_t * ui_Container7;
+extern lv_obj_t * ui_cbOPModule7;
+extern lv_obj_t * ui_cbOPModule8;
+extern lv_obj_t * ui_cbOPModule9;
+extern lv_obj_t * ui_cbOPModule10;
+extern lv_obj_t * ui_cbOPModule11;
+extern lv_obj_t * ui_Panel4;
+extern lv_obj_t * ui_Label14;
+extern lv_obj_t * ui_Container8;
+extern lv_obj_t * ui_cbOPNeedyModule1;
+extern lv_obj_t * ui_cbOPNeedyModule2;
+extern lv_obj_t * ui_Container9;
+extern lv_obj_t * ui_cbOPNeedyModule3;
+void ui_event_btnOPBack(lv_event_t * e);
+extern lv_obj_t * ui_btnOPBack;
 // CUSTOM VARIABLES
 
 // EVENTS
@@ -120,13 +159,15 @@ LV_IMG_DECLARE(ui_img_play_png);    // assets/play.png
 LV_IMG_DECLARE(ui_img_setting_png);    // assets/setting.png
 LV_IMG_DECLARE(ui_img_timer_png);    // assets/timer.png
 LV_IMG_DECLARE(ui_img_leaderboard_png);    // assets/leaderboard.png
-LV_IMG_DECLARE(ui_img_restart_png);    // assets/restart.png
+LV_IMG_DECLARE(ui_img_order_play_png);    // assets/order_play.png
 LV_IMG_DECLARE(ui_img_success_png);    // assets/success.png
 LV_IMG_DECLARE(ui_img_fail_png);    // assets/fail.png
 LV_IMG_DECLARE(ui_img_back_png);    // assets/back.png
+LV_IMG_DECLARE(ui_img_exit_png);    // assets/exit.png
 
 // FONTS
 LV_FONT_DECLARE(ui_font_Digit);
+LV_FONT_DECLARE(ui_font_Digit_45);
 LV_FONT_DECLARE(ui_font_XFail);
 
 // UI INIT
