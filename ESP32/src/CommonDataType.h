@@ -184,6 +184,21 @@ EXTERN_MAP_ENUM_WSTR(MODULE_NAME)
 
 // Allow modification
 #pragma region Custom_datatype
+#define DEF_COLOR_TYPE(e, CREATE) \
+        CREATE(e, DEFAULT_COLOR) \
+        CREATE(e, RED) \
+        CREATE(e, GREEN) \
+
+enum class COLOR_TYPE
+{
+    DEF_COLOR_TYPE(COLOR_TYPE, TO_ENUM)
+    MAX
+};
+
+EXTERN_MAP_ENUM_STR(COLOR_TYPE)
+
+extern std::unordered_map<COLOR_TYPE, COLOR> mapColor;
+
 #define KEYPAD_MAX_NUM 4
 #define MAX_COL 6
 #define MAX_ITEM 7

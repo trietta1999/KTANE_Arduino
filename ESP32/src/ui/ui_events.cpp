@@ -204,7 +204,7 @@ void OnButtonKeypadClick(lv_event_t* e)
 
 #ifndef UNIT_TEST
         // Send error to Host
-        CommonGetRequest(WM_STRIKESTATE_SET);
+        CommonSendRequest(WM_STRIKESTATE_SET);
 #endif
     }
 
@@ -212,5 +212,10 @@ void OnButtonKeypadClick(lv_event_t* e)
     if (currentKeyIndex >= KEYPAD_MAX_NUM)
     {
         sys_gui::SuccessState.SetValue(STATE_CHECKED);
+
+#ifndef UNIT_TEST
+        // Send success to Host
+        CommonSendRequest(WM_SUCCESSSTATE_SET);
+#endif
     }
 }
