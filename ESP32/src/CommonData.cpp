@@ -18,13 +18,12 @@ namespace sys_host {
     CData<uint8_t> BatteryNum;
     CData<uint32_t> RandomSeed;
     CData<std::pair<uint8_t, uint8_t>> TimeClock;
+    CData<std::tuple<uint16_t, uint16_t, uint16_t>> EndlessTimeClock;
     CData<uint8_t> StrikeNum;
     CData<uint16_t> TimeCycle;
     CData<bool> StrikeState;
-    CData<bool> TimeOut;
-#ifdef _WIN64
     CData<JsonDocument> JsonResponse;
-#endif
+    CData<bool> ModuleStatus;
 }
 
 namespace sys_gui
