@@ -153,6 +153,11 @@ void OnButtonClick(lv_event_t * e)
         {
             // Finish
             sys_gui::SuccessState.SetValue(STATE_CHECKED);
+
+#ifndef UNIT_TEST
+            // Send success to Host
+            CommonSendRequest(WM_SUCCESSSTATE_SET);
+#endif
         }
     }
     else
@@ -161,6 +166,6 @@ void OnButtonClick(lv_event_t * e)
         isIncorrectButton = true;
 
         // Send error to Host
-        CommonGetRequest(WM_STRIKESTATE_SET);
+        CommonSendRequest(WM_STRIKESTATE_SET);
     }
 }
