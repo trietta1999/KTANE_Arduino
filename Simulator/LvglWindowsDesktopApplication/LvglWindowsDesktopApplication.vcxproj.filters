@@ -816,6 +816,9 @@
       <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ESP32\Hardware.h" />
+    <ClInclude Include="LibEngine.h">
+      <Filter>Library</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)..\LvglPlatform\lvgl\.typos.toml">
@@ -1462,6 +1465,9 @@
       <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ESP32\src\CommonService.cpp">
+      <Filter>Library</Filter>
+    </ClCompile>
+    <ClCompile Include="LibEngine.cpp">
       <Filter>Library</Filter>
     </ClCompile>
   </ItemGroup>
