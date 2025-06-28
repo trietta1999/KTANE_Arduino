@@ -158,8 +158,11 @@ public:
         sys_host::StrikeState.SetValue(false);
         sys_gui::IsStarted.SetValue(true);
         sys_gui::ModuleStatusMap.SetValue({
-            { "A", MODULE_STATUS::ENABLE },
-            { "B", MODULE_STATUS::DISABLE },
+            { "A", MODULE_STATUS::ON },
+            { "B", MODULE_STATUS::OFF },
+            { "C", MODULE_STATUS::START },
+            { "D", MODULE_STATUS::SUCCESS },
+            { "E", MODULE_STATUS::OFF },
             });
 
         lv_init();
@@ -174,9 +177,36 @@ public:
         lv_deinit();
     }
 
+    TEST_METHOD(TEST_ProcessRequest_WM_SET_CLIENTSTATE_1)
+    {
+        JsonDocument jsonDocIn;
+        jsonDocIn["module"] = "A";
+
+        auto jsonDoc = CommonSendRequestWithData(WM_SET_CLIENTSTATE, jsonDocIn);
+
+        Assert::IsTrue(jsonDoc["state"] == (uint8_t)MODULE_STATUS::ON);
+    }
+
+    TEST_METHOD(TEST_ProcessRequest_WM_SET_CLIENTSTATE_2)
+    {
+        JsonDocument jsonDocIn;
+        jsonDocIn["module"] = "B";
+
+        auto jsonDoc = CommonSendRequestWithData(WM_SET_CLIENTSTATE, jsonDocIn);
+
+        Assert::IsTrue(jsonDoc["state"] == (uint8_t)MODULE_STATUS::OFF);
+    }
+
+    TEST_METHOD(TEST_ProcessRequest_WM_START_ALL)
+    {
+        auto jsonDoc = CommonSendRequest(WM_START_ALL);
+
+        Assert::IsTrue(jsonDoc["start"] == (uint8_t)MODULE_STATUS::START);
+    }
+
     TEST_METHOD(TEST_ProcessRequest_WM_TIMER_GET)
     {
-        auto jsonDoc = CommonGetRequest(WM_TIMER_GET);
+        auto jsonDoc = CommonSendRequest(WM_TIMER_GET);
 
         Assert::IsTrue(jsonDoc["minute"] == (uint8_t)2);
         Assert::IsTrue(jsonDoc["second"] == (uint8_t)3);
@@ -184,21 +214,32 @@ public:
 
     TEST_METHOD(TEST_ProcessRequest_WM_STRIKENUM_GET)
     {
-        auto jsonDoc = CommonGetRequest(WM_STRIKENUM_GET);
+        auto jsonDoc = CommonSendRequest(WM_STRIKENUM_GET);
 
         Assert::IsTrue(jsonDoc[STR(StrikeNum)] == (uint8_t)2);
     }
 
     TEST_METHOD(TEST_ProcessRequest_WM_STRIKESTATE_SET)
     {
-        CommonGetRequest(WM_STRIKESTATE_SET);
+        CommonSendRequest(WM_STRIKESTATE_SET);
 
         Assert::IsTrue(sys_host::StrikeState.GetValue() == true);
     }
 
+    TEST_METHOD(TEST_ProcessRequest_WM_SUCCESSSTATE_SET)
+    {
+        JsonDocument jsonDocIn;
+        jsonDocIn["module"] = "A";
+
+        auto jsonDoc = CommonSendRequestWithData(WM_SUCCESSSTATE_SET, jsonDocIn);
+        auto mapModuleStatus = sys_gui::ModuleStatusMap.GetValue();
+
+        Assert::IsTrue(mapModuleStatus["A"] == MODULE_STATUS::SUCCESS);
+    }
+
     TEST_METHOD(TEST_ProcessRequest_WM_SYSINIT_GET)
     {
-        auto jsonDoc = CommonGetRequest(WM_SYSINIT_GET);
+        auto jsonDoc = CommonSendRequest(WM_SYSINIT_GET);
 
         Assert::IsTrue(jsonDoc[STR(RandomSeed)] == (uint32_t)123456);
         Assert::IsTrue(jsonDoc[STR(LabelIndicator)] == (uint8_t)LABEL_INDICATOR::BOB);
@@ -212,37 +253,8 @@ public:
 
     TEST_METHOD(TEST_ProcessRequest_WM_STOP_ALL)
     {
-        auto jsonDoc = CommonGetRequest(WM_STOP_ALL);
+        auto jsonDoc = CommonSendRequest(WM_STOP_ALL);
 
         Assert::IsTrue(jsonDoc["stop"] == true);
-    }
-
-    TEST_METHOD(TEST_ProcessRequest_WM_START_1)
-    {
-        JsonDocument jsonDocIn;
-        jsonDocIn["module"] = "A";
-
-        auto jsonDoc = CommonGetRequestWithData(WM_START, jsonDocIn);
-
-        Assert::IsTrue(jsonDoc["module"] == jsonDocIn["module"]);
-        Assert::IsTrue(jsonDoc["status"] == (uint8_t)MODULE_STATUS::ENABLE);
-    }
-
-    TEST_METHOD(TEST_ProcessRequest_WM_START_2)
-    {
-        JsonDocument jsonDocIn;
-        jsonDocIn["module"] = "B";
-
-        auto jsonDoc = CommonGetRequestWithData(WM_START, jsonDocIn);
-
-        Assert::IsTrue(jsonDoc["module"] == jsonDocIn["module"]);
-        Assert::IsTrue(jsonDoc["status"] == (uint8_t)MODULE_STATUS::DISABLE);
-    }
-
-    TEST_METHOD(TEST_ProcessRequest_WM_READY)
-    {
-        auto jsonDoc = CommonGetRequest(WM_READY);
-
-        Assert::IsTrue(jsonDoc["ready"] == true);
     }
 };
