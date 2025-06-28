@@ -142,107 +142,119 @@ LRESULT CALLBACK MyNewWinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam
     return CallWindowProc(OriginalWndProc, hwnd, uMsg, wParam, lParam);
 }
 
-//TEST_CLASS(Service_Test)
-//{
-//public:
-//    TEST_CLASS_INITIALIZE(TESTCLASS_Init)
-//    {
-//        sys_host::TimeClock.SetValue(std::make_pair(2, 3));
-//        sys_host::RandomSeed.SetValue(123456);
-//        sys_host::LabelIndicator.SetValue(LABEL_INDICATOR::BOB);
-//        sys_host::BatteryType.SetValue(BATTERY_TYPE::AA);
-//        sys_host::ComPortType.SetValue(COMPORT_TYPE::DVID);
-//        sys_host::BatteryNum.SetValue(2);
-//        sys_host::SerialNum.SetValue("ABCDEFGHI2");
-//        sys_host::StrikeNum.SetValue(2);
-//        sys_host::StrikeState.SetValue(false);
-//        sys_gui::IsStarted.SetValue(true);
-//        sys_gui::ModuleStatusMap.SetValue({
-//            { "A", MODULE_STATUS::ENABLE },
-//            { "B", MODULE_STATUS::DISABLE },
-//            });
-//
-//        lv_init();
-//        lv_display_t* display = ::lv_windows_create_display(mapWstr_MODULE_NAME[MODULE_NAME::HostTimer].c_str(), 320, 240, 100, false, false);
-//        HWND window_handle = ::lv_windows_get_display_window_handle(display);
-//        ui_init();
-//        OriginalWndProc = (WNDPROC)::SetWindowLongPtr(window_handle, GWLP_WNDPROC, (LONG_PTR)MyNewWinProc);
-//    }
-//
-//    TEST_CLASS_CLEANUP(TESTCLASS_Cleanup)
-//    {
-//        lv_deinit();
-//    }
-//
-//    TEST_METHOD(TEST_ProcessRequest_WM_TIMER_GET)
-//    {
-//        auto jsonDoc = CommonSendRequest(WM_TIMER_GET);
-//
-//        Assert::IsTrue(jsonDoc["minute"] == (uint8_t)2);
-//        Assert::IsTrue(jsonDoc["second"] == (uint8_t)3);
-//    }
-//
-//    TEST_METHOD(TEST_ProcessRequest_WM_STRIKENUM_GET)
-//    {
-//        auto jsonDoc = CommonSendRequest(WM_STRIKENUM_GET);
-//
-//        Assert::IsTrue(jsonDoc[STR(StrikeNum)] == (uint8_t)2);
-//    }
-//
-//    TEST_METHOD(TEST_ProcessRequest_WM_STRIKESTATE_SET)
-//    {
-//        CommonSendRequest(WM_STRIKESTATE_SET);
-//
-//        Assert::IsTrue(sys_host::StrikeState.GetValue() == true);
-//    }
-//
-//    TEST_METHOD(TEST_ProcessRequest_WM_SYSINIT_GET)
-//    {
-//        auto jsonDoc = CommonSendRequest(WM_SYSINIT_GET);
-//
-//        Assert::IsTrue(jsonDoc[STR(RandomSeed)] == (uint32_t)123456);
-//        Assert::IsTrue(jsonDoc[STR(LabelIndicator)] == (uint8_t)LABEL_INDICATOR::BOB);
-//        Assert::IsTrue(jsonDoc[STR(BatteryType)] == (uint8_t)BATTERY_TYPE::AA);
-//        Assert::IsTrue(jsonDoc[STR(ComPortType)] == (uint8_t)COMPORT_TYPE::DVID);
-//        Assert::IsTrue(jsonDoc[STR(BatteryNum)] == (uint8_t)2);
-//        Assert::IsTrue(jsonDoc[STR(SerialNum)] == "ABCDEFGHI2");
-//        Assert::IsTrue(jsonDoc[STR(StrikeNum)] == (uint8_t)2);
-//        Assert::IsTrue(jsonDoc[STR(IsStarted)] == true);
-//    }
-//
-//    TEST_METHOD(TEST_ProcessRequest_WM_STOP_ALL)
-//    {
-//        auto jsonDoc = CommonSendRequest(WM_STOP_ALL);
-//
-//        Assert::IsTrue(jsonDoc["stop"] == true);
-//    }
-//
-//    TEST_METHOD(TEST_ProcessRequest_WM_START_1)
-//    {
-//        JsonDocument jsonDocIn;
-//        jsonDocIn["module"] = "A";
-//
-//        auto jsonDoc = CommonSendRequestWithData(WM_START, jsonDocIn);
-//
-//        Assert::IsTrue(jsonDoc["module"] == jsonDocIn["module"]);
-//        Assert::IsTrue(jsonDoc["status"] == (uint8_t)MODULE_STATUS::ENABLE);
-//    }
-//
-//    TEST_METHOD(TEST_ProcessRequest_WM_START_2)
-//    {
-//        JsonDocument jsonDocIn;
-//        jsonDocIn["module"] = "B";
-//
-//        auto jsonDoc = CommonGetRequestWithData(WM_START, jsonDocIn);
-//
-//        Assert::IsTrue(jsonDoc["module"] == jsonDocIn["module"]);
-//        Assert::IsTrue(jsonDoc["status"] == (uint8_t)MODULE_STATUS::DISABLE);
-//    }
-//
-//    TEST_METHOD(TEST_ProcessRequest_WM_READY)
-//    {
-//        auto jsonDoc = CommonGetRequest(WM_READY);
-//
-//        Assert::IsTrue(jsonDoc["ready"] == true);
-//    }
-//};
+TEST_CLASS(Service_Test)
+{
+public:
+    TEST_CLASS_INITIALIZE(TESTCLASS_Init)
+    {
+        sys_host::TimeClock.SetValue(std::make_pair(2, 3));
+        sys_host::RandomSeed.SetValue(123456);
+        sys_host::LabelIndicator.SetValue(LABEL_INDICATOR::BOB);
+        sys_host::BatteryType.SetValue(BATTERY_TYPE::AA);
+        sys_host::ComPortType.SetValue(COMPORT_TYPE::DVID);
+        sys_host::BatteryNum.SetValue(2);
+        sys_host::SerialNum.SetValue("ABCDEFGHI2");
+        sys_host::StrikeNum.SetValue(2);
+        sys_host::StrikeState.SetValue(false);
+        sys_gui::IsStarted.SetValue(true);
+        sys_gui::ModuleStatusMap.SetValue({
+            { "A", MODULE_STATUS::ON },
+            { "B", MODULE_STATUS::OFF },
+            { "C", MODULE_STATUS::START },
+            { "D", MODULE_STATUS::SUCCESS },
+            { "E", MODULE_STATUS::OFF },
+            });
+
+        lv_init();
+        lv_display_t* display = ::lv_windows_create_display(mapWstr_MODULE_NAME[MODULE_NAME::HostTimer].c_str(), 320, 240, 100, false, false);
+        HWND window_handle = ::lv_windows_get_display_window_handle(display);
+        ui_init();
+        OriginalWndProc = (WNDPROC)::SetWindowLongPtr(window_handle, GWLP_WNDPROC, (LONG_PTR)MyNewWinProc);
+    }
+
+    TEST_CLASS_CLEANUP(TESTCLASS_Cleanup)
+    {
+        lv_deinit();
+    }
+
+    TEST_METHOD(TEST_ProcessRequest_WM_SET_CLIENTSTATE_1)
+    {
+        JsonDocument jsonDocIn;
+        jsonDocIn["module"] = "A";
+
+        auto jsonDoc = CommonSendRequestWithData(WM_SET_CLIENTSTATE, jsonDocIn);
+
+        Assert::IsTrue(jsonDoc["state"] == (uint8_t)MODULE_STATUS::ON);
+    }
+
+    TEST_METHOD(TEST_ProcessRequest_WM_SET_CLIENTSTATE_2)
+    {
+        JsonDocument jsonDocIn;
+        jsonDocIn["module"] = "B";
+
+        auto jsonDoc = CommonSendRequestWithData(WM_SET_CLIENTSTATE, jsonDocIn);
+
+        Assert::IsTrue(jsonDoc["state"] == (uint8_t)MODULE_STATUS::OFF);
+    }
+
+    TEST_METHOD(TEST_ProcessRequest_WM_START_ALL)
+    {
+        auto jsonDoc = CommonSendRequest(WM_START_ALL);
+
+        Assert::IsTrue(jsonDoc["start"] == (uint8_t)MODULE_STATUS::START);
+    }
+
+    TEST_METHOD(TEST_ProcessRequest_WM_TIMER_GET)
+    {
+        auto jsonDoc = CommonSendRequest(WM_TIMER_GET);
+
+        Assert::IsTrue(jsonDoc["minute"] == (uint8_t)2);
+        Assert::IsTrue(jsonDoc["second"] == (uint8_t)3);
+    }
+
+    TEST_METHOD(TEST_ProcessRequest_WM_STRIKENUM_GET)
+    {
+        auto jsonDoc = CommonSendRequest(WM_STRIKENUM_GET);
+
+        Assert::IsTrue(jsonDoc[STR(StrikeNum)] == (uint8_t)2);
+    }
+
+    TEST_METHOD(TEST_ProcessRequest_WM_STRIKESTATE_SET)
+    {
+        CommonSendRequest(WM_STRIKESTATE_SET);
+
+        Assert::IsTrue(sys_host::StrikeState.GetValue() == true);
+    }
+
+    TEST_METHOD(TEST_ProcessRequest_WM_SUCCESSSTATE_SET)
+    {
+        JsonDocument jsonDocIn;
+        jsonDocIn["module"] = "A";
+
+        auto jsonDoc = CommonSendRequestWithData(WM_SUCCESSSTATE_SET, jsonDocIn);
+        auto mapModuleStatus = sys_gui::ModuleStatusMap.GetValue();
+
+        Assert::IsTrue(mapModuleStatus["A"] == MODULE_STATUS::SUCCESS);
+    }
+
+    TEST_METHOD(TEST_ProcessRequest_WM_SYSINIT_GET)
+    {
+        auto jsonDoc = CommonSendRequest(WM_SYSINIT_GET);
+
+        Assert::IsTrue(jsonDoc[STR(RandomSeed)] == (uint32_t)123456);
+        Assert::IsTrue(jsonDoc[STR(LabelIndicator)] == (uint8_t)LABEL_INDICATOR::BOB);
+        Assert::IsTrue(jsonDoc[STR(BatteryType)] == (uint8_t)BATTERY_TYPE::AA);
+        Assert::IsTrue(jsonDoc[STR(ComPortType)] == (uint8_t)COMPORT_TYPE::DVID);
+        Assert::IsTrue(jsonDoc[STR(BatteryNum)] == (uint8_t)2);
+        Assert::IsTrue(jsonDoc[STR(SerialNum)] == "ABCDEFGHI2");
+        Assert::IsTrue(jsonDoc[STR(StrikeNum)] == (uint8_t)2);
+        Assert::IsTrue(jsonDoc[STR(IsStarted)] == true);
+    }
+
+    TEST_METHOD(TEST_ProcessRequest_WM_STOP_ALL)
+    {
+        auto jsonDoc = CommonSendRequest(WM_STOP_ALL);
+
+        Assert::IsTrue(jsonDoc["stop"] == true);
+    }
+};
