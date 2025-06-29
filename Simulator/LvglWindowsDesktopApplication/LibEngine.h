@@ -3,6 +3,11 @@
  * @brief Library engine header
  */
 
+/* FOR BUTTON */
+#define ABORT       "ABORT"
+#define DETONATE    "DETONATE"
+
+
 #include "..\LvglPlatform\lvgl\src\misc\lv_types.h"
 
 #pragma once

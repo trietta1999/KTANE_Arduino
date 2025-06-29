@@ -10,34 +10,7 @@
 #include <string.h>
 #include <src/misc/lv_event.h>
 
-/*
-TIEU CHI:
-    TIMER               → TimeClock
 
-    Label               → LabelIndicator --> CAR/FRK/...		(LABEL_INDICATOR)
-    SL PIN (1 or >1)    → BatteryNum
-
-    #1
-    MÀU SẮC CỦA NÚT 	→ ButtonColor							(COLOR)
-    CAI NUT GHI ...     → ButtonLabel -- Abort/Detonate/Hold: 	(string)
-
-    ColorBar            → ENUM_COLOR							()
-
-    .Random cdata #1
-    .LIB → Generate queue:
-            queue = <eventClickOrPress, release, number>
-            CData<std::tuple<uint32_t, uint32_t, uint32_t>> CorrectEvent;
-            CData<std::tuple<uint32_t, uint32_t, uint32_t>> TempEvent;
-
-            CorrectEvent = std::make_tuple(eventCode, LV_EVENT_RELEASED, 0);
-                → CorrectEvent(LV_EVENT_CLICKED, LV_EVENT_RELEASED, 4)
-                → CorrectEvent(LV_EVENT_LONG_PRESSED, LV_EVENT_LONG_PRESSED, )
-
-    .std::tuple → Already created
-*/
-
-
-/* Start timer: RunFakeTimer(timeForButtonModule) */
 void ButtonModule(lv_event_t* e)
 {
     /* Get common data */
@@ -52,12 +25,12 @@ void ButtonModule(lv_event_t* e)
     CorrectEvent.SetValue(std::make_tuple(eventCode, LV_EVENT_RELEASED, 0));
 
     /* Case 1 */
-    if ((buttonColor == COLOR_TYPE::BLUE) && (buttonLabel == "ABORT"))
+    if ((buttonColor == COLOR_TYPE::BLUE) && (buttonLabel == ABORT))
     {
         CheckStripColor(e);
     }
     /* Case 2 */
-    else if ((batteryNum > 1) && (buttonLabel == "DETONATE"))
+    else if ((batteryNum > 1) && (buttonLabel == DETONATE))
     {
         CorrectEvent.SetValue(std::make_tuple(LV_EVENT_CLICKED, LV_EVENT_RELEASED, 0));
     }
@@ -72,7 +45,7 @@ void ButtonModule(lv_event_t* e)
         CorrectEvent.SetValue(std::make_tuple(LV_EVENT_CLICKED, LV_EVENT_RELEASED, 0));
     }
     /* Case 6 */
-    else if ((buttonColor == COLOR_TYPE::RED) && (buttonLabel == "ABORT"))
+    else if ((buttonColor == COLOR_TYPE::RED) && (buttonLabel == ABORT))
     {
         CorrectEvent.SetValue(std::make_tuple(LV_EVENT_CLICKED, LV_EVENT_RELEASED, 0));
     }
@@ -82,6 +55,7 @@ void ButtonModule(lv_event_t* e)
         CheckStripColor(e);
     }
 }
+
 
 bool CheckTimerNumbers(int number)
 {
@@ -95,15 +69,14 @@ bool CheckTimerNumbers(int number)
         || (strSecond.find('4') != std::string::npos)
         )
     {
-        std::cout << "The number contains a '4'.\n";
         return true;
     }
     else
     {
-        std::cout << "The number does not contain a '4'.\n";
         return false;
     }
 }
+
 
 void CheckStripColor(lv_event_t* e)
 {
