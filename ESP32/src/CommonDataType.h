@@ -182,15 +182,25 @@ EXTERN_MAP_ENUM_WSTR(MODULE_NAME)
 // Allow modification
 #pragma region Custom_datatype
 #define COLOR uint32_t
+#define ORDER uint32_t
 #define NON_COLOR 0x000001
 
 #define DEF_WIRECOLOR_TYPE(e, CREATE) \
+        CREATE(e, NONE) \
         CREATE(e, RED) \
         CREATE(e, WHITE) \
         CREATE(e, BLUE) \
         CREATE(e, YELLOW) \
         CREATE(e, BLACK) \
         CREATE(e, PINK) \
+
+#define DEF_WIRE_IN_ORDER(e, CREATE) \
+        CREATE(e, FIRST_WIRE) \
+        CREATE(e, SECOND_WIRE) \
+        CREATE(e, THIRD_WIRE) \
+        CREATE(e, FOURTH_WIRE) \
+        CREATE(e, FIFTH_WIRE) \
+        CREATE(e, SIXTH_WIRE) \
 
 enum class WIRECOLOR_TYPE
 {
@@ -200,8 +210,16 @@ enum class WIRECOLOR_TYPE
 };
 EXTERN_MAP_ENUM_STR(WIRECOLOR_TYPE)
 
-extern std::unordered_map<WIRECOLOR_TYPE, COLOR> mapColor;
+enum class WIRE_IN_ORDER
+{
+    MIN,
+    DEF_WIRE_IN_ORDER(WIRE_IN_ORDER, TO_ENUM)
+    MAX
+};
+EXTERN_MAP_ENUM_STR(WIRE_IN_ORDER)
 
+extern std::unordered_map<WIRECOLOR_TYPE, COLOR> mapColor;
+extern std::unordered_map<ORDER, WIRE_IN_ORDER> mapWireOrder;
 #pragma endregion
 
 #endif // !_COMMON_DATATYPE_H

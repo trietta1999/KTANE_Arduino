@@ -6,6 +6,7 @@
 #include "..\LvglPlatform\lvgl\src\misc\lv_types.h"
 
 #pragma once
-void ButtonModule(lv_event_t* e);
-bool CheckTimerNumbers(int number);
-void CheckStripColor(lv_event_t* e);
+void ThreeWiresModule();
+void FourWiresModule();
+void FiveWiresModule();
+void SixWiresModule();
