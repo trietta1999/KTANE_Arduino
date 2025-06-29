@@ -10,6 +10,7 @@
 #include "ui.h"
 #include "../CommonData.h"
 #include "../CommonLibrary.h"
+#include "../CommonDataType.h"
 
 #define th_sleep(d) std::this_thread::sleep_until(std::chrono::system_clock::now() + std::chrono::milliseconds(d))
 
@@ -121,7 +122,7 @@ void OnBrightnessChange(lv_event_t* e)
 
 void OnWireSelect(lv_event_t* e)
 {
-    if (std::find(listSelect.begin(), listSelect.end(), e->current_target) - listSelect.begin() == CorrectWireIndex.GetValue())
+    if (std::find(listSelect.begin(), listSelect.end(), e->current_target) - listSelect.begin() == static_cast<ORDER>(CorrectWireIndex.GetValue()))
     {
         sys_gui::SuccessState.SetValue(STATE_CHECKED);
     }

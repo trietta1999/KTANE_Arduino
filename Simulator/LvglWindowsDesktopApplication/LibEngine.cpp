@@ -9,132 +9,203 @@
 #include <CommonData.h>
 #include <string.h>
 #include <src/misc/lv_event.h>
-
-/*
-TIEU CHI:
-    TIMER               → TimeClock
-
-    Label               → LabelIndicator --> CAR/FRK/...		(LABEL_INDICATOR)
-    SL PIN (1 or >1)    → BatteryNum
-
-    #1
-    MÀU SẮC CỦA NÚT 	→ ButtonColor							(COLOR)
-    CAI NUT GHI ...     → ButtonLabel -- Abort/Detonate/Hold: 	(string)
-
-    ColorBar            → ENUM_COLOR							()
-
-    .Random cdata #1
-    .LIB → Generate queue:
-            queue = <eventClickOrPress, release, number>
-            CData<std::tuple<uint32_t, uint32_t, uint32_t>> CorrectEvent;
-            CData<std::tuple<uint32_t, uint32_t, uint32_t>> TempEvent;
-
-            CorrectEvent = std::make_tuple(eventCode, LV_EVENT_RELEASED, 0);
-                → CorrectEvent(LV_EVENT_CLICKED, LV_EVENT_RELEASED, 4)
-                → CorrectEvent(LV_EVENT_LONG_PRESSED, LV_EVENT_LONG_PRESSED, )
-
-    .std::tuple → Already created
-*/
+#include <CommonLibrary.h>
 
 
-/* Start timer: RunFakeTimer(timeForButtonModule) */
-void ButtonModule(lv_event_t* e)
+ /*
+ * Function name: WireModule()
+ * Brief: The body of feature wire
+ */
+void WireModule()
 {
     /* Get common data */
-    COLOR_TYPE buttonColor = ButtonColor.GetValue();
-    LABEL_INDICATOR labelIndicator = sys_host::LabelIndicator.GetValue();
-    std::string buttonLabel = ButtonLabel.GetValue();
-    uint8_t batteryNum = sys_host::BatteryNum.GetValue();
+    std::vector<COLOR> wireColorList = WireColorList.GetValue();
+    int mumOfWire = wireColorList.size();
 
-    /* Get button event */
-    lv_event_code_t eventCode = lv_event_get_code(e);
-
-    CorrectEvent.SetValue(std::make_tuple(eventCode, LV_EVENT_RELEASED, 0));
-
-    /* Case 1 */
-    if ((buttonColor == COLOR_TYPE::BLUE) && (buttonLabel == "ABORT"))
+    switch (mumOfWire)
     {
-        CheckStripColor(e);
-    }
-    /* Case 2 */
-    else if ((batteryNum > 1) && (buttonLabel == "DETONATE"))
-    {
-        CorrectEvent.SetValue(std::make_tuple(LV_EVENT_CLICKED, LV_EVENT_RELEASED, 0));
-    }
-    /* Case 3 */
-    else if ((buttonColor == COLOR_TYPE::WHITE) && (labelIndicator == LABEL_INDICATOR::CAR))
-    {
-        CheckStripColor(e);
-    }
-    /* Case 4 */
-    else if ((batteryNum > 2) && (labelIndicator == LABEL_INDICATOR::FRK))
-    {
-        CorrectEvent.SetValue(std::make_tuple(LV_EVENT_CLICKED, LV_EVENT_RELEASED, 0));
-    }
-    /* Case 6 */
-    else if ((buttonColor == COLOR_TYPE::RED) && (buttonLabel == "ABORT"))
-    {
-        CorrectEvent.SetValue(std::make_tuple(LV_EVENT_CLICKED, LV_EVENT_RELEASED, 0));
-    }
-    /* Case 5, case 7 */
-    else
-    {
-        CheckStripColor(e);
-    }
-}
-
-bool CheckTimerNumbers(int number)
-{
-    int minute = std::get<MINUTE_POS>(sys_host::TimeClock.GetValue());
-    int second = std::get<SECOND_POS>(sys_host::TimeClock.GetValue());
-
-    std::string strMinute = std::to_string(minute);
-    std::string strSecond = std::to_string(second);
-
-    if ((strMinute.find('4') != std::string::npos)
-        || (strSecond.find('4') != std::string::npos)
-        )
-    {
-        std::cout << "The number contains a '4'.\n";
-        return true;
-    }
-    else
-    {
-        std::cout << "The number does not contain a '4'.\n";
-        return false;
-    }
-}
-
-void CheckStripColor(lv_event_t* e)
-{
-    COLOR_TYPE stripColor = StripColor.GetValue();
-
-    switch (stripColor)
-    {
-    case COLOR_TYPE::BLUE:
-    {
-        /* If number '4' exists on timer -> Release button */
-        CorrectEvent.SetValue(std::make_tuple(LV_EVENT_LONG_PRESSED, LV_EVENT_RELEASED, 4));
-    }
-        break;
-    case COLOR_TYPE::YELLOW:
-    {
-        /* If number '4' exists on timer -> Release button */
-        if (CheckTimerNumbers(5))
+        case 3:
         {
-            if (lv_event_get_code(e) == LV_EVENT_LONG_PRESSED)
+            ThreeWiresModule();
+        }
+            break;
+        case 4:
+        {
+            FourWiresModule();
+        }
+            break;
+        case 5:
+        {
+            FiveWiresModule();
+        }
+            break;
+        case 6:
+        {
+            SixWiresModule();
+        }
+            break;
+        default:
+            /* ASSERT or nothing */
+            break;
+    }
+
+    return;
+}
+
+/*
+* Function name: ThreeWiresModule()
+* Brief: Handle in case of this module has 3 wires
+*/
+void ThreeWiresModule()
+{
+    /* Get common data */
+    std::vector<COLOR> wireColorList = WireColorList.GetValue();
+
+    /* If there is no red wire, then the target is the 2nd wire */
+    if (std::count(wireColorList.begin(), wireColorList.end(), mapColor[WIRECOLOR_TYPE::RED]) == 0)
+    {
+        CorrectWireIndex.SetValue(WIRE_IN_ORDER::SECOND_WIRE);
+    }
+    /* If the last wire is white, let cut it */
+    else if (mapColor[WIRECOLOR_TYPE::WHITE] == wireColorList.back())
+    {
+        CorrectWireIndex.SetValue(mapWireOrder[wireColorList.size()]);
+    }
+    /* If there are more than a blue-wire, let cut the-last-blue-wire */
+    else if (std::count(wireColorList.begin(), wireColorList.end(), mapColor[WIRECOLOR_TYPE::BLUE]) > 1)
+    {
+        for (int i = wireColorList.size() - 1; i >= 0; i--)
+        {
+            if (wireColorList[i] == mapColor[WIRECOLOR_TYPE::BLUE])
             {
-                CorrectEvent.SetValue(std::make_tuple(LV_EVENT_LONG_PRESSED, LV_EVENT_RELEASED, 5));
+                CorrectWireIndex.SetValue(mapWireOrder[wireColorList.size()]);
+                break;
             }
         }
-        break;
     }
-    default:
+    /* Others */
+    else
     {
-        /* If number '1' exists on timer -> Release button */
-        CorrectEvent.SetValue(std::make_tuple(LV_EVENT_LONG_PRESSED, LV_EVENT_RELEASED, 1));
+        CorrectWireIndex.SetValue(mapWireOrder[wireColorList.size()]);
     }
-        break;
+
+    return;
+}
+
+/*
+* Function name: FourWiresModule()
+* Brief: Handle in case of this module has 4 wires
+*/
+void FourWiresModule()
+{
+    /* Get common data */
+    std::vector<COLOR> wireColorList = WireColorList.GetValue();
+    std::string seriNumber = sys_host::SerialNum.GetValue();
+
+    /* If there are more than a red-wire
+    * and the-end-number of serial-number-string is an odd number, let cut the-last-blue-wire */
+    if ((std::count(wireColorList.begin(), wireColorList.end(), mapColor[WIRECOLOR_TYPE::RED]) > 1)
+        && OddCheckAtLast(seriNumber))
+    {
+        for (int i = wireColorList.size() - 1; i >= 0; i--)
+        {
+            if (wireColorList[i] == mapColor[WIRECOLOR_TYPE::BLUE])
+            {
+                // The order of a wire = Index + 1
+                CorrectWireIndex.SetValue(mapWireOrder[i+1]);
+                break;
+            }
+        }
+    }
+    /* If the number of blue-wire is equal to 1, let cut the-first-wire */
+    else if (std::count(wireColorList.begin(), wireColorList.end(), mapColor[WIRECOLOR_TYPE::BLUE]) == 1)
+    {
+        CorrectWireIndex.SetValue(WIRE_IN_ORDER::FIRST_WIRE);
+    }
+    /* More than a yellow-wire, let cut the-last-wire */
+    else if (std::count(wireColorList.begin(), wireColorList.end(), mapColor[WIRECOLOR_TYPE::YELLOW]) > 1)
+    {
+        ORDER wireOrder = wireColorList.size() - 1;
+        CorrectWireIndex.SetValue(mapWireOrder[wireOrder]);
+    }
+    /* Others */
+    else
+    {
+        CorrectWireIndex.SetValue(WIRE_IN_ORDER::SECOND_WIRE);
+    }
+
+    return;
+}
+
+/*
+* Function name: FiveWiresModule()
+* Brief: Handle in case of this module has 5 wires
+*/
+void FiveWiresModule()
+{
+    /* Get common data */
+    std::vector<COLOR> wireColorList = WireColorList.GetValue();
+    std::string seriNumber = sys_host::SerialNum.GetValue();
+
+    /* If the-last-wire is black
+    * and the-end-number of serial-number-string is an odd number, then cutting the-fourth-wire */
+    if ((wireColorList[wireColorList.size() - 1] == mapColor[WIRECOLOR_TYPE::BLACK])
+        && OddCheckAtLast(seriNumber))
+    {
+        CorrectWireIndex.SetValue(WIRE_IN_ORDER::FOURTH_WIRE);
+    }
+    /* Red is 1 and yellow is more than 1 --> Then cutting the-first-wire */
+    else if ((std::count(wireColorList.begin(), wireColorList.end(), mapColor[WIRECOLOR_TYPE::RED]) == 1)
+        && (std::count(wireColorList.begin(), wireColorList.end(), mapColor[WIRECOLOR_TYPE::YELLOW]) > 1))
+    {
+        CorrectWireIndex.SetValue(WIRE_IN_ORDER::FIRST_WIRE);
+    }
+    /* Black is zero --> then cutting the-second-wire */
+    else if (std::count(wireColorList.begin(), wireColorList.end(), mapColor[WIRECOLOR_TYPE::BLACK]) == 0)
+    {
+        CorrectWireIndex.SetValue(WIRE_IN_ORDER::SECOND_WIRE);
+    }
+    /* Others */
+    else
+    {
+        CorrectWireIndex.SetValue(WIRE_IN_ORDER::FIRST_WIRE);
+    }
+
+    return;
+}
+
+
+/*
+* Function name: SixWiresModule()
+* Brief: Handle in case of this module has 6 wires
+*/
+void SixWiresModule()
+{
+    /* Get common data */
+    std::vector<COLOR> wireColorList = WireColorList.GetValue();
+    std::string seriNumber = sys_host::SerialNum.GetValue();
+
+    /* Yellow is 0 and the-end-number in serial-number-string is odd, then cutting the-third-wire */
+    if ((std::count(wireColorList.begin(), wireColorList.end(), mapColor[WIRECOLOR_TYPE::YELLOW]) == 0)
+        && OddCheckAtLast(seriNumber))
+    {
+        CorrectWireIndex.SetValue(WIRE_IN_ORDER::THIRD_WIRE);
+    }
+    /* Red is 1 and yellow is more than 1 --> Then cutting the-first-wire */
+    else if ((std::count(wireColorList.begin(), wireColorList.end(), mapColor[WIRECOLOR_TYPE::YELLOW]) == 1)
+        && (std::count(wireColorList.begin(), wireColorList.end(), mapColor[WIRECOLOR_TYPE::WHITE]) > 1))
+    {
+        CorrectWireIndex.SetValue(WIRE_IN_ORDER::FOURTH_WIRE);
+    }
+    else if (std::count(wireColorList.begin(), wireColorList.end(), mapColor[WIRECOLOR_TYPE::RED]) == 0)
+    {
+        ORDER wireOrder = wireColorList.size() - 1;
+        CorrectWireIndex.SetValue(mapWireOrder[wireOrder]);
+    }
+    /* Others */
+    else
+    {
+        CorrectWireIndex.SetValue(WIRE_IN_ORDER::FOURTH_WIRE);
     }
 
     return;

@@ -80,7 +80,16 @@ void CreateRandomWireList()
     for (uint8_t i = 0; i < wireNum; i++)
     {
         uint8_t randomColorIndex = RandomRange((uint8_t)WIRECOLOR_TYPE::MIN + 1, (uint8_t)WIRECOLOR_TYPE::MAX) - 1;
-        listColor.push_back(std::next(mapColor.begin(), randomColorIndex)->second);
+
+        /*
+        @Brief
+        1. mapColor.begin() => Returns an iterator pointing to the first element in the unordered_map
+        2. std::next(mapColor.begin(), randomColorIndex) => move the iterator to the position by [randomColorIndex] unit from the first iterator
+        3. ->second => accesses the value (not the key) at that iterator position
+        */
+
+        COLOR getColorByKey = std::next(mapColor.begin(), randomColorIndex)->second;
+        listColor.push_back(getColorByKey);
     }
     if (listColor.size() < 6)
     {

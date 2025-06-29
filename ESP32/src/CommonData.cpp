@@ -38,7 +38,7 @@ namespace sys_gui
 // Allow modification
 #pragma region Custom_data
 CData<std::vector<COLOR>> WireColorList;
-CData<uint8_t> CorrectWireIndex;
+CData<WIRE_IN_ORDER> CorrectWireIndex;
 #pragma endregion
 
 // Add auto reset state for custom data only
