@@ -64,7 +64,7 @@ void ButtonModule()
         CorrectEvent.SetValue(std::make_tuple(LV_EVENT_CLICKED, LV_EVENT_RELEASED, 0));
     }
     /* Case 6 */
-    else if ((buttonColor == COLOR_TYPE::RED) && (buttonLabel == BTN_LABEL_TYPE::Abort))
+    else if ((buttonColor == COLOR_TYPE::RED) && (buttonLabel == BTN_LABEL_TYPE::Hold))
     {
         CorrectEvent.SetValue(std::make_tuple(LV_EVENT_CLICKED, LV_EVENT_RELEASED, 0));
     }
@@ -120,30 +120,32 @@ void AutoUpdate()
         // First and second temp event are not 0
         if (std::get<FIRST_EVENT>(tempEvent) && std::get<SECOND_EVENT>(tempEvent))
         {
-            // Check correct timer number with current timer
-            if (NumberCheckInTimer(std::get<SPECIAL_NUM>(tempEvent)))
+            bool conditionMatch = false;
+
+            // Timer is not required
+            if (!std::get<SPECIAL_NUM>(tempEvent))
             {
-                // Not same
-                if (TempEvent.GetValue() != CorrectEvent.GetValue())
+                conditionMatch = true;
+            }
+            // Check correct timer number with current timer
+            else if (NumberCheckInTimer(std::get<SPECIAL_NUM>(tempEvent)))
+            {
+                conditionMatch = true;
+            }
+
+            if (conditionMatch)
+            {
+                if (tempEvent != CorrectEvent.GetValue())
                 {
 #ifndef UNIT_TEST
                     // Send error state to Host
                     CommonSendRequest(WM_STRIKESTATE_SET);
 #endif
                 }
-                // Same
-                else
+                else // Same
                 {
                     sys_gui::SuccessState.SetValue(STATE_CHECKED);
                 }
-            // Not correct
-            }
-            else
-            {
-#ifndef UNIT_TEST
-                // Send error state to Host
-                CommonSendRequest(WM_STRIKESTATE_SET);
-#endif
             }
 
             // Clear temp event data
@@ -220,9 +222,11 @@ void OnButtonRelease(lv_event_t* e)
     // Set correct timer number to temp event
     std::get<SPECIAL_NUM>(tempEvent) = correctNum;
 
+#ifndef UNIT_TEST
     // Get current timer from Host
     auto data = CommonSendRequest(WM_TIMER_GET);
     sys_host::TimeClock.SetValue(std::make_pair(data["minute"].as<uint8_t>(), data["second"].as<uint8_t>()));
+#endif
 
     TempEvent.SetValue(tempEvent);
 }
