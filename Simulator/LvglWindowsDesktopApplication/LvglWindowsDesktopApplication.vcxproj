@@ -308,6 +308,7 @@
     <ClInclude Include="..\..\ESP32\src\ui\ui.h" />
     <ClInclude Include="..\..\ESP32\src\ui\ui_events.h" />
     <ClInclude Include="..\..\ESP32\src\ui\ui_helpers.h" />
+    <ClInclude Include="..\..\ESP32\src\ui\ui_Main.h" />
     <ClInclude Include="lv_conf.h" />
   </ItemGroup>
   <ItemGroup>

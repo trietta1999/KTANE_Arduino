@@ -218,6 +218,8 @@ enum class BTN_LABEL_TYPE
 
 EXTERN_MAP_ENUM_STR(COLOR_TYPE)
 EXTERN_MAP_ENUM_STR(BTN_LABEL_TYPE)
+
+extern std::unordered_map<COLOR_TYPE, COLOR> mapColor;
 #pragma endregion
 
 #endif // !_COMMON_DATATYPE_H

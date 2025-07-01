@@ -44,13 +44,14 @@ namespace sys_gui // GUI read/write -> Send data to HOST
 
 // Allow modification
 #pragma region Custom_data
-extern CData<COLOR> ButtonColor;
-extern CData<std::string> ButtonLabel;
-extern CData<COLOR> StripColor;
+extern CData<COLOR_TYPE> ButtonColor;
+extern CData<BTN_LABEL_TYPE> ButtonLabel;
+extern CData<COLOR_TYPE> StripColor;
 extern CData<std::tuple<uint32_t, uint32_t, uint32_t>> CorrectEvent;
 extern CData<std::tuple<uint32_t, uint32_t, uint32_t>> TempEvent;
 #pragma endregion
 
+// Add auto reset state for custom data only
 void UpdateAll();
 
 #endif // !_COMMON_DATA_H

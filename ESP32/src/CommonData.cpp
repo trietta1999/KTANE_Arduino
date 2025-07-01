@@ -37,9 +37,9 @@ namespace sys_gui
 
 // Allow modification
 #pragma region Custom_data
-CData<COLOR> ButtonColor;
-CData<std::string> ButtonLabel;
-CData<COLOR> StripColor;
+CData<COLOR_TYPE> ButtonColor;
+CData<BTN_LABEL_TYPE> ButtonLabel;
+CData<COLOR_TYPE> StripColor;
 CData<std::tuple<uint32_t, uint32_t, uint32_t>> CorrectEvent;
 CData<std::tuple<uint32_t, uint32_t, uint32_t>> TempEvent;
 #pragma endregion
@@ -48,6 +48,7 @@ CData<std::tuple<uint32_t, uint32_t, uint32_t>> TempEvent;
 void UpdateAll()
 {
     sys_gui::Brightness.ResetState();
+    sys_gui::SuccessState.ResetState();
     ButtonColor.ResetState();
     ButtonLabel.ResetState();
     StripColor.ResetState();

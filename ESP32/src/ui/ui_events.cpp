@@ -6,48 +6,168 @@
 #include "ui.h"
 #include "../CommonData.h"
 #include "../CommonLibrary.h"
+#include "../CommonService.h"
+
+void CheckStripColor()
+{
+    auto stripColor = StripColor.GetValue();
+
+    switch (stripColor)
+    {
+    case COLOR_TYPE::BLUE:
+    {
+        /* If number '4' exists on timer -> Release button */
+        CorrectEvent.SetValue(std::make_tuple(LV_EVENT_LONG_PRESSED, LV_EVENT_RELEASED, 4));
+    }
+    break;
+    case COLOR_TYPE::YELLOW:
+    {
+        /* If number '5' exists on timer -> Release button */
+        CorrectEvent.SetValue(std::make_tuple(LV_EVENT_LONG_PRESSED, LV_EVENT_RELEASED, 5));
+        break;
+    }
+    default:
+    {
+        /* If number '1' exists on timer -> Release button */
+        CorrectEvent.SetValue(std::make_tuple(LV_EVENT_LONG_PRESSED, LV_EVENT_RELEASED, 1));
+    }
+    break;
+    }
+}
+
+void ButtonModule()
+{
+    /* Get common data */
+    auto buttonColor = ButtonColor.GetValue();
+    auto labelIndicator = sys_host::LabelIndicator.GetValue();
+    auto buttonLabel = ButtonLabel.GetValue();
+    auto batteryNum = sys_host::BatteryNum.GetValue();
+
+    /* Case 1 */
+    if ((buttonColor == COLOR_TYPE::BLUE) && (buttonLabel == BTN_LABEL_TYPE::Abort))
+    {
+        CheckStripColor();
+    }
+    /* Case 2 */
+    else if ((batteryNum > 1) && (buttonLabel == BTN_LABEL_TYPE::Detonate))
+    {
+        CorrectEvent.SetValue(std::make_tuple(LV_EVENT_CLICKED, LV_EVENT_RELEASED, 0));
+    }
+    /* Case 3 */
+    else if ((buttonColor == COLOR_TYPE::WHITE) && (labelIndicator == LABEL_INDICATOR::CAR))
+    {
+        CheckStripColor();
+    }
+    /* Case 4 */
+    else if ((batteryNum > 2) && (labelIndicator == LABEL_INDICATOR::FRK))
+    {
+        CorrectEvent.SetValue(std::make_tuple(LV_EVENT_CLICKED, LV_EVENT_RELEASED, 0));
+    }
+    /* Case 6 */
+    else if ((buttonColor == COLOR_TYPE::RED) && (buttonLabel == BTN_LABEL_TYPE::Abort))
+    {
+        CorrectEvent.SetValue(std::make_tuple(LV_EVENT_CLICKED, LV_EVENT_RELEASED, 0));
+    }
+    /* Case 5, case 7 */
+    else
+    {
+        CheckStripColor();
+    }
+}
 
 void Init()
 {
     // Brightness
     sys_gui::Brightness.SetValue(100);
     lv_slider_set_value(ui_sldBrightness, sys_gui::Brightness.GetValue(), LV_ANIM_OFF);
+
+    // Create random button color and text
+    ButtonColor.SetValue((COLOR_TYPE)RandomRange(((uint8_t)COLOR_TYPE::MIN) + 1, (uint8_t)COLOR_TYPE::MAX));
+    ButtonLabel.SetValue((BTN_LABEL_TYPE)RandomRange(((uint8_t)BTN_LABEL_TYPE::MIN) + 1, (uint8_t)BTN_LABEL_TYPE::MAX));
+
+    // Create random strip color, Black is not allowed
+    do
+    {
+        StripColor.SetValue((COLOR_TYPE)RandomRange(((uint8_t)COLOR_TYPE::MIN) + 1, (uint8_t)COLOR_TYPE::MAX));
+    } while (StripColor.GetValue() == COLOR_TYPE::BLACK);
+
+    // Update GUI button
+    lv_obj_set_style_bg_color(ui_btnButton, lv_color_hex(mapColor[ButtonColor.GetValue()]), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_label_set_text(ui_btnText, map_BTN_LABEL_TYPE[ButtonLabel.GetValue()].c_str());
+    lv_obj_set_style_bg_color(ui_barColor, lv_color_hex(mapColor[StripColor.GetValue()]), LV_PART_INDICATOR | LV_STATE_EDITED);
+
+    // Update text color
+    if (ButtonColor.GetValue() == COLOR_TYPE::BLACK)
+    {
+        lv_obj_set_style_text_color(ui_btnText, lv_color_hex(mapColor[COLOR_TYPE::WHITE]), LV_PART_MAIN | LV_STATE_DEFAULT);
+    }
+    else
+    {
+        lv_obj_set_style_text_color(ui_btnText, lv_color_hex(mapColor[COLOR_TYPE::BLACK]), LV_PART_MAIN | LV_STATE_DEFAULT);
+    }
+
+    // Calculate correct event
+    ButtonModule();
 }
 
 void AutoUpdate()
 {
     if (TempEvent.GetState())
     {
+        // Get temp event
         auto tempEvent = TempEvent.GetValue();
 
+        // First and second temp event are not 0
         if (std::get<FIRST_EVENT>(tempEvent) && std::get<SECOND_EVENT>(tempEvent))
         {
-            if (tempEvent == CorrectEvent.GetValue())
+            // Check correct timer number with current timer
+            if (NumberCheckInTimer(std::get<SPECIAL_NUM>(tempEvent)))
             {
-                sys_gui::SuccessState.SetValue(true);
+                // Not same
+                if (TempEvent.GetValue() != CorrectEvent.GetValue())
+                {
+#ifndef UNIT_TEST
+                    // Send error state to Host
+                    CommonSendRequest(WM_STRIKESTATE_SET);
+#endif
+                }
+                // Same
+                else
+                {
+                    sys_gui::SuccessState.SetValue(STATE_CHECKED);
+                }
+            // Not correct
             }
             else
             {
-                sys_host::StrikeState.SetValue(true);
+#ifndef UNIT_TEST
+                // Send error state to Host
+                CommonSendRequest(WM_STRIKESTATE_SET);
+#endif
             }
 
+            // Clear temp event data
             TempEvent.SetValue(std::make_tuple(0, 0, 0));
         }
     }
 
-    if (sys_gui::SuccessState.GetValue() != INCORRECT)
-    {
-        lv_obj_clear_flag(ui_imgResult, LV_OBJ_FLAG_HIDDEN);
+#ifndef UNIT_TEST
+    if (sys_gui::SuccessState.GetState()) {
+        if (sys_gui::SuccessState.GetValue() != INCORRECT)
+        {
+            lv_obj_clear_flag(ui_imgResult, LV_OBJ_FLAG_HIDDEN);
 
-        if (sys_gui::SuccessState.GetValue() == STATE_UNCHECK)
-        {
-            lv_obj_add_state(ui_imgResult, LV_STATE_DISABLED);
-        }
-        else if (sys_gui::SuccessState.GetValue() == STATE_CHECKED)
-        {
-            lv_obj_add_state(ui_imgResult, LV_STATE_CHECKED);
+            if (sys_gui::SuccessState.GetValue() == STATE_UNCHECK)
+            {
+                lv_obj_add_state(ui_imgResult, LV_STATE_DISABLED);
+            }
+            else if (sys_gui::SuccessState.GetValue() == STATE_CHECKED)
+            {
+                lv_obj_add_state(ui_imgResult, LV_STATE_CHECKED);
+            }
         }
     }
+#endif
 }
 
 void OnBrightnessChange(lv_event_t* e)
@@ -55,31 +175,54 @@ void OnBrightnessChange(lv_event_t* e)
     sys_gui::Brightness.SetValue(lv_slider_get_value(ui_sldBrightness));
 }
 
-void OnButtonPress(lv_event_t * e)
+void OnButtonPress(lv_event_t* e)
 {
+    // Change strip color
+    lv_obj_add_state(ui_barColor, LV_STATE_EDITED);
+
+    // Set first temp event is long press
     auto tempEvent = TempEvent.GetValue();
     std::get<FIRST_EVENT>(tempEvent) = LV_EVENT_LONG_PRESSED;
 
     TempEvent.SetValue(tempEvent);
 }
 
-void OnButtonClick(lv_event_t * e)
+void OnButtonClick(lv_event_t* e)
 {
     auto tempEvent = TempEvent.GetValue();
+
+    // Get first temp event
     auto firstEvent = std::get<FIRST_EVENT>(tempEvent);
 
+    // First temp event is not long press
     if (firstEvent != LV_EVENT_LONG_PRESSED)
     {
+        // Set first temp event is click
         std::get<FIRST_EVENT>(tempEvent) = LV_EVENT_CLICKED;
     }
 
     TempEvent.SetValue(tempEvent);
 }
 
-void OnButtonRelease(lv_event_t * e)
+void OnButtonRelease(lv_event_t* e)
 {
+    // Remove-change strip color
+    lv_obj_remove_state(ui_barColor, LV_STATE_EDITED);
+
     auto tempEvent = TempEvent.GetValue();
+
+    // Set second temp event is released
     std::get<SECOND_EVENT>(tempEvent) = LV_EVENT_RELEASED;
+
+    // Get correct timer number
+    auto correctNum = std::get<SPECIAL_NUM>(CorrectEvent.GetValue());
+
+    // Set correct timer number to temp event
+    std::get<SPECIAL_NUM>(tempEvent) = correctNum;
+
+    // Get current timer from Host
+    auto data = CommonSendRequest(WM_TIMER_GET);
+    sys_host::TimeClock.SetValue(std::make_pair(data["minute"].as<uint8_t>(), data["second"].as<uint8_t>()));
 
     TempEvent.SetValue(tempEvent);
 }
