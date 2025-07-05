@@ -104,6 +104,13 @@ void ProcessData()
             debug_println("SerialNum: " + sys_host::SerialNum.GetValue());
             debug_println("==================================");
         }
+        else if (read == "gui_correct")
+        {
+            auto correctEvent = CorrectEventDebug.GetValue();
+            debug_println("First event: " + std::get<FIRST_EVENT>(correctEvent));
+            debug_println("Second event: " + std::get<SECOND_EVENT>(correctEvent));
+            debug_println("Timer number: " + std::to_string(std::get<SPECIAL_NUM>(correctEvent)));
+        }
     }
 #endif
 

@@ -40,8 +40,9 @@ namespace sys_gui
 CData<COLOR_TYPE> ButtonColor;
 CData<BTN_LABEL_TYPE> ButtonLabel;
 CData<COLOR_TYPE> StripColor;
-CData<std::tuple<uint32_t, uint32_t, uint32_t>> CorrectEvent;
-CData<std::tuple<uint32_t, uint32_t, uint32_t>> TempEvent;
+CData<std::tuple<uint32_t, uint32_t, uint8_t>> CorrectEvent;
+CData<std::tuple<std::string, std::string, uint8_t>> CorrectEventDebug;
+CData<std::tuple<uint32_t, uint32_t, uint8_t>> TempEvent;
 #pragma endregion
 
 // Add auto reset state for custom data only

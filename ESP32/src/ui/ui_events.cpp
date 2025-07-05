@@ -3,6 +3,9 @@
 // LVGL version: 9.1.0
 // Project name: SquareLine_Project
 
+#ifdef _WIN64
+#include <iostream>
+#endif
 #include "ui.h"
 #include "../CommonData.h"
 #include "../CommonLibrary.h"
@@ -17,19 +20,19 @@ void CheckStripColor()
     case COLOR_TYPE::BLUE:
     {
         /* If number '4' exists on timer -> Release button */
-        CorrectEvent.SetValue(std::make_tuple(LV_EVENT_LONG_PRESSED, LV_EVENT_RELEASED, 4));
+        SET_CORRECT_EVENT(LV_EVENT_LONG_PRESSED, LV_EVENT_RELEASED, 4);
     }
     break;
     case COLOR_TYPE::YELLOW:
     {
         /* If number '5' exists on timer -> Release button */
-        CorrectEvent.SetValue(std::make_tuple(LV_EVENT_LONG_PRESSED, LV_EVENT_RELEASED, 5));
+        SET_CORRECT_EVENT(LV_EVENT_LONG_PRESSED, LV_EVENT_RELEASED, 5);
         break;
     }
     default:
     {
         /* If number '1' exists on timer -> Release button */
-        CorrectEvent.SetValue(std::make_tuple(LV_EVENT_LONG_PRESSED, LV_EVENT_RELEASED, 1));
+        SET_CORRECT_EVENT(LV_EVENT_LONG_PRESSED, LV_EVENT_RELEASED, 1);
     }
     break;
     }
@@ -51,7 +54,7 @@ void ButtonModule()
     /* Case 2 */
     else if ((batteryNum > 1) && (buttonLabel == BTN_LABEL_TYPE::Detonate))
     {
-        CorrectEvent.SetValue(std::make_tuple(LV_EVENT_CLICKED, LV_EVENT_RELEASED, 0));
+        SET_CORRECT_EVENT(LV_EVENT_CLICKED, LV_EVENT_RELEASED, 0);
     }
     /* Case 3 */
     else if ((buttonColor == COLOR_TYPE::WHITE) && (labelIndicator == LABEL_INDICATOR::CAR))
@@ -61,12 +64,12 @@ void ButtonModule()
     /* Case 4 */
     else if ((batteryNum > 2) && (labelIndicator == LABEL_INDICATOR::FRK))
     {
-        CorrectEvent.SetValue(std::make_tuple(LV_EVENT_CLICKED, LV_EVENT_RELEASED, 0));
+        SET_CORRECT_EVENT(LV_EVENT_CLICKED, LV_EVENT_RELEASED, 0);
     }
     /* Case 6 */
     else if ((buttonColor == COLOR_TYPE::RED) && (buttonLabel == BTN_LABEL_TYPE::Hold))
     {
-        CorrectEvent.SetValue(std::make_tuple(LV_EVENT_CLICKED, LV_EVENT_RELEASED, 0));
+        SET_CORRECT_EVENT(LV_EVENT_CLICKED, LV_EVENT_RELEASED, 0);
     }
     /* Case 5, case 7 */
     else
@@ -108,6 +111,13 @@ void Init()
 
     // Calculate correct event
     ButtonModule();
+
+#ifdef _WIN64
+    auto correctEvent = CorrectEventDebug.GetValue();
+    debug_println("First event: " + std::get<FIRST_EVENT>(correctEvent));
+    debug_println("Second event: " + std::get<SECOND_EVENT>(correctEvent));
+    debug_println("Timer number: " + std::to_string(std::get<SPECIAL_NUM>(correctEvent)));
+#endif
 }
 
 void AutoUpdate()

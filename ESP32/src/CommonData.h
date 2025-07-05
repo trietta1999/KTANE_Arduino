@@ -47,8 +47,9 @@ namespace sys_gui // GUI read/write -> Send data to HOST
 extern CData<COLOR_TYPE> ButtonColor;
 extern CData<BTN_LABEL_TYPE> ButtonLabel;
 extern CData<COLOR_TYPE> StripColor;
-extern CData<std::tuple<uint32_t, uint32_t, uint32_t>> CorrectEvent;
-extern CData<std::tuple<uint32_t, uint32_t, uint32_t>> TempEvent;
+extern CData<std::tuple<uint32_t, uint32_t, uint8_t>> CorrectEvent;
+extern CData<std::tuple<std::string, std::string, uint8_t>> CorrectEventDebug;
+extern CData<std::tuple<uint32_t, uint32_t, uint8_t>> TempEvent;
 #pragma endregion
 
 // Add auto reset state for custom data only
