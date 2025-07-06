@@ -155,6 +155,16 @@ void AutoUpdate()
                 else // Same
                 {
                     sys_gui::SuccessState.SetValue(STATE_CHECKED);
+
+#ifndef UNIT_TEST
+                    JsonDocument jsonDocIn;
+#ifdef _WIN64
+                    jsonDocIn["module"] = CLIENT_NAME_FOR_JSON;
+#else
+                    jsonDocIn["module"] = CLIENT_NAME;
+#endif
+                    CommonSendRequestWithData(WM_SUCCESSSTATE_SET, jsonDocIn);
+#endif
                 }
             }
 
