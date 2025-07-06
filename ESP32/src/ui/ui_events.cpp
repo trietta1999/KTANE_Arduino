@@ -276,7 +276,13 @@ void OnButtonKeypadClick(lv_event_t* e)
 
 #ifndef UNIT_TEST
             // Send success to Host
-            CommonSendRequest(WM_SUCCESSSTATE_SET);
+            JsonDocument jsonDocIn;
+#ifdef _WIN64
+            jsonDocIn["module"] = CLIENT_NAME_FOR_JSON;
+#else
+            jsonDocIn["module"] = CLIENT_NAME;
+#endif
+            CommonSendRequestWithData(WM_SUCCESSSTATE_SET, jsonDocIn);
 #endif
         }
     }
