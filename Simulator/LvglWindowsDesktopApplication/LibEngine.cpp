@@ -62,7 +62,7 @@ void ThreeWiresModule()
     std::vector<COLOR> wireColorList = WireColorList.GetValue();
 
     /* If there is no red wire, then the target is the 2nd wire */
-    if (std::count(wireColorList.begin(), wireColorList.end(), mapColor[WIRECOLOR_TYPE::RED]) == 0)
+    if (CountElementOccurences(wireColorList, WIRECOLOR_TYPE::RED) == 0)
     {
         CorrectWireIndex.SetValue(WIRE_IN_ORDER::SECOND_WIRE);
     }
@@ -72,7 +72,7 @@ void ThreeWiresModule()
         CorrectWireIndex.SetValue(mapWireOrder[wireColorList.size()]);
     }
     /* If there are more than a blue-wire, let cut the-last-blue-wire */
-    else if (std::count(wireColorList.begin(), wireColorList.end(), mapColor[WIRECOLOR_TYPE::BLUE]) > 1)
+    else if (CountElementOccurences(wireColorList, WIRECOLOR_TYPE::BLUE) > 1)
     {
         for (int i = wireColorList.size() - 1; i >= 0; i--)
         {
@@ -104,7 +104,7 @@ void FourWiresModule()
 
     /* If there are more than a red-wire
     * and the-end-number of serial-number-string is an odd number, let cut the-last-blue-wire */
-    if ((std::count(wireColorList.begin(), wireColorList.end(), mapColor[WIRECOLOR_TYPE::RED]) > 1)
+    if ((CountElementOccurences(wireColorList, WIRECOLOR_TYPE::RED) > 1)
         && OddCheckAtLast(seriNumber))
     {
         for (int i = wireColorList.size() - 1; i >= 0; i--)
@@ -118,12 +118,12 @@ void FourWiresModule()
         }
     }
     /* If the number of blue-wire is equal to 1, let cut the-first-wire */
-    else if (std::count(wireColorList.begin(), wireColorList.end(), mapColor[WIRECOLOR_TYPE::BLUE]) == 1)
+    else if (CountElementOccurences(wireColorList, WIRECOLOR_TYPE::BLUE) == 1)
     {
         CorrectWireIndex.SetValue(WIRE_IN_ORDER::FIRST_WIRE);
     }
     /* More than a yellow-wire, let cut the-last-wire */
-    else if (std::count(wireColorList.begin(), wireColorList.end(), mapColor[WIRECOLOR_TYPE::YELLOW]) > 1)
+    else if (CountElementOccurences(wireColorList, WIRECOLOR_TYPE::YELLOW) > 1)
     {
         ORDER wireOrder = wireColorList.size() - 1;
         CorrectWireIndex.SetValue(mapWireOrder[wireOrder]);
@@ -155,13 +155,13 @@ void FiveWiresModule()
         CorrectWireIndex.SetValue(WIRE_IN_ORDER::FOURTH_WIRE);
     }
     /* Red is 1 and yellow is more than 1 --> Then cutting the-first-wire */
-    else if ((std::count(wireColorList.begin(), wireColorList.end(), mapColor[WIRECOLOR_TYPE::RED]) == 1)
-        && (std::count(wireColorList.begin(), wireColorList.end(), mapColor[WIRECOLOR_TYPE::YELLOW]) > 1))
+    else if ((CountElementOccurences(wireColorList, WIRECOLOR_TYPE::RED) == 1)
+        && (CountElementOccurences(wireColorList, WIRECOLOR_TYPE::YELLOW) > 1))
     {
         CorrectWireIndex.SetValue(WIRE_IN_ORDER::FIRST_WIRE);
     }
     /* Black is zero --> then cutting the-second-wire */
-    else if (std::count(wireColorList.begin(), wireColorList.end(), mapColor[WIRECOLOR_TYPE::BLACK]) == 0)
+    else if (CountElementOccurences(wireColorList, WIRECOLOR_TYPE::BLACK) == 0)
     {
         CorrectWireIndex.SetValue(WIRE_IN_ORDER::SECOND_WIRE);
     }
@@ -186,18 +186,18 @@ void SixWiresModule()
     std::string seriNumber = sys_host::SerialNum.GetValue();
 
     /* Yellow is 0 and the-end-number in serial-number-string is odd, then cutting the-third-wire */
-    if ((std::count(wireColorList.begin(), wireColorList.end(), mapColor[WIRECOLOR_TYPE::YELLOW]) == 0)
+    if ((CountElementOccurences(wireColorList, WIRECOLOR_TYPE::YELLOW) == 0)
         && OddCheckAtLast(seriNumber))
     {
         CorrectWireIndex.SetValue(WIRE_IN_ORDER::THIRD_WIRE);
     }
     /* Red is 1 and yellow is more than 1 --> Then cutting the-first-wire */
-    else if ((std::count(wireColorList.begin(), wireColorList.end(), mapColor[WIRECOLOR_TYPE::YELLOW]) == 1)
-        && (std::count(wireColorList.begin(), wireColorList.end(), mapColor[WIRECOLOR_TYPE::WHITE]) > 1))
+    else if ((CountElementOccurences(wireColorList, WIRECOLOR_TYPE::YELLOW) == 1)
+        && (CountElementOccurences(wireColorList, WIRECOLOR_TYPE::WHITE) > 1))
     {
         CorrectWireIndex.SetValue(WIRE_IN_ORDER::FOURTH_WIRE);
     }
-    else if (std::count(wireColorList.begin(), wireColorList.end(), mapColor[WIRECOLOR_TYPE::RED]) == 0)
+    else if (CountElementOccurences(wireColorList, WIRECOLOR_TYPE::RED) == 0)
     {
         ORDER wireOrder = wireColorList.size() - 1;
         CorrectWireIndex.SetValue(mapWireOrder[wireOrder]);
@@ -209,4 +209,11 @@ void SixWiresModule()
     }
 
     return;
+}
+
+int CountElementOccurences(std::vector<COLOR> wireColorList, WIRECOLOR_TYPE color)
+{
+    int occurences = std::count(wireColorList.begin(), wireColorList.end(), mapColor[color]);
+
+    return occurences;
 }
