@@ -43,8 +43,9 @@ namespace sys_gui // GUI read/write -> Send data to HOST
 
 // Allow modification
 #pragma region Custom_data
-extern CData<uint8_t> CurrentStage;
-extern CData<TEXT_LABEL> CorrectTextLabel;
+extern CData<uint16_t> CorrectFrequency;
+extern CData<std::string> CorrectWord;
+extern CData<uint16_t> TempFrequency;
 #pragma endregion
 
 void UpdateAll();

@@ -3,7 +3,6 @@
  */
 
 #include <algorithm>
-#include <iterator>
 #include "CommonLibrary.h"
 #include "CommonData.h"
 #include "CommonService.h"
@@ -73,50 +72,72 @@ bool NumberCheckInTimer(uint8_t num)
 
 // Allow modification
 #pragma region Custom_function
-std::tuple<TEXT_DISPLAY, uint8_t> GetRandomTextDisplay()
+std::tuple<TEXT_TYPE, std::string> GetRandomText()
 {
-    auto textDisplay = (TEXT_DISPLAY)RandomRange(((uint8_t)TEXT_DISPLAY::MIN) + 1, (uint8_t)TEXT_DISPLAY::MAX);
-    auto focusPos = std::get<FOCUSPOS_POS>(map_TextDisplayWithFocusPostion[textDisplay]);
+    auto textType = (TEXT_TYPE)RandomRange(((uint8_t)TEXT_TYPE::MIN) + 1, (uint8_t)TEXT_TYPE::MAX);
+    auto textStr = map_TEXT_TYPE[textType];
 
-    return std::make_tuple(textDisplay, focusPos);
+    return std::make_tuple(textType, textStr);
 }
 
-std::vector<TEXT_LABEL> GetTextLabelListFromMap(uint8_t takeNum)
+std::vector<int32_t> FlatMorseCodeArray(std::vector<std::array<int32_t, MAX_MORSE_SYMBOL>> list)
 {
-    // Convert map to text label list
-    std::vector<TEXT_LABEL> listTextLabel = { };
-    std::transform(map_TextLabel.begin(), map_TextLabel.end(),
-        std::back_inserter(listTextLabel),
-        [](const auto& pair) { return pair.first; });
+    std::vector<int32_t> flat = { };
 
-    // Get list text label
-    auto textLabel = (TEXT_LABEL)RandomRange(((uint8_t)TEXT_LABEL::MIN) + 1, (uint8_t)TEXT_LABEL::MAX);
-    auto listTextLabelItem = map_TextLabelList[textLabel];
-
-    // Take [takeNum] element trong list text label
-    auto randomIndex = RandomRange(0, listTextLabelItem.size() - takeNum);
-    std::vector<TEXT_LABEL> listSelectTextLabel(listTextLabelItem.begin() + randomIndex, (listTextLabelItem.begin() + randomIndex) + takeNum);
-
-    return listSelectTextLabel;
-}
-
-TEXT_LABEL SetCorrectTextLabel(uint8_t position, std::vector<TEXT_LABEL> listTextLabel)
-{
-    auto textLabel = listTextLabel[position - 1];
-    auto targetListTextLabel = map_TextLabelList[textLabel];
-
-    // Check first mapping text label in map label in
-    for (const auto& targetTextLabel : targetListTextLabel)
+    // Insert each sub-array to end of vector
+    for (const auto& morseCode : list)
     {
-        for (const auto& i_textLabel : listTextLabel)
+        flat.insert(flat.end(), morseCode.begin(), morseCode.end());
+    }
+
+    return flat;
+}
+
+std::array<int32_t, MAX_MORSE_SYMBOL> ConvertSymbolToDigitArray(std::string pattern)
+{
+    std::array<int32_t, MAX_MORSE_SYMBOL> morseCode = { SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL };
+
+    // Fill morse symbol to array
+    for (uint8_t i = 0; i < pattern.length(); i++)
+    {
+        if (pattern[i] == DOT_CHAR)
         {
-            if (i_textLabel == targetTextLabel)
-            {
-                return i_textLabel;
-            }
+            morseCode[i] = DOT_LEVEL;
+        }
+        else
+        {
+            morseCode[i] = DASH_LEVEL;
         }
     }
 
-    return TEXT_LABEL::MIN;
+    return morseCode;
+}
+
+std::vector<std::array<int32_t, MAX_MORSE_SYMBOL>> ConvertTextToMorseCode(std::string textStr)
+{
+    std::vector<std::array<int32_t, MAX_MORSE_SYMBOL>> listMorseCode = { };
+
+    for (const auto& strChar : textStr)
+    {
+        // Get morse code of letter
+        auto pattern = mapLetterMorsePattern[strChar];
+        auto morseCode = ConvertSymbolToDigitArray(pattern);
+
+        // Push morse code of letter to vector 
+        listMorseCode.push_back(morseCode);
+    }
+
+#ifndef UNIT_TEST
+    // Auto fill empty morse code
+    if (listMorseCode.size() < MAX_LETTER)
+    {
+        for (uint8_t i = 0; i < MAX_LETTER - listMorseCode.size(); i++)
+        {
+            listMorseCode.push_back({ SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL });
+        }
+    }
+#endif
+
+    return listMorseCode;
 }
 #pragma endregion

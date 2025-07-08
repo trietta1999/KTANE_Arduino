@@ -7,17 +7,11 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 TEST_CLASS(GUI_Test)
 {
 public:
-#pragma region Setup_TestClass
     TEST_CLASS_INITIALIZE(TESTCLASS_Init)
     {
         lv_init();
         lv_windows_create_display(L"", 320, 240, 100, false, false);
         ui_init();
-
-        // Init GUI
-        Init();
-
-        CurrentStage.SetValue(1);
     }
 
     TEST_CLASS_CLEANUP(TESTCLASS_Cleanup)
@@ -27,619 +21,506 @@ public:
 
     TEST_METHOD_CLEANUP(TESTMETHOD_Cleanup)
     {
-        regenerate = false;
-        isIncorrectButton = false;
-        CurrentStage.SetValue(1);
+        sys_gui::SuccessState.SetValue(INCORRECT);
     }
 
-    TEST_METHOD(TESTMETHOD_OnButtonClick_1)
+#pragma region Test_FrequencyMapping
+    TEST_METHOD(TEST_FrequencyMapping_01)
     {
-        displayInfo = std::make_tuple(TEXT_DISPLAY::E_YES, 3);
-        listTextLabel = {
-            TEXT_LABEL::E_YES,
-            TEXT_LABEL::E_OKAY,
-            TEXT_LABEL::E_READY,
-            TEXT_LABEL::E_WHAT,
-            TEXT_LABEL::E_MIDDLE,
-            TEXT_LABEL::E_LEFT,
-        };
-        lv_event_t e = { 0 };
-        e.current_target = ui_Button1;
+        auto textType = (TEXT_TYPE)std::stoi(std::string(__FUNCTION__).substr(32, 2));
 
-        AutoUpdate();
-        OnButtonClick(&e);
+        // Create text info
+        ut_textInfo = std::make_tuple(textType, map_TEXT_TYPE[textType]);
 
-        Assert::IsTrue(CorrectTextLabel.GetValue() == TEXT_LABEL::E_YES);
-        Assert::IsTrue(CurrentStage.GetValue() == 2);
+        // Init data
+        Init();
+
+        Assert::IsTrue(CorrectFrequency.GetValue() == mapTextFrequency[textType]);
     }
 
-    TEST_METHOD(TESTMETHOD_OnButtonClick_2)
+    TEST_METHOD(TEST_FrequencyMapping_02)
     {
-        displayInfo = std::make_tuple(TEXT_DISPLAY::E_FIRST, 2);
-        listTextLabel = {
-            TEXT_LABEL::E_YES,
-            TEXT_LABEL::E_OKAY,
-            TEXT_LABEL::E_READY,
-            TEXT_LABEL::E_WHAT,
-            TEXT_LABEL::E_MIDDLE,
-            TEXT_LABEL::E_LEFT,
-        };
-        lv_event_t e = { 0 };
-        e.current_target = ui_Button5;
+        auto textType = (TEXT_TYPE)std::stoi(std::string(__FUNCTION__).substr(32, 2));
 
-        AutoUpdate();
-        OnButtonClick(&e);
+        // Create text info
+        ut_textInfo = std::make_tuple(textType, map_TEXT_TYPE[textType]);
 
-        Assert::IsTrue(CorrectTextLabel.GetValue() == TEXT_LABEL::E_MIDDLE);
-        Assert::IsTrue(CurrentStage.GetValue() == 2);
+        // Init data
+        Init();
+
+        Assert::IsTrue(CorrectFrequency.GetValue() == mapTextFrequency[textType]);
     }
 
-    TEST_METHOD(TESTMETHOD_OnButtonClick_3)
+    TEST_METHOD(TEST_FrequencyMapping_03)
     {
-        displayInfo = std::make_tuple(TEXT_DISPLAY::E_DISPLAY, 6);
-        listTextLabel = {
-            TEXT_LABEL::E_YES,
-            TEXT_LABEL::E_OKAY,
-            TEXT_LABEL::E_READY,
-            TEXT_LABEL::E_WHAT,
-            TEXT_LABEL::E_MIDDLE,
-            TEXT_LABEL::E_LEFT,
-        };
-        lv_event_t e = { 0 };
-        e.current_target = ui_Button6;
+        auto textType = (TEXT_TYPE)std::stoi(std::string(__FUNCTION__).substr(32, 2));
 
-        AutoUpdate();
-        OnButtonClick(&e);
+        // Create text info
+        ut_textInfo = std::make_tuple(textType, map_TEXT_TYPE[textType]);
 
-        Assert::IsTrue(CorrectTextLabel.GetValue() == TEXT_LABEL::E_LEFT);
-        Assert::IsTrue(CurrentStage.GetValue() == 2);
+        // Init data
+        Init();
+
+        Assert::IsTrue(CorrectFrequency.GetValue() == mapTextFrequency[textType]);
     }
 
-    TEST_METHOD(TESTMETHOD_OnButtonClick_4)
+    TEST_METHOD(TEST_FrequencyMapping_04)
     {
-        displayInfo = std::make_tuple(TEXT_DISPLAY::E_OKAY, 2);
-        listTextLabel = {
-            TEXT_LABEL::E_YES,
-            TEXT_LABEL::E_OKAY,
-            TEXT_LABEL::E_READY,
-            TEXT_LABEL::E_WHAT,
-            TEXT_LABEL::E_MIDDLE,
-            TEXT_LABEL::E_LEFT,
-        };
-        lv_event_t e = { 0 };
-        e.current_target = ui_Button5;
+        auto textType = (TEXT_TYPE)std::stoi(std::string(__FUNCTION__).substr(32, 2));
 
-        AutoUpdate();
-        OnButtonClick(&e);
+        // Create text info
+        ut_textInfo = std::make_tuple(textType, map_TEXT_TYPE[textType]);
 
-        Assert::IsTrue(CorrectTextLabel.GetValue() == TEXT_LABEL::E_MIDDLE);
-        Assert::IsTrue(CurrentStage.GetValue() == 2);
+        // Init data
+        Init();
+
+        Assert::IsTrue(CorrectFrequency.GetValue() == mapTextFrequency[textType]);
     }
 
-    TEST_METHOD(TESTMETHOD_OnButtonClick_5)
+    TEST_METHOD(TEST_FrequencyMapping_05)
     {
-        displayInfo = std::make_tuple(TEXT_DISPLAY::E_SAYS, 6);
-        listTextLabel = {
-            TEXT_LABEL::E_YES,
-            TEXT_LABEL::E_OKAY,
-            TEXT_LABEL::E_READY,
-            TEXT_LABEL::E_WHAT,
-            TEXT_LABEL::E_MIDDLE,
-            TEXT_LABEL::E_LEFT,
-        };
-        lv_event_t e = { 0 };
-        e.current_target = ui_Button6;
+        auto textType = (TEXT_TYPE)std::stoi(std::string(__FUNCTION__).substr(32, 2));
 
-        AutoUpdate();
-        OnButtonClick(&e);
+        // Create text info
+        ut_textInfo = std::make_tuple(textType, map_TEXT_TYPE[textType]);
 
-        Assert::IsTrue(CorrectTextLabel.GetValue() == TEXT_LABEL::E_LEFT);
-        Assert::IsTrue(CurrentStage.GetValue() == 2);
+        // Init data
+        Init();
+
+        Assert::IsTrue(CorrectFrequency.GetValue() == mapTextFrequency[textType]);
     }
 
-    TEST_METHOD(TESTMETHOD_OnButtonClick_6)
+    TEST_METHOD(TEST_FrequencyMapping_06)
     {
-        displayInfo = std::make_tuple(TEXT_DISPLAY::E_NOTHING, 3);
-        listTextLabel = {
-            TEXT_LABEL::E_YES,
-            TEXT_LABEL::E_OKAY,
-            TEXT_LABEL::E_READY,
-            TEXT_LABEL::E_WHAT,
-            TEXT_LABEL::E_MIDDLE,
-            TEXT_LABEL::E_LEFT,
-        };
-        lv_event_t e = { 0 };
-        e.current_target = ui_Button1;
+        auto textType = (TEXT_TYPE)std::stoi(std::string(__FUNCTION__).substr(32, 2));
 
-        AutoUpdate();
-        OnButtonClick(&e);
+        // Create text info
+        ut_textInfo = std::make_tuple(textType, map_TEXT_TYPE[textType]);
 
-        Assert::IsTrue(CorrectTextLabel.GetValue() == TEXT_LABEL::E_YES);
-        Assert::IsTrue(CurrentStage.GetValue() == 2);
+        // Init data
+        Init();
+
+        Assert::IsTrue(CorrectFrequency.GetValue() == mapTextFrequency[textType]);
     }
 
-    TEST_METHOD(TESTMETHOD_OnButtonClick_7)
+    TEST_METHOD(TEST_FrequencyMapping_07)
     {
-        displayInfo = std::make_tuple(TEXT_DISPLAY::E_EMPTY, 5);
-        listTextLabel = {
-            TEXT_LABEL::E_YES,
-            TEXT_LABEL::E_OKAY,
-            TEXT_LABEL::E_READY,
-            TEXT_LABEL::E_WHAT,
-            TEXT_LABEL::E_MIDDLE,
-            TEXT_LABEL::E_LEFT,
-        };
-        lv_event_t e = { 0 };
-        e.current_target = ui_Button3;
+        auto textType = (TEXT_TYPE)std::stoi(std::string(__FUNCTION__).substr(32, 2));
 
-        AutoUpdate();
-        OnButtonClick(&e);
+        // Create text info
+        ut_textInfo = std::make_tuple(textType, map_TEXT_TYPE[textType]);
 
-        Assert::IsTrue(CorrectTextLabel.GetValue() == TEXT_LABEL::E_READY);
-        Assert::IsTrue(CurrentStage.GetValue() == 2);
+        // Init data
+        Init();
+
+        Assert::IsTrue(CorrectFrequency.GetValue() == mapTextFrequency[textType]);
     }
 
-    TEST_METHOD(TESTMETHOD_OnButtonClick_8)
+    TEST_METHOD(TEST_FrequencyMapping_08)
     {
-        displayInfo = std::make_tuple(TEXT_DISPLAY::E_BLANK, 4);
-        listTextLabel = {
-            TEXT_LABEL::E_YES,
-            TEXT_LABEL::E_OKAY,
-            TEXT_LABEL::E_READY,
-            TEXT_LABEL::E_WHAT,
-            TEXT_LABEL::E_MIDDLE,
-            TEXT_LABEL::E_LEFT,
-        };
-        lv_event_t e = { 0 };
-        e.current_target = ui_Button4;
+        auto textType = (TEXT_TYPE)std::stoi(std::string(__FUNCTION__).substr(32, 2));
 
-        AutoUpdate();
-        OnButtonClick(&e);
+        // Create text info
+        ut_textInfo = std::make_tuple(textType, map_TEXT_TYPE[textType]);
 
-        Assert::IsTrue(CorrectTextLabel.GetValue() == TEXT_LABEL::E_WHAT);
-        Assert::IsTrue(CurrentStage.GetValue() == 2);
+        // Init data
+        Init();
+
+        Assert::IsTrue(CorrectFrequency.GetValue() == mapTextFrequency[textType]);
     }
 
-    TEST_METHOD(TESTMETHOD_OnButtonClick_9)
+    TEST_METHOD(TEST_FrequencyMapping_09)
     {
-        displayInfo = std::make_tuple(TEXT_DISPLAY::E_NO, 6);
-        listTextLabel = {
-            TEXT_LABEL::E_YES,
-            TEXT_LABEL::E_OKAY,
-            TEXT_LABEL::E_READY,
-            TEXT_LABEL::E_WHAT,
-            TEXT_LABEL::E_MIDDLE,
-            TEXT_LABEL::E_LEFT,
-        };
-        lv_event_t e = { 0 };
-        e.current_target = ui_Button6;
+        auto textType = (TEXT_TYPE)std::stoi(std::string(__FUNCTION__).substr(32, 2));
 
-        AutoUpdate();
-        OnButtonClick(&e);
+        // Create text info
+        ut_textInfo = std::make_tuple(textType, map_TEXT_TYPE[textType]);
 
-        Assert::IsTrue(CorrectTextLabel.GetValue() == TEXT_LABEL::E_LEFT);
-        Assert::IsTrue(CurrentStage.GetValue() == 2);
+        // Init data
+        Init();
+
+        Assert::IsTrue(CorrectFrequency.GetValue() == mapTextFrequency[textType]);
     }
 
-    TEST_METHOD(TESTMETHOD_OnButtonClick_10)
+    TEST_METHOD(TEST_FrequencyMapping_10)
     {
-        displayInfo = std::make_tuple(TEXT_DISPLAY::E_LED, 3);
-        listTextLabel = {
-            TEXT_LABEL::E_YES,
-            TEXT_LABEL::E_OKAY,
-            TEXT_LABEL::E_READY,
-            TEXT_LABEL::E_WHAT,
-            TEXT_LABEL::E_MIDDLE,
-            TEXT_LABEL::E_LEFT,
-        };
-        lv_event_t e = { 0 };
-        e.current_target = ui_Button1;
+        auto textType = (TEXT_TYPE)std::stoi(std::string(__FUNCTION__).substr(32, 2));
 
-        AutoUpdate();
-        OnButtonClick(&e);
+        // Create text info
+        ut_textInfo = std::make_tuple(textType, map_TEXT_TYPE[textType]);
 
-        Assert::IsTrue(CorrectTextLabel.GetValue() == TEXT_LABEL::E_YES);
-        Assert::IsTrue(CurrentStage.GetValue() == 2);
+        // Init data
+        Init();
+
+        Assert::IsTrue(CorrectFrequency.GetValue() == mapTextFrequency[textType]);
     }
 
-    TEST_METHOD(TESTMETHOD_OnButtonClick_11)
+    TEST_METHOD(TEST_FrequencyMapping_11)
     {
-        displayInfo = std::make_tuple(TEXT_DISPLAY::E_LEED, 6);
-        listTextLabel = {
-            TEXT_LABEL::E_YES,
-            TEXT_LABEL::E_OKAY,
-            TEXT_LABEL::E_READY,
-            TEXT_LABEL::E_WHAT,
-            TEXT_LABEL::E_MIDDLE,
-            TEXT_LABEL::E_LEFT,
-        };
-        lv_event_t e = { 0 };
-        e.current_target = ui_Button6;
+        auto textType = (TEXT_TYPE)std::stoi(std::string(__FUNCTION__).substr(32, 2));
 
-        AutoUpdate();
-        OnButtonClick(&e);
+        // Create text info
+        ut_textInfo = std::make_tuple(textType, map_TEXT_TYPE[textType]);
 
-        Assert::IsTrue(CorrectTextLabel.GetValue() == TEXT_LABEL::E_LEFT);
-        Assert::IsTrue(CurrentStage.GetValue() == 2);
+        // Init data
+        Init();
+
+        Assert::IsTrue(CorrectFrequency.GetValue() == mapTextFrequency[textType]);
     }
 
-    TEST_METHOD(TESTMETHOD_OnButtonClick_12)
+    TEST_METHOD(TEST_FrequencyMapping_12)
     {
-        displayInfo = std::make_tuple(TEXT_DISPLAY::E_READ, 4);
-        listTextLabel = {
-            TEXT_LABEL::E_YES,
-            TEXT_LABEL::E_OKAY,
-            TEXT_LABEL::E_READY,
-            TEXT_LABEL::E_WHAT,
-            TEXT_LABEL::E_MIDDLE,
-            TEXT_LABEL::E_LEFT,
-        };
-        lv_event_t e = { 0 };
-        e.current_target = ui_Button4;
+        auto textType = (TEXT_TYPE)std::stoi(std::string(__FUNCTION__).substr(32, 2));
 
-        AutoUpdate();
-        OnButtonClick(&e);
+        // Create text info
+        ut_textInfo = std::make_tuple(textType, map_TEXT_TYPE[textType]);
 
-        Assert::IsTrue(CorrectTextLabel.GetValue() == TEXT_LABEL::E_WHAT);
-        Assert::IsTrue(CurrentStage.GetValue() == 2);
+        // Init data
+        Init();
+
+        Assert::IsTrue(CorrectFrequency.GetValue() == mapTextFrequency[textType]);
     }
 
-    TEST_METHOD(TESTMETHOD_OnButtonClick_13)
+    TEST_METHOD(TEST_FrequencyMapping_13)
     {
-        displayInfo = std::make_tuple(TEXT_DISPLAY::E_RED, 4);
-        listTextLabel = {
-            TEXT_LABEL::E_YES,
-            TEXT_LABEL::E_OKAY,
-            TEXT_LABEL::E_READY,
-            TEXT_LABEL::E_WHAT,
-            TEXT_LABEL::E_MIDDLE,
-            TEXT_LABEL::E_LEFT,
-        };
-        lv_event_t e = { 0 };
-        e.current_target = ui_Button4;
+        auto textType = (TEXT_TYPE)std::stoi(std::string(__FUNCTION__).substr(32, 2));
 
-        AutoUpdate();
-        OnButtonClick(&e);
+        // Create text info
+        ut_textInfo = std::make_tuple(textType, map_TEXT_TYPE[textType]);
 
-        Assert::IsTrue(CorrectTextLabel.GetValue() == TEXT_LABEL::E_WHAT);
-        Assert::IsTrue(CurrentStage.GetValue() == 2);
+        // Init data
+        Init();
+
+        Assert::IsTrue(CorrectFrequency.GetValue() == mapTextFrequency[textType]);
     }
 
-    TEST_METHOD(TESTMETHOD_OnButtonClick_14)
+    TEST_METHOD(TEST_FrequencyMapping_14)
     {
-        displayInfo = std::make_tuple(TEXT_DISPLAY::E_REED, 5);
-        listTextLabel = {
-            TEXT_LABEL::E_YES,
-            TEXT_LABEL::E_OKAY,
-            TEXT_LABEL::E_READY,
-            TEXT_LABEL::E_WHAT,
-            TEXT_LABEL::E_MIDDLE,
-            TEXT_LABEL::E_LEFT,
-        };
-        lv_event_t e = { 0 };
-        e.current_target = ui_Button3;
+        auto textType = (TEXT_TYPE)std::stoi(std::string(__FUNCTION__).substr(32, 2));
 
-        AutoUpdate();
-        OnButtonClick(&e);
+        // Create text info
+        ut_textInfo = std::make_tuple(textType, map_TEXT_TYPE[textType]);
 
-        Assert::IsTrue(CorrectTextLabel.GetValue() == TEXT_LABEL::E_READY);
-        Assert::IsTrue(CurrentStage.GetValue() == 2);
+        // Init data
+        Init();
+
+        Assert::IsTrue(CorrectFrequency.GetValue() == mapTextFrequency[textType]);
     }
 
-    TEST_METHOD(TESTMETHOD_OnButtonClick_15)
+    TEST_METHOD(TEST_FrequencyMapping_15)
     {
-        displayInfo = std::make_tuple(TEXT_DISPLAY::E_LEED, 5);
-        listTextLabel = {
-            TEXT_LABEL::E_YES,
-            TEXT_LABEL::E_OKAY,
-            TEXT_LABEL::E_READY,
-            TEXT_LABEL::E_WHAT,
-            TEXT_LABEL::E_MIDDLE,
-            TEXT_LABEL::E_LEFT,
-        };
-        lv_event_t e = { 0 };
-        e.current_target = ui_Button3;
+        auto textType = (TEXT_TYPE)std::stoi(std::string(__FUNCTION__).substr(32, 2));
 
-        AutoUpdate();
-        OnButtonClick(&e);
+        // Create text info
+        ut_textInfo = std::make_tuple(textType, map_TEXT_TYPE[textType]);
 
-        Assert::IsTrue(CorrectTextLabel.GetValue() == TEXT_LABEL::E_READY);
-        Assert::IsTrue(CurrentStage.GetValue() == 2);
+        // Init data
+        Init();
+
+        Assert::IsTrue(CorrectFrequency.GetValue() == mapTextFrequency[textType]);
     }
 
-    TEST_METHOD(TESTMETHOD_OnButtonClick_16)
+    TEST_METHOD(TEST_FrequencyMapping_16)
     {
-        displayInfo = std::make_tuple(TEXT_DISPLAY::E_HOLD_ON, 6);
-        listTextLabel = {
-            TEXT_LABEL::E_YES,
-            TEXT_LABEL::E_OKAY,
-            TEXT_LABEL::E_READY,
-            TEXT_LABEL::E_WHAT,
-            TEXT_LABEL::E_MIDDLE,
-            TEXT_LABEL::E_LEFT,
-        };
-        lv_event_t e = { 0 };
-        e.current_target = ui_Button6;
+        auto textType = (TEXT_TYPE)std::stoi(std::string(__FUNCTION__).substr(32, 2));
 
-        AutoUpdate();
-        OnButtonClick(&e);
+        // Create text info
+        ut_textInfo = std::make_tuple(textType, map_TEXT_TYPE[textType]);
 
-        Assert::IsTrue(CorrectTextLabel.GetValue() == TEXT_LABEL::E_LEFT);
-        Assert::IsTrue(CurrentStage.GetValue() == 2);
+        // Init data
+        Init();
+
+        Assert::IsTrue(CorrectFrequency.GetValue() == mapTextFrequency[textType]);
+    }
+#pragma endregion
+
+#pragma region Test_Operation
+    TEST_METHOD(TEST_TextType_01)
+    {
+        auto textType = (TEXT_TYPE)std::stoi(std::string(__FUNCTION__).substr(24, 2));
+
+        // Create text info
+        ut_textInfo = std::make_tuple(textType, map_TEXT_TYPE[textType]);
+
+        // Init data
+        Init();
+        lv_slider_set_value(ui_sldFreAdjust, (uint8_t)textType - 1, LV_ANIM_OFF);
+
+        // Operation
+        OnFreAdjustChange(nullptr);
+        OnButtonTXClick(nullptr);
+
+        Assert::IsTrue(sys_gui::SuccessState.GetValue() == STATE_CHECKED);
     }
 
-    TEST_METHOD(TESTMETHOD_OnButtonClick_17)
+    TEST_METHOD(TEST_TextType_02)
     {
-        displayInfo = std::make_tuple(TEXT_DISPLAY::E_YOU, 4);
-        listTextLabel = {
-            TEXT_LABEL::E_YES,
-            TEXT_LABEL::E_OKAY,
-            TEXT_LABEL::E_READY,
-            TEXT_LABEL::E_WHAT,
-            TEXT_LABEL::E_MIDDLE,
-            TEXT_LABEL::E_LEFT,
-        };
-        lv_event_t e = { 0 };
-        e.current_target = ui_Button4;
+        auto textType = (TEXT_TYPE)std::stoi(std::string(__FUNCTION__).substr(24, 2));
 
-        AutoUpdate();
-        OnButtonClick(&e);
+        // Create text info
+        ut_textInfo = std::make_tuple(textType, map_TEXT_TYPE[textType]);
 
-        Assert::IsTrue(CorrectTextLabel.GetValue() == TEXT_LABEL::E_WHAT);
-        Assert::IsTrue(CurrentStage.GetValue() == 2);
+        // Init data
+        Init();
+        lv_slider_set_value(ui_sldFreAdjust, (uint8_t)textType - 1, LV_ANIM_OFF);
+
+        // Operation
+        OnFreAdjustChange(nullptr);
+        OnButtonTXClick(nullptr);
+
+        Assert::IsTrue(sys_gui::SuccessState.GetValue() == STATE_CHECKED);
     }
 
-    TEST_METHOD(TESTMETHOD_OnButtonClick_18)
+    TEST_METHOD(TEST_TextType_03)
     {
-        displayInfo = std::make_tuple(TEXT_DISPLAY::E_YOU_ARE, 6);
-        listTextLabel = {
-            TEXT_LABEL::E_YES,
-            TEXT_LABEL::E_OKAY,
-            TEXT_LABEL::E_READY,
-            TEXT_LABEL::E_WHAT,
-            TEXT_LABEL::E_MIDDLE,
-            TEXT_LABEL::E_LEFT,
-        };
-        lv_event_t e = { 0 };
-        e.current_target = ui_Button6;
+        auto textType = (TEXT_TYPE)std::stoi(std::string(__FUNCTION__).substr(24, 2));
 
-        AutoUpdate();
-        OnButtonClick(&e);
+        // Create text info
+        ut_textInfo = std::make_tuple(textType, map_TEXT_TYPE[textType]);
 
-        Assert::IsTrue(CorrectTextLabel.GetValue() == TEXT_LABEL::E_LEFT);
-        Assert::IsTrue(CurrentStage.GetValue() == 2);
+        // Init data
+        Init();
+        lv_slider_set_value(ui_sldFreAdjust, (uint8_t)textType - 1, LV_ANIM_OFF);
+
+        // Operation
+        OnFreAdjustChange(nullptr);
+        OnButtonTXClick(nullptr);
+
+        Assert::IsTrue(sys_gui::SuccessState.GetValue() == STATE_CHECKED);
     }
 
-    TEST_METHOD(TESTMETHOD_OnButtonClick_19)
+    TEST_METHOD(TEST_TextType_04)
     {
-        displayInfo = std::make_tuple(TEXT_DISPLAY::E_YOUR, 4);
-        listTextLabel = {
-            TEXT_LABEL::E_YES,
-            TEXT_LABEL::E_OKAY,
-            TEXT_LABEL::E_READY,
-            TEXT_LABEL::E_WHAT,
-            TEXT_LABEL::E_MIDDLE,
-            TEXT_LABEL::E_LEFT,
-        };
-        lv_event_t e = { 0 };
-        e.current_target = ui_Button4;
+        auto textType = (TEXT_TYPE)std::stoi(std::string(__FUNCTION__).substr(24, 2));
 
-        AutoUpdate();
-        OnButtonClick(&e);
+        // Create text info
+        ut_textInfo = std::make_tuple(textType, map_TEXT_TYPE[textType]);
 
-        Assert::IsTrue(CorrectTextLabel.GetValue() == TEXT_LABEL::E_WHAT);
-        Assert::IsTrue(CurrentStage.GetValue() == 2);
+        // Init data
+        Init();
+        lv_slider_set_value(ui_sldFreAdjust, (uint8_t)textType - 1, LV_ANIM_OFF);
+
+        // Operation
+        OnFreAdjustChange(nullptr);
+        OnButtonTXClick(nullptr);
+
+        Assert::IsTrue(sys_gui::SuccessState.GetValue() == STATE_CHECKED);
     }
 
-    TEST_METHOD(TESTMETHOD_OnButtonClick_20)
+    TEST_METHOD(TEST_TextType_05)
     {
-        displayInfo = std::make_tuple(TEXT_DISPLAY::E_YOURE, 4);
-        listTextLabel = {
-            TEXT_LABEL::E_YES,
-            TEXT_LABEL::E_OKAY,
-            TEXT_LABEL::E_READY,
-            TEXT_LABEL::E_WHAT,
-            TEXT_LABEL::E_MIDDLE,
-            TEXT_LABEL::E_LEFT,
-        };
-        lv_event_t e = { 0 };
-        e.current_target = ui_Button4;
+        auto textType = (TEXT_TYPE)std::stoi(std::string(__FUNCTION__).substr(24, 2));
 
-        AutoUpdate();
-        OnButtonClick(&e);
+        // Create text info
+        ut_textInfo = std::make_tuple(textType, map_TEXT_TYPE[textType]);
 
-        Assert::IsTrue(CorrectTextLabel.GetValue() == TEXT_LABEL::E_WHAT);
-        Assert::IsTrue(CurrentStage.GetValue() == 2);
+        // Init data
+        Init();
+        lv_slider_set_value(ui_sldFreAdjust, (uint8_t)textType - 1, LV_ANIM_OFF);
+
+        // Operation
+        OnFreAdjustChange(nullptr);
+        OnButtonTXClick(nullptr);
+
+        Assert::IsTrue(sys_gui::SuccessState.GetValue() == STATE_CHECKED);
     }
 
-    TEST_METHOD(TESTMETHOD_OnButtonClick_21)
+    TEST_METHOD(TEST_TextType_06)
     {
-        displayInfo = std::make_tuple(TEXT_DISPLAY::E_UR, 1);
-        listTextLabel = {
-            TEXT_LABEL::E_YES,
-            TEXT_LABEL::E_OKAY,
-            TEXT_LABEL::E_READY,
-            TEXT_LABEL::E_WHAT,
-            TEXT_LABEL::E_MIDDLE,
-            TEXT_LABEL::E_LEFT,
-        };
-        lv_event_t e = { 0 };
-        e.current_target = ui_Button2;
+        auto textType = (TEXT_TYPE)std::stoi(std::string(__FUNCTION__).substr(24, 2));
 
-        AutoUpdate();
-        OnButtonClick(&e);
+        // Create text info
+        ut_textInfo = std::make_tuple(textType, map_TEXT_TYPE[textType]);
 
-        Assert::IsTrue(CorrectTextLabel.GetValue() == TEXT_LABEL::E_OKAY);
-        Assert::IsTrue(CurrentStage.GetValue() == 2);
+        // Init data
+        Init();
+        lv_slider_set_value(ui_sldFreAdjust, (uint8_t)textType - 1, LV_ANIM_OFF);
+
+        // Operation
+        OnFreAdjustChange(nullptr);
+        OnButtonTXClick(nullptr);
+
+        Assert::IsTrue(sys_gui::SuccessState.GetValue() == STATE_CHECKED);
     }
 
-    TEST_METHOD(TESTMETHOD_OnButtonClick_22)
+    TEST_METHOD(TEST_TextType_07)
     {
-        displayInfo = std::make_tuple(TEXT_DISPLAY::E_THERE, 6);
-        listTextLabel = {
-            TEXT_LABEL::E_YES,
-            TEXT_LABEL::E_OKAY,
-            TEXT_LABEL::E_READY,
-            TEXT_LABEL::E_WHAT,
-            TEXT_LABEL::E_MIDDLE,
-            TEXT_LABEL::E_LEFT,
-        };
-        lv_event_t e = { 0 };
-        e.current_target = ui_Button6;
+        auto textType = (TEXT_TYPE)std::stoi(std::string(__FUNCTION__).substr(24, 2));
 
-        AutoUpdate();
-        OnButtonClick(&e);
+        // Create text info
+        ut_textInfo = std::make_tuple(textType, map_TEXT_TYPE[textType]);
 
-        Assert::IsTrue(CorrectTextLabel.GetValue() == TEXT_LABEL::E_LEFT);
-        Assert::IsTrue(CurrentStage.GetValue() == 2);
+        // Init data
+        Init();
+        lv_slider_set_value(ui_sldFreAdjust, (uint8_t)textType - 1, LV_ANIM_OFF);
+
+        // Operation
+        OnFreAdjustChange(nullptr);
+        OnButtonTXClick(nullptr);
+
+        Assert::IsTrue(sys_gui::SuccessState.GetValue() == STATE_CHECKED);
     }
 
-    TEST_METHOD(TESTMETHOD_OnButtonClick_23)
+    TEST_METHOD(TEST_TextType_08)
     {
-        displayInfo = std::make_tuple(TEXT_DISPLAY::E_THEYRE, 5);
-        listTextLabel = {
-            TEXT_LABEL::E_YES,
-            TEXT_LABEL::E_OKAY,
-            TEXT_LABEL::E_READY,
-            TEXT_LABEL::E_WHAT,
-            TEXT_LABEL::E_MIDDLE,
-            TEXT_LABEL::E_LEFT,
-        };
-        lv_event_t e = { 0 };
-        e.current_target = ui_Button3;
+        auto textType = (TEXT_TYPE)std::stoi(std::string(__FUNCTION__).substr(24, 2));
 
-        AutoUpdate();
-        OnButtonClick(&e);
+        // Create text info
+        ut_textInfo = std::make_tuple(textType, map_TEXT_TYPE[textType]);
 
-        Assert::IsTrue(CorrectTextLabel.GetValue() == TEXT_LABEL::E_READY);
-        Assert::IsTrue(CurrentStage.GetValue() == 2);
+        // Init data
+        Init();
+        lv_slider_set_value(ui_sldFreAdjust, (uint8_t)textType - 1, LV_ANIM_OFF);
+
+        // Operation
+        OnFreAdjustChange(nullptr);
+        OnButtonTXClick(nullptr);
+
+        Assert::IsTrue(sys_gui::SuccessState.GetValue() == STATE_CHECKED);
     }
 
-    TEST_METHOD(TESTMETHOD_OnButtonClick_24)
+    TEST_METHOD(TEST_TextType_09)
     {
-        displayInfo = std::make_tuple(TEXT_DISPLAY::E_THEIR, 4);
-        listTextLabel = {
-            TEXT_LABEL::E_YES,
-            TEXT_LABEL::E_OKAY,
-            TEXT_LABEL::E_READY,
-            TEXT_LABEL::E_WHAT,
-            TEXT_LABEL::E_MIDDLE,
-            TEXT_LABEL::E_LEFT,
-        };
-        lv_event_t e = { 0 };
-        e.current_target = ui_Button4;
+        auto textType = (TEXT_TYPE)std::stoi(std::string(__FUNCTION__).substr(24, 2));
 
-        AutoUpdate();
-        OnButtonClick(&e);
+        // Create text info
+        ut_textInfo = std::make_tuple(textType, map_TEXT_TYPE[textType]);
 
-        Assert::IsTrue(CorrectTextLabel.GetValue() == TEXT_LABEL::E_WHAT);
-        Assert::IsTrue(CurrentStage.GetValue() == 2);
+        // Init data
+        Init();
+        lv_slider_set_value(ui_sldFreAdjust, (uint8_t)textType - 1, LV_ANIM_OFF);
+
+        // Operation
+        OnFreAdjustChange(nullptr);
+        OnButtonTXClick(nullptr);
+
+        Assert::IsTrue(sys_gui::SuccessState.GetValue() == STATE_CHECKED);
     }
 
-    TEST_METHOD(TESTMETHOD_OnButtonClick_25)
+    TEST_METHOD(TEST_TextType_10)
     {
-        displayInfo = std::make_tuple(TEXT_DISPLAY::E_THEY_ARE, 3);
-        listTextLabel = {
-            TEXT_LABEL::E_YES,
-            TEXT_LABEL::E_OKAY,
-            TEXT_LABEL::E_READY,
-            TEXT_LABEL::E_WHAT,
-            TEXT_LABEL::E_MIDDLE,
-            TEXT_LABEL::E_LEFT,
-        };
-        lv_event_t e = { 0 };
-        e.current_target = ui_Button1;
+        auto textType = (TEXT_TYPE)std::stoi(std::string(__FUNCTION__).substr(24, 2));
 
-        AutoUpdate();
-        OnButtonClick(&e);
+        // Create text info
+        ut_textInfo = std::make_tuple(textType, map_TEXT_TYPE[textType]);
 
-        Assert::IsTrue(CorrectTextLabel.GetValue() == TEXT_LABEL::E_YES);
-        Assert::IsTrue(CurrentStage.GetValue() == 2);
+        // Init data
+        Init();
+        lv_slider_set_value(ui_sldFreAdjust, (uint8_t)textType - 1, LV_ANIM_OFF);
+
+        // Operation
+        OnFreAdjustChange(nullptr);
+        OnButtonTXClick(nullptr);
+
+        Assert::IsTrue(sys_gui::SuccessState.GetValue() == STATE_CHECKED);
     }
 
-    TEST_METHOD(TESTMETHOD_OnButtonClick_26)
+    TEST_METHOD(TEST_TextType_11)
     {
-        displayInfo = std::make_tuple(TEXT_DISPLAY::E_SEE, 6);
-        listTextLabel = {
-            TEXT_LABEL::E_YES,
-            TEXT_LABEL::E_OKAY,
-            TEXT_LABEL::E_READY,
-            TEXT_LABEL::E_WHAT,
-            TEXT_LABEL::E_MIDDLE,
-            TEXT_LABEL::E_LEFT,
-        };
-        lv_event_t e = { 0 };
-        e.current_target = ui_Button6;
+        auto textType = (TEXT_TYPE)std::stoi(std::string(__FUNCTION__).substr(24, 2));
 
-        AutoUpdate();
-        OnButtonClick(&e);
+        // Create text info
+        ut_textInfo = std::make_tuple(textType, map_TEXT_TYPE[textType]);
 
-        Assert::IsTrue(CorrectTextLabel.GetValue() == TEXT_LABEL::E_LEFT);
-        Assert::IsTrue(CurrentStage.GetValue() == 2);
+        // Init data
+        Init();
+        lv_slider_set_value(ui_sldFreAdjust, (uint8_t)textType - 1, LV_ANIM_OFF);
+
+        // Operation
+        OnFreAdjustChange(nullptr);
+        OnButtonTXClick(nullptr);
+
+        Assert::IsTrue(sys_gui::SuccessState.GetValue() == STATE_CHECKED);
     }
 
-    TEST_METHOD(TESTMETHOD_OnButtonClick_27)
+    TEST_METHOD(TEST_TextType_12)
     {
-        displayInfo = std::make_tuple(TEXT_DISPLAY::E_C, 2);
-        listTextLabel = {
-            TEXT_LABEL::E_YES,
-            TEXT_LABEL::E_OKAY,
-            TEXT_LABEL::E_READY,
-            TEXT_LABEL::E_WHAT,
-            TEXT_LABEL::E_MIDDLE,
-            TEXT_LABEL::E_LEFT,
-        };
-        lv_event_t e = { 0 };
-        e.current_target = ui_Button5;
+        auto textType = (TEXT_TYPE)std::stoi(std::string(__FUNCTION__).substr(24, 2));
 
-        AutoUpdate();
-        OnButtonClick(&e);
+        // Create text info
+        ut_textInfo = std::make_tuple(textType, map_TEXT_TYPE[textType]);
 
-        Assert::IsTrue(CorrectTextLabel.GetValue() == TEXT_LABEL::E_MIDDLE);
-        Assert::IsTrue(CurrentStage.GetValue() == 2);
+        // Init data
+        Init();
+        lv_slider_set_value(ui_sldFreAdjust, (uint8_t)textType - 1, LV_ANIM_OFF);
+
+        // Operation
+        OnFreAdjustChange(nullptr);
+        OnButtonTXClick(nullptr);
+
+        Assert::IsTrue(sys_gui::SuccessState.GetValue() == STATE_CHECKED);
     }
 
-    TEST_METHOD(TESTMETHOD_OnButtonClick_28)
+    TEST_METHOD(TEST_TextType_13)
     {
-        displayInfo = std::make_tuple(TEXT_DISPLAY::E_CEE, 6);
-        listTextLabel = {
-            TEXT_LABEL::E_YES,
-            TEXT_LABEL::E_OKAY,
-            TEXT_LABEL::E_READY,
-            TEXT_LABEL::E_WHAT,
-            TEXT_LABEL::E_MIDDLE,
-            TEXT_LABEL::E_LEFT,
-        };
-        lv_event_t e = { 0 };
-        e.current_target = ui_Button6;
+        auto textType = (TEXT_TYPE)std::stoi(std::string(__FUNCTION__).substr(24, 2));
 
-        AutoUpdate();
-        OnButtonClick(&e);
+        // Create text info
+        ut_textInfo = std::make_tuple(textType, map_TEXT_TYPE[textType]);
 
-        Assert::IsTrue(CorrectTextLabel.GetValue() == TEXT_LABEL::E_LEFT);
-        Assert::IsTrue(CurrentStage.GetValue() == 2);
+        // Init data
+        Init();
+        lv_slider_set_value(ui_sldFreAdjust, (uint8_t)textType - 1, LV_ANIM_OFF);
+
+        // Operation
+        OnFreAdjustChange(nullptr);
+        OnButtonTXClick(nullptr);
+
+        Assert::IsTrue(sys_gui::SuccessState.GetValue() == STATE_CHECKED);
     }
 
-    TEST_METHOD(TESTMETHOD_OnButtonClick_29)
+    TEST_METHOD(TEST_TextType_14)
     {
-        displayInfo = std::make_tuple(TEXT_DISPLAY::E_YOUR, 4);
-        listTextLabel = {
-            TEXT_LABEL::E_YES,
-            TEXT_LABEL::E_OKAY,
-            TEXT_LABEL::E_READY,
-            TEXT_LABEL::E_WHAT,
-            TEXT_LABEL::E_MIDDLE,
-            TEXT_LABEL::E_LEFT,
-        };
-        lv_event_t e = { 0 };
-        e.current_target = ui_Button3;
+        auto textType = (TEXT_TYPE)std::stoi(std::string(__FUNCTION__).substr(24, 2));
 
-        AutoUpdate();
-        OnButtonClick(&e);
+        // Create text info
+        ut_textInfo = std::make_tuple(textType, map_TEXT_TYPE[textType]);
 
-        Assert::IsTrue(CorrectTextLabel.GetValue() == TEXT_LABEL::E_WHAT);
-        Assert::IsTrue(CurrentStage.GetValue() == 1);
-        Assert::IsTrue(isIncorrectButton == true);
+        // Init data
+        Init();
+        lv_slider_set_value(ui_sldFreAdjust, (uint8_t)textType - 1, LV_ANIM_OFF);
+
+        // Operation
+        OnFreAdjustChange(nullptr);
+        OnButtonTXClick(nullptr);
+
+        Assert::IsTrue(sys_gui::SuccessState.GetValue() == STATE_CHECKED);
+    }
+
+    TEST_METHOD(TEST_TextType_15)
+    {
+        auto textType = (TEXT_TYPE)std::stoi(std::string(__FUNCTION__).substr(24, 2));
+
+        // Create text info
+        ut_textInfo = std::make_tuple(textType, map_TEXT_TYPE[textType]);
+
+        // Init data
+        Init();
+        lv_slider_set_value(ui_sldFreAdjust, (uint8_t)textType - 1, LV_ANIM_OFF);
+
+        // Operation
+        OnFreAdjustChange(nullptr);
+        OnButtonTXClick(nullptr);
+
+        Assert::IsTrue(sys_gui::SuccessState.GetValue() == STATE_CHECKED);
+    }
+
+    TEST_METHOD(TEST_TextType_16)
+    {
+        auto textType = (TEXT_TYPE)std::stoi(std::string(__FUNCTION__).substr(24, 2));
+
+        // Create text info
+        ut_textInfo = std::make_tuple(textType, map_TEXT_TYPE[textType]);
+
+        // Init data
+        Init();
+        lv_slider_set_value(ui_sldFreAdjust, (uint8_t)textType - 1, LV_ANIM_OFF);
+
+        // Operation
+        OnFreAdjustChange(nullptr);
+        OnButtonTXClick(nullptr);
+
+        Assert::IsTrue(sys_gui::SuccessState.GetValue() == STATE_CHECKED);
     }
 #pragma endregion
 };

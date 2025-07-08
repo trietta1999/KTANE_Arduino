@@ -106,7 +106,8 @@ void ProcessData()
         }
         else if (read == "gui_correct")
         {
-            debug_println("Corect label: " + map_TextLabel[CorrectTextLabel.GetValue()]);
+            debug_println("Corect word: " + CorrectWord.GetValue());
+            debug_println("Corect frequency: " + std::to_string(CorrectFrequency.GetValue()));
         }
     }
 #endif

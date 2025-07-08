@@ -102,15 +102,342 @@ public:
         Assert::IsTrue(NumberCheckInTimer(2) == true);
     }
 
-    TEST_METHOD(TEST_GetTextLabelListFromMap)
+    TEST_METHOD(TEST_FlatMorseCodeArray)
     {
-        auto result = GetTextLabelListFromMap(BUTTON_NUM);
-        Assert::IsTrue(result.size() == BUTTON_NUM);
+        std::vector<std::array<int32_t, MAX_MORSE_SYMBOL>> list = {
+            { 1, 1, 1, 1, 1 },
+            { 0, 0, 0, 0, 0 },
+            { 1, 0, 1, 0, 1 },
+        };
+        auto result = FlatMorseCodeArray(list);
+        std::vector<int32_t> compare = { 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1 };
+
+        Assert::IsTrue(result == compare);
     }
 
-    TEST_METHOD(TEST_SetCorrectTextLabel)
+    TEST_METHOD(TEST_ConvertSymbolToDigitArray)
     {
-        auto result = SetCorrectTextLabel(2, { TEXT_LABEL::E_RIGHT, TEXT_LABEL::E_NOTHING, TEXT_LABEL::E_READY, TEXT_LABEL::E_PRESS, TEXT_LABEL::E_UHHH, });
-        Assert::IsTrue(result == TEXT_LABEL::E_UHHH);
+        auto result = ConvertSymbolToDigitArray("-.-.-");
+        std::array<int32_t, MAX_MORSE_SYMBOL> compare = { DASH_LEVEL, DOT_LEVEL, DASH_LEVEL, DOT_LEVEL, DASH_LEVEL };
+
+        Assert::IsTrue(result == compare);
     }
+
+#pragma region Test_ConvertTextToMorseCode
+    TEST_METHOD(TEST_ConvertTextToMorseCode_A)
+    {
+        auto result = ConvertTextToMorseCode("A");
+
+        std::array<int32_t, MAX_MORSE_SYMBOL> compare = { SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL };
+        compare[0] = DOT_LEVEL;
+        compare[1] = DASH_LEVEL;
+
+        Assert::IsTrue(result[0] == compare);
+    }
+
+    TEST_METHOD(TEST_ConvertTextToMorseCode_B)
+    {
+        auto result = ConvertTextToMorseCode("B");
+
+        std::array<int32_t, MAX_MORSE_SYMBOL> compare = { SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL };
+        compare[0] = DASH_LEVEL;
+        compare[1] = DOT_LEVEL;
+        compare[2] = DOT_LEVEL;
+        compare[3] = DOT_LEVEL;
+
+        Assert::IsTrue(result[0] == compare);
+    }
+
+    TEST_METHOD(TEST_ConvertTextToMorseCode_C)
+    {
+        auto result = ConvertTextToMorseCode("C");
+
+        std::array<int32_t, MAX_MORSE_SYMBOL> compare = { SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL };
+        compare[0] = DASH_LEVEL;
+        compare[1] = DOT_LEVEL;
+        compare[2] = DASH_LEVEL;
+        compare[3] = DOT_LEVEL;
+
+        Assert::IsTrue(result[0] == compare);
+    }
+
+    TEST_METHOD(TEST_ConvertTextToMorseCode_D)
+    {
+        auto result = ConvertTextToMorseCode("D");
+
+        std::array<int32_t, MAX_MORSE_SYMBOL> compare = { SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL };
+        compare[0] = DASH_LEVEL;
+        compare[1] = DOT_LEVEL;
+        compare[2] = DOT_LEVEL;
+
+        Assert::IsTrue(result[0] == compare);
+    }
+
+    TEST_METHOD(TEST_ConvertTextToMorseCode_E)
+    {
+        auto result = ConvertTextToMorseCode("E");
+
+        std::array<int32_t, MAX_MORSE_SYMBOL> compare = { SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL };
+        compare[0] = DOT_LEVEL;
+
+        Assert::IsTrue(result[0] == compare);
+    }
+
+    TEST_METHOD(TEST_ConvertTextToMorseCode_F)
+    {
+        auto result = ConvertTextToMorseCode("F");
+
+        std::array<int32_t, MAX_MORSE_SYMBOL> compare = { SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL };
+        compare[0] = DOT_LEVEL;
+        compare[1] = DOT_LEVEL;
+        compare[2] = DASH_LEVEL;
+        compare[3] = DOT_LEVEL;
+
+        Assert::IsTrue(result[0] == compare);
+    }
+
+    TEST_METHOD(TEST_ConvertTextToMorseCode_G)
+    {
+        auto result = ConvertTextToMorseCode("G");
+
+        std::array<int32_t, MAX_MORSE_SYMBOL> compare = { SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL };
+        compare[0] = DASH_LEVEL;
+        compare[1] = DASH_LEVEL;
+        compare[2] = DOT_LEVEL;
+
+        Assert::IsTrue(result[0] == compare);
+    }
+
+    TEST_METHOD(TEST_ConvertTextToMorseCode_H)
+    {
+        auto result = ConvertTextToMorseCode("H");
+
+        std::array<int32_t, MAX_MORSE_SYMBOL> compare = { SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL };
+        compare[0] = DOT_LEVEL;
+        compare[1] = DOT_LEVEL;
+        compare[2] = DOT_LEVEL;
+        compare[3] = DOT_LEVEL;
+
+        Assert::IsTrue(result[0] == compare);
+    }
+
+    TEST_METHOD(TEST_ConvertTextToMorseCode_I)
+    {
+        auto result = ConvertTextToMorseCode("I");
+
+        std::array<int32_t, MAX_MORSE_SYMBOL> compare = { SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL };
+        compare[0] = DOT_LEVEL;
+        compare[1] = DOT_LEVEL;
+
+        Assert::IsTrue(result[0] == compare);
+    }
+
+    TEST_METHOD(TEST_ConvertTextToMorseCode_J)
+    {
+        auto result = ConvertTextToMorseCode("J");
+
+        std::array<int32_t, MAX_MORSE_SYMBOL> compare = { SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL };
+        compare[0] = DOT_LEVEL;
+        compare[1] = DASH_LEVEL;
+        compare[2] = DASH_LEVEL;
+        compare[3] = DASH_LEVEL;
+
+        Assert::IsTrue(result[0] == compare);
+    }
+
+    TEST_METHOD(TEST_ConvertTextToMorseCode_K)
+    {
+        auto result = ConvertTextToMorseCode("K");
+
+        std::array<int32_t, MAX_MORSE_SYMBOL> compare = { SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL };
+        compare[0] = DASH_LEVEL;
+        compare[1] = DOT_LEVEL;
+        compare[2] = DASH_LEVEL;
+
+        Assert::IsTrue(result[0] == compare);
+    }
+
+    TEST_METHOD(TEST_ConvertTextToMorseCode_L)
+    {
+        auto result = ConvertTextToMorseCode("L");
+
+        std::array<int32_t, MAX_MORSE_SYMBOL> compare = { SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL };
+        compare[0] = DOT_LEVEL;
+        compare[1] = DASH_LEVEL;
+        compare[2] = DOT_LEVEL;
+        compare[3] = DOT_LEVEL;
+
+        Assert::IsTrue(result[0] == compare);
+    }
+
+    TEST_METHOD(TEST_ConvertTextToMorseCode_M)
+    {
+        auto result = ConvertTextToMorseCode("M");
+
+        std::array<int32_t, MAX_MORSE_SYMBOL> compare = { SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL };
+        compare[0] = DASH_LEVEL;
+        compare[1] = DASH_LEVEL;
+
+        Assert::IsTrue(result[0] == compare);
+    }
+
+    TEST_METHOD(TEST_ConvertTextToMorseCode_N)
+    {
+        auto result = ConvertTextToMorseCode("N");
+
+        std::array<int32_t, MAX_MORSE_SYMBOL> compare = { SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL };
+        compare[0] = DASH_LEVEL;
+        compare[1] = DOT_LEVEL;
+
+        Assert::IsTrue(result[0] == compare);
+    }
+
+    TEST_METHOD(TEST_ConvertTextToMorseCode_O)
+    {
+        auto result = ConvertTextToMorseCode("O");
+
+        std::array<int32_t, MAX_MORSE_SYMBOL> compare = { SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL };
+        compare[0] = DASH_LEVEL;
+        compare[1] = DASH_LEVEL;
+        compare[2] = DASH_LEVEL;
+
+        Assert::IsTrue(result[0] == compare);
+    }
+
+    TEST_METHOD(TEST_ConvertTextToMorseCode_P)
+    {
+        auto result = ConvertTextToMorseCode("P");
+
+        std::array<int32_t, MAX_MORSE_SYMBOL> compare = { SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL };
+        compare[0] = DOT_LEVEL;
+        compare[1] = DASH_LEVEL;
+        compare[2] = DASH_LEVEL;
+        compare[3] = DOT_LEVEL;
+
+        Assert::IsTrue(result[0] == compare);
+    }
+
+    TEST_METHOD(TEST_ConvertTextToMorseCode_Q)
+    {
+        auto result = ConvertTextToMorseCode("Q");
+
+        std::array<int32_t, MAX_MORSE_SYMBOL> compare = { SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL };
+        compare[0] = DASH_LEVEL;
+        compare[1] = DASH_LEVEL;
+        compare[2] = DOT_LEVEL;
+        compare[3] = DASH_LEVEL;
+
+        Assert::IsTrue(result[0] == compare);
+    }
+
+    TEST_METHOD(TEST_ConvertTextToMorseCode_R)
+    {
+        auto result = ConvertTextToMorseCode("R");
+
+        std::array<int32_t, MAX_MORSE_SYMBOL> compare = { SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL };
+        compare[0] = DOT_LEVEL;
+        compare[1] = DASH_LEVEL;
+        compare[2] = DOT_LEVEL;
+
+        Assert::IsTrue(result[0] == compare);
+    }
+
+    TEST_METHOD(TEST_ConvertTextToMorseCode_S)
+    {
+        auto result = ConvertTextToMorseCode("S");
+
+        std::array<int32_t, MAX_MORSE_SYMBOL> compare = { SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL };
+        compare[0] = DOT_LEVEL;
+        compare[1] = DOT_LEVEL;
+        compare[2] = DOT_LEVEL;
+
+        Assert::IsTrue(result[0] == compare);
+    }
+
+    TEST_METHOD(TEST_ConvertTextToMorseCode_T)
+    {
+        auto result = ConvertTextToMorseCode("T");
+
+        std::array<int32_t, MAX_MORSE_SYMBOL> compare = { SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL };
+        compare[0] = DASH_LEVEL;
+
+        Assert::IsTrue(result[0] == compare);
+    }
+
+    TEST_METHOD(TEST_ConvertTextToMorseCode_U)
+    {
+        auto result = ConvertTextToMorseCode("U");
+
+        std::array<int32_t, MAX_MORSE_SYMBOL> compare = { SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL };
+        compare[0] = DOT_LEVEL;
+        compare[1] = DOT_LEVEL;
+        compare[2] = DASH_LEVEL;
+
+        Assert::IsTrue(result[0] == compare);
+    }
+
+    TEST_METHOD(TEST_ConvertTextToMorseCode_V)
+    {
+        auto result = ConvertTextToMorseCode("V");
+
+        std::array<int32_t, MAX_MORSE_SYMBOL> compare = { SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL };
+        compare[0] = DOT_LEVEL;
+        compare[1] = DOT_LEVEL;
+        compare[2] = DOT_LEVEL;
+        compare[3] = DASH_LEVEL;
+
+        Assert::IsTrue(result[0] == compare);
+    }
+
+    TEST_METHOD(TEST_ConvertTextToMorseCode_W)
+    {
+        auto result = ConvertTextToMorseCode("W");
+
+        std::array<int32_t, MAX_MORSE_SYMBOL> compare = { SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL };
+        compare[0] = DOT_LEVEL;
+        compare[1] = DASH_LEVEL;
+        compare[2] = DASH_LEVEL;
+
+        Assert::IsTrue(result[0] == compare);
+    }
+
+    TEST_METHOD(TEST_ConvertTextToMorseCode_X)
+    {
+        auto result = ConvertTextToMorseCode("X");
+
+        std::array<int32_t, MAX_MORSE_SYMBOL> compare = { SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL };
+        compare[0] = DASH_LEVEL;
+        compare[1] = DOT_LEVEL;
+        compare[2] = DOT_LEVEL;
+        compare[3] = DASH_LEVEL;
+
+        Assert::IsTrue(result[0] == compare);
+    }
+
+    TEST_METHOD(TEST_ConvertTextToMorseCode_Y)
+    {
+        auto result = ConvertTextToMorseCode("Y");
+
+        std::array<int32_t, MAX_MORSE_SYMBOL> compare = { SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL };
+        compare[0] = DASH_LEVEL;
+        compare[1] = DOT_LEVEL;
+        compare[2] = DASH_LEVEL;
+        compare[3] = DASH_LEVEL;
+
+        Assert::IsTrue(result[0] == compare);
+    }
+
+    TEST_METHOD(TEST_ConvertTextToMorseCode_Z)
+    {
+        auto result = ConvertTextToMorseCode("Z");
+
+        std::array<int32_t, MAX_MORSE_SYMBOL> compare = { SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL, SPACE_LEVEL };
+        compare[0] = DASH_LEVEL;
+        compare[1] = DASH_LEVEL;
+        compare[2] = DOT_LEVEL;
+        compare[3] = DOT_LEVEL;
+
+        Assert::IsTrue(result[0] == compare);
+    }
+#pragma endregion
 };

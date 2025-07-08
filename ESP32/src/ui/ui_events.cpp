@@ -11,14 +11,134 @@
 #include "../CommonLibrary.h"
 #include "../CommonService.h"
 
-bool regenerate = false;
-bool isIncorrectButton = false;
-std::vector<std::tuple<lv_obj_t*, lv_obj_t*, TEXT_LABEL>> listButton = { };
-
 #ifdef UNIT_TEST
-std::tuple<TEXT_DISPLAY, uint8_t> displayInfo = { };
-std::vector<TEXT_LABEL> listTextLabel = { };
+std::tuple<TEXT_TYPE, std::string> ut_textInfo;
 #endif
+
+struct chart_info_t {
+    lv_obj_t* chart;
+    lv_chart_series_t* series;
+    std::vector<int32_t> listData;
+
+    chart_info_t(uint8_t size, lv_obj_t* chart, uint32_t seriesColor)
+    {
+        this->listData.resize(size);
+        this->chart = chart;
+        this->series = lv_chart_add_series(this->chart, lv_color_hex(seriesColor), LV_CHART_AXIS_PRIMARY_Y);
+    }
+
+    void SetChartData()
+    {
+        lv_chart_set_ext_y_array(this->chart, this->series, this->listData.data());
+        lv_chart_refresh(this->chart);
+    }
+
+    void SetActive(uint8_t index)
+    {
+        // All data off
+        for (auto& data : this->listData)
+        {
+            data = CHANNEL_OFF;
+        }
+
+        // Set active
+        listData[index] = CHANNEL_ACTIVE;
+        SetChartData();
+    }
+};
+
+chart_info_t* chartMorseCodeInfo = nullptr;
+chart_info_t* chartMorseCodeActiveInfo = nullptr;
+chart_info_t* chartRadioInfo = nullptr;
+
+void CreateBlinkLamp()
+{
+    static uint8_t index = 0;
+    static bool lampState = true;
+    static bool lampEnable = true;
+    static lv_timer_t* timerLampBlink = lv_timer_create([](lv_timer_t* timer) {
+        if (sys_gui::SuccessState.GetValue() != INCORRECT)
+        {
+            // Delete timer
+            lv_timer_del(timer);
+            timer = nullptr;
+            timerLampBlink = nullptr;
+
+            // Turn off lamp
+            lv_obj_set_style_bg_color(ui_lblLamp, lv_color_hex(COLOR_LAMP_OFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+
+            // Exit timer
+            return;
+        }
+
+        // Get symbol
+        auto symbol = chartMorseCodeInfo->listData[index];
+
+        // Dot symbol
+        if (symbol == DOT_LEVEL)
+        {
+            lv_timer_set_period(timer, DOT_SLEEP);
+            lampEnable = true;
+        }
+        // Dash symbol
+        else if (symbol == DASH_LEVEL)
+        {
+            lv_timer_set_period(timer, DASH_SLEEP);
+            lampEnable = true;
+        }
+        // Empty symbol
+        else if (symbol == SPACE_LEVEL)
+        {
+            // Quick bypass
+            lv_timer_set_period(timer, SPACE_SLEEP);
+
+            // End of letter
+            if ((index + 1) % MAX_MORSE_SYMBOL == 0)
+            {
+                lv_obj_set_style_bg_color(ui_lblLamp, lv_color_hex(COLOR_LAMP_OFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+                lv_timer_set_period(timer, LETTER_SLEEP);
+            }
+
+            lampEnable = false;
+        }
+
+        if (lampEnable)
+        {
+            // Turn on lamp
+            if (lampState)
+            {
+                lv_obj_set_style_bg_color(ui_lblLamp, lv_color_hex(COLOR_LAMP_ON), LV_PART_MAIN | LV_STATE_DEFAULT);
+
+                // Set active morse code position
+                chartMorseCodeActiveInfo->SetActive(index);
+
+                // Move to next active morse code position
+                index++;
+            }
+            // Turn off lamp
+            else
+            {
+                lv_obj_set_style_bg_color(ui_lblLamp, lv_color_hex(COLOR_LAMP_OFF), LV_PART_MAIN | LV_STATE_DEFAULT);
+                lv_timer_set_period(timer, SYMBOL_SLEEP);
+            }
+
+            // Toggle lamp
+            lampState = !lampState;
+        }
+        else
+        {
+            // Move to next active morse code position
+            index++;
+        }
+
+        // End of word
+        if (index >= MAX_SYMBOL)
+        {
+            index = 0;
+            lv_timer_set_period(timer, WORD_SLEEP);
+        }
+        }, 0, nullptr);
+}
 
 void Init()
 {
@@ -26,83 +146,42 @@ void Init()
     sys_gui::Brightness.SetValue(100);
     lv_slider_set_value(ui_sldBrightness, sys_gui::Brightness.GetValue(), LV_ANIM_OFF);
 
-    // Create list button
-    listButton = {
-        { ui_Button1, ui_lblButtonText1, TEXT_LABEL::MIN },
-        { ui_Button2, ui_lblButtonText2, TEXT_LABEL::MIN },
-        { ui_Button3, ui_lblButtonText3, TEXT_LABEL::MIN },
-        { ui_Button4, ui_lblButtonText4, TEXT_LABEL::MIN },
-        { ui_Button5, ui_lblButtonText5, TEXT_LABEL::MIN },
-        { ui_Button6, ui_lblButtonText6, TEXT_LABEL::MIN },
-    };
+    // Init chart
+    chartMorseCodeActiveInfo = new chart_info_t(MAX_SYMBOL, ui_chartMorseCode, COLOR_BLUE);
+    chartMorseCodeInfo = new chart_info_t(MAX_SYMBOL, ui_chartMorseCode, COLOR_RED);
+    chartRadioInfo = new chart_info_t(MAX_CHANNEL, ui_chartRadio, COLOR_RED);
 
-    CurrentStage.SetValue(1);
+    // Get morse code info
+#ifdef UNIT_TEST
+    auto textInfo = ut_textInfo;
+#else
+    auto textInfo = GetRandomText();
+#endif
+    chartMorseCodeInfo->listData = FlatMorseCodeArray(ConvertTextToMorseCode(std::get<TEXT_STR_POS>(textInfo)));
+
+    // Set chart data
+    chartMorseCodeInfo->SetChartData();
+
+    // Set correct data
+    CorrectFrequency.SetValue(mapTextFrequency[std::get<TEXT_TYPE_POS>(textInfo)]);
+    CorrectWord.SetValue(std::get<TEXT_STR_POS>(textInfo));
+
+#ifndef UNIT_TEST
+    // Init radio value
+    OnFreAdjustChange(nullptr);
+
+    // Bink lamp timer
+    CreateBlinkLamp();
+#endif
+
+#ifdef _WIN64
+    debug_println("Corect word: " + CorrectWord.GetValue());
+    debug_println("Corect frequency: " + std::to_string(CorrectFrequency.GetValue()));
+#endif
 }
 
 void AutoUpdate()
 {
-#ifndef UNIT_TEST
-    if (CurrentStage.GetState() || isIncorrectButton || regenerate)
-    {
-#endif
-#ifndef UNIT_TEST
-        auto displayInfo = GetRandomTextDisplay();
-        auto listTextLabel = GetTextLabelListFromMap(BUTTON_NUM);
-#endif
-
-        // Set display
-        auto textDisplay = std::get<TEXT_POS>(displayInfo);
-        auto textDisplayStr = std::get<TEXT_POS>(map_TextDisplayWithFocusPostion[textDisplay]);
-        lv_label_set_text(ui_lblDisplay, textDisplayStr.c_str());
-
-        // Set button label
-        for (uint8_t i = 0; i < listButton.size(); i++)
-        {
-            auto& item = listButton[i];
-            auto textLabel = listTextLabel[i];
-            auto textLabelStr = map_TextLabel[textLabel];
-
-            // Set text label to button list
-            std::get<2>(item) = textLabel;
-
-            // Set text label
-            lv_label_set_text(std::get<1>(item), textLabelStr.c_str());
-        }
-
-        // Set correct text label
-        auto focusPos = std::get<FOCUSPOS_POS>(displayInfo);
-        auto correctLabel = SetCorrectTextLabel(focusPos, listTextLabel);
-
-        if (map_TextLabel[correctLabel] == "")
-        {
-            // Re-genrate correct label when it's empty
-            regenerate = true;
-
-#ifdef _WIN64
-            debug_println("Re-generate...");
-#endif
-        }
-        else
-        {
-            // Set correct label
-            CorrectTextLabel.SetValue(correctLabel);
-            regenerate = false;
-
-#ifdef _WIN64
-        debug_println("Stage: " + std::to_string(CurrentStage.GetValue()));
-        debug_println("Corect label: " + map_TextLabel[CorrectTextLabel.GetValue()]);
-#endif
-        }
-
-        // Reset error flag
-        if (isIncorrectButton)
-        {
-            isIncorrectButton = false;
-        }
-#ifndef UNIT_TEST
-    }
-#endif
-
 #ifndef UNIT_TEST
     if (sys_gui::SuccessState.GetState()) {
         if (sys_gui::SuccessState.GetValue() != INCORRECT)
@@ -127,45 +206,45 @@ void OnBrightnessChange(lv_event_t* e)
     sys_gui::Brightness.SetValue(lv_slider_get_value(ui_sldBrightness));
 }
 
-void OnButtonClick(lv_event_t * e)
+void OnFreAdjustChange(lv_event_t* e)
 {
-    auto currentButton = reinterpret_cast<lv_obj_t*>(e->current_target);
-    auto find = std::find_if(listButton.begin(), listButton.end(),
-        [currentButton](const std::tuple<lv_obj_t*, lv_obj_t*, TEXT_LABEL>& item) {
-            return std::get<0>(item) == currentButton;
-        });
+    auto value = lv_slider_get_value(ui_sldFreAdjust);
+    auto frequency = mapTextFrequency[(TEXT_TYPE)(value + 1)];
 
-    auto textLabel = std::get<2>(*find);
+    // Update radio channel
+    chartRadioInfo->SetActive(value);
 
-    if (textLabel == CorrectTextLabel.GetValue())
+    // Update frequency label
+    auto frequencyStr = std::to_string(frequency);
+    frequencyStr.insert(1, ".");
+    lv_label_set_text_fmt(ui_lblFrequency, "%s MHz", frequencyStr.c_str());
+
+    // Set temp frequency
+    TempFrequency.SetValue(frequency);
+}
+
+void OnButtonTXClick(lv_event_t* e)
+{
+    if (TempFrequency.GetValue() == CorrectFrequency.GetValue())
     {
-        auto stage = CurrentStage.GetValue();
-
-        // Update bar stage
-        lv_bar_set_value(ui_barStage, stage, LV_ANIM_ON);
-
-        if (stage < STAGE_NUM)
-        {
-            // Set to next stage
-            CurrentStage.SetValue(stage + 1);
-        }
-        else
-        {
-            // Finish
-            sys_gui::SuccessState.SetValue(STATE_CHECKED);
+        sys_gui::SuccessState.SetValue(STATE_CHECKED);
 
 #ifndef UNIT_TEST
-            // Send success to Host
-            CommonSendRequest(WM_SUCCESSSTATE_SET);
+        // Send success to Host
+        JsonDocument jsonDocIn;
+#ifdef _WIN64
+        jsonDocIn["module"] = CLIENT_NAME_FOR_JSON;
+#else
+        jsonDocIn["module"] = CLIENT_NAME;
 #endif
-        }
+        CommonSendRequestWithData(WM_SUCCESSSTATE_SET, jsonDocIn);
+#endif
     }
     else
     {
-        // Set error flag
-        isIncorrectButton = true;
-
+#ifndef UNIT_TEST
         // Send error to Host
         CommonSendRequest(WM_STRIKESTATE_SET);
+#endif
     }
 }
