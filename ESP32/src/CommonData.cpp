@@ -37,7 +37,7 @@ namespace sys_gui
 
 // Allow modification
 #pragma region Custom_data
-CData<std::vector<COLOR>> WireColorList;
+CData<std::vector<WIRECOLOR_TYPE>> WireColorList;
 CData<WIRE_IN_ORDER> CorrectWireIndex;
 #pragma endregion
 

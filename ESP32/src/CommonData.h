@@ -44,7 +44,7 @@ namespace sys_gui // GUI read/write -> Send data to HOST
 
 // Allow modification
 #pragma region Custom_data
-extern CData<std::vector<COLOR>> WireColorList;
+extern CData<std::vector<WIRECOLOR_TYPE>> WireColorList;
 extern CData<WIRE_IN_ORDER> CorrectWireIndex;
 #pragma endregion
 

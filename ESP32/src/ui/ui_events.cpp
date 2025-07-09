@@ -3,70 +3,16 @@
 // LVGL version: 9.1.0
 // Project name: SquareLine_Project
 
-#include <unordered_map>
-#include <iterator>
-#include <thread>
-#include <chrono>
+#ifdef _WIN64
+#include <iostream>
+#endif
 #include "ui.h"
 #include "../CommonData.h"
 #include "../CommonLibrary.h"
-#include "../CommonDataType.h"
-
-#define th_sleep(d) std::this_thread::sleep_until(std::chrono::system_clock::now() + std::chrono::milliseconds(d))
+#include "../CommonService.h"
 
 std::vector<lv_obj_t*> listWire;
 std::vector<lv_obj_t*> listSelect;
-
-/*
-#include <iostream>
-#include <cstdlib>
-#include <ctime>
-
-// Hàm ki?m tra t?n su?t xu?t hi?n c?a các ph?n t? trong m?ng
-void countFrequency(int arr[], int size) {
-    // M?ng frequency d? d?m s? l?n xu?t hi?n c?a các giá tr? t? 1 d?n 4
-    int frequency[5] = { 0 }; // Ch? c?n 5 ph?n t?, vì giá tr? l?n nh?t là 4
-
-    // Ð?m s? l?n xu?t hi?n c?a t?ng giá tr? trong m?ng
-    for (int i = 0; i < size; ++i) {
-        frequency[arr[i]]++; // Tang t?n su?t cho giá tr? tuong ?ng
-    }
-
-    // In ra t?n su?t xu?t hi?n c?a t?ng giá tr?
-    for (int i = 1; i <= 4; ++i) {
-        std::cout << "Giá tr? " << i << " xu?t hi?n " << frequency[i] << " l?n.\n";
-    }
-}
-
-int main() {
-    // Kh?i t?o seed cho hàm random
-    srand(static_cast<unsigned int>(time(0)));
-
-    // T?o d? dài m?ng ng?u nhiên t? 3 d?n 6
-    int size = rand() % 4 + 3; // Rand t? 0 d?n 3, c?ng thêm 3 d? có giá tr? t? 3 d?n 6
-
-    // T?o m?ng v?i s? lu?ng ph?n t? ng?u nhiên
-    int* arr = new int[size];
-
-    // Gán giá tr? ng?u nhiên t? 1 d?n 4 cho m?i ph?n t? trong m?ng
-    for (int i = 0; i < size; ++i) {
-        arr[i] = rand() % 4 + 1; // Rand t? 1 d?n 4
-    }
-
-    // In ra m?ng d? ki?m tra
-    std::cout << "M?ng ng?u nhiên có " << size << " ph?n t?: ";
-    for (int i = 0; i < size; ++i) {
-        std::cout << arr[i] << " ";
-    }
-    std::cout << std::endl;
-
-    // Ki?m tra và tính toán t?n su?t c?a các ph?n t?
-    countFrequency(arr, size);
-
-    return 0;
-}
-
-*/
 
 void Init()
 {
@@ -78,16 +24,21 @@ void Init()
     listWire = { ui_barWire1, ui_barWire2, ui_barWire3, ui_barWire4, ui_barWire5, ui_barWire6 };
     listSelect = { ui_swSelect1, ui_swSelect2, ui_swSelect3, ui_swSelect4, ui_swSelect5, ui_swSelect6 };
 
+#ifndef UNIT_TEST
     // Create random color wire list
     CreateRandomWireList();
+#endif
 
+    // Calculate correct wire
+    WireModule();
+
+    // Set color to GUI wires
+    auto mumOfWire = WireColorList.GetValue().size();
     for (uint8_t i = 0; i < listWire.size(); i++)
     {
-        auto color = WireColorList.GetValue().at(i);
-
-        if (color != NON_COLOR)
+        if (i < mumOfWire)
         {
-            lv_obj_set_style_bg_color(listWire.at(i), lv_color_hex(color), LV_PART_INDICATOR | LV_STATE_DEFAULT);
+            lv_obj_set_style_bg_color(listWire.at(i), lv_color_hex(mapColor[WireColorList.GetValue().at(i)]), LV_PART_INDICATOR | LV_STATE_DEFAULT);
         }
         else
         {
@@ -96,21 +47,28 @@ void Init()
             lv_obj_clear_state(listSelect.at(i), LV_STATE_CHECKED);
         }
     }
+
+#ifdef _WIN64
+    debug_println("Correct wire index: " + std::to_string((uint8_t)CorrectWireIndex.GetValue()));
+#endif
 }
 
 void AutoUpdate()
 {
-    if (sys_gui::SuccessState.GetValue() != INCORRECT)
+    if (sys_gui::SuccessState.GetState())
     {
-        lv_obj_clear_flag(ui_imgResult, LV_OBJ_FLAG_HIDDEN);
+        if (sys_gui::SuccessState.GetValue() != INCORRECT)
+        {
+            lv_obj_clear_flag(ui_imgResult, LV_OBJ_FLAG_HIDDEN);
 
-        if (sys_gui::SuccessState.GetValue() == STATE_UNCHECK)
-        {
-            lv_obj_add_state(ui_imgResult, LV_STATE_DISABLED);
-        }
-        else if (sys_gui::SuccessState.GetValue() == STATE_CHECKED)
-        {
-            lv_obj_add_state(ui_imgResult, LV_STATE_CHECKED);
+            if (sys_gui::SuccessState.GetValue() == STATE_UNCHECK)
+            {
+                lv_obj_add_state(ui_imgResult, LV_STATE_DISABLED);
+            }
+            else if (sys_gui::SuccessState.GetValue() == STATE_CHECKED)
+            {
+                lv_obj_add_state(ui_imgResult, LV_STATE_CHECKED);
+            }
         }
     }
 }
@@ -122,12 +80,26 @@ void OnBrightnessChange(lv_event_t* e)
 
 void OnWireSelect(lv_event_t* e)
 {
-    if (std::find(listSelect.begin(), listSelect.end(), e->current_target) - listSelect.begin() == static_cast<ORDER>(CorrectWireIndex.GetValue()))
+    if (std::find(listSelect.begin(), listSelect.end(), e->current_target) - listSelect.begin() == (uint8_t)CorrectWireIndex.GetValue() - 1)
     {
         sys_gui::SuccessState.SetValue(STATE_CHECKED);
+
+#ifndef UNIT_TEST
+        // Send success to Host
+        JsonDocument jsonDocIn;
+#ifdef _WIN64
+        jsonDocIn["module"] = CLIENT_NAME_FOR_JSON;
+#else
+        jsonDocIn["module"] = CLIENT_NAME;
+#endif
+        CommonSendRequestWithData(WM_SUCCESSSTATE_SET, jsonDocIn);
+#endif
     }
     else
     {
-        sys_host::StrikeState.SetValue(true);
+#ifndef UNIT_TEST
+        // Send error to Host
+        CommonSendRequest(WM_STRIKESTATE_SET);
+#endif
     }
 }

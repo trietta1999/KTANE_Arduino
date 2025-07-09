@@ -181,9 +181,10 @@ EXTERN_MAP_ENUM_WSTR(MODULE_NAME)
 
 // Allow modification
 #pragma region Custom_datatype
+#define MIN_WIRE_NUM 3
+#define MAX_WRIRE_NUM 6
+#define ORDER uint8_t
 #define COLOR uint32_t
-#define ORDER uint32_t
-#define NON_COLOR 0x000001
 
 #define DEF_WIRECOLOR_TYPE(e, CREATE) \
         CREATE(e, NONE) \

@@ -18,6 +18,7 @@ MAP_ENUM_STR(WIRE_IN_ORDER, DEF_WIRE_IN_ORDER)
 
 std::unordered_map<WIRECOLOR_TYPE, COLOR> mapColor =
 {
+    { WIRECOLOR_TYPE::NONE, 0x000001 },
     { WIRECOLOR_TYPE::RED, 0xFF0000 },
     { WIRECOLOR_TYPE::WHITE, 0xFFFFFF },
     { WIRECOLOR_TYPE::BLUE, 0x0000FF },
@@ -26,7 +27,7 @@ std::unordered_map<WIRECOLOR_TYPE, COLOR> mapColor =
     { WIRECOLOR_TYPE::PINK, 0xE80CAD },
 };
 
-extern std::unordered_map<ORDER, WIRE_IN_ORDER> mapWireOrder =
+std::unordered_map<ORDER, WIRE_IN_ORDER> mapWireOrder =
 {
     { 1, WIRE_IN_ORDER::FIRST_WIRE },
     { 2, WIRE_IN_ORDER::SECOND_WIRE },

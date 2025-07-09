@@ -104,6 +104,9 @@ void ProcessData()
             debug_println("SerialNum: " + sys_host::SerialNum.GetValue());
             debug_println("==================================");
         }
+        else if (read == "gui_correct") {
+            debug_println("Correct wire index: " + std::to_string((uint8_t)CorrectWireIndex.GetValue()));
+        }
     }
 #endif
 
