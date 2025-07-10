@@ -142,7 +142,7 @@ void ThreeWiresModule()
     /* If the last wire is white, let cut it */
     else if (WIRECOLOR_TYPE::WHITE == wireColorList.back())
     {
-        CorrectWireIndex.SetValue(mapWireOrder[wireColorList.size()]);
+        CorrectWireIndex.SetValue((WIRE_IN_ORDER)wireColorList.size());
     }
     /* If there are more than a blue-wire, let cut the-last-blue-wire */
     else if (CountElementOccurences(wireColorList, WIRECOLOR_TYPE::BLUE) > 1)
@@ -151,7 +151,7 @@ void ThreeWiresModule()
         {
             if (wireColorList[i] == WIRECOLOR_TYPE::BLUE)
             {
-                CorrectWireIndex.SetValue(mapWireOrder[wireColorList.size()]);
+                CorrectWireIndex.SetValue((WIRE_IN_ORDER)(i + 1));
                 break;
             }
         }
@@ -159,7 +159,7 @@ void ThreeWiresModule()
     /* Others */
     else
     {
-        CorrectWireIndex.SetValue(mapWireOrder[wireColorList.size()]);
+        CorrectWireIndex.SetValue((WIRE_IN_ORDER)wireColorList.size());
     }
 }
 
@@ -179,10 +179,10 @@ void FourWiresModule()
     {
         for (int8_t i = wireColorList.size() - 1; i >= 0; i--)
         {
-            if (wireColorList[i] == WIRECOLOR_TYPE::BLUE)
+            if (wireColorList[i] == WIRECOLOR_TYPE::RED)
             {
                 // The order of a wire = Index + 1
-                CorrectWireIndex.SetValue(mapWireOrder[i + 1]);
+                CorrectWireIndex.SetValue((WIRE_IN_ORDER)(i + 1));
                 break;
             }
         }
@@ -195,8 +195,7 @@ void FourWiresModule()
     /* More than a yellow-wire, let cut the-last-wire */
     else if (CountElementOccurences(wireColorList, WIRECOLOR_TYPE::YELLOW) > 1)
     {
-        ORDER wireOrder = wireColorList.size() - 1;
-        CorrectWireIndex.SetValue(mapWireOrder[wireOrder]);
+        CorrectWireIndex.SetValue((WIRE_IN_ORDER)wireColorList.size());
     }
     /* Others */
     else
@@ -260,8 +259,7 @@ void SixWiresModule()
     }
     else if (CountElementOccurences(wireColorList, WIRECOLOR_TYPE::RED) == 0)
     {
-        ORDER wireOrder = wireColorList.size();
-        CorrectWireIndex.SetValue(mapWireOrder[wireOrder]);
+        CorrectWireIndex.SetValue((WIRE_IN_ORDER)wireColorList.size());
     }
     /* Others */
     else

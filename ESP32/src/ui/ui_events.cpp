@@ -27,7 +27,6 @@ void Init()
 #ifndef UNIT_TEST
     // Create random color wire list
     CreateRandomWireList();
-#endif
 
     // Calculate correct wire
     WireModule();
@@ -50,6 +49,7 @@ void Init()
 
 #ifdef _WIN64
     debug_println("Correct wire index: " + std::to_string((uint8_t)CorrectWireIndex.GetValue()));
+#endif
 #endif
 }
 

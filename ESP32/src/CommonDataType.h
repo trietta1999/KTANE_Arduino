@@ -183,7 +183,6 @@ EXTERN_MAP_ENUM_WSTR(MODULE_NAME)
 #pragma region Custom_datatype
 #define MIN_WIRE_NUM 3
 #define MAX_WRIRE_NUM 6
-#define ORDER uint8_t
 #define COLOR uint32_t
 
 #define DEF_WIRECOLOR_TYPE(e, CREATE) \
@@ -220,7 +219,6 @@ enum class WIRE_IN_ORDER
 EXTERN_MAP_ENUM_STR(WIRE_IN_ORDER)
 
 extern std::unordered_map<WIRECOLOR_TYPE, COLOR> mapColor;
-extern std::unordered_map<ORDER, WIRE_IN_ORDER> mapWireOrder;
 #pragma endregion
 
 #endif // !_COMMON_DATATYPE_H

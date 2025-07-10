@@ -26,13 +26,3 @@ std::unordered_map<WIRECOLOR_TYPE, COLOR> mapColor =
     { WIRECOLOR_TYPE::BLACK, 0x000000 },
     { WIRECOLOR_TYPE::PINK, 0xE80CAD },
 };
-
-std::unordered_map<ORDER, WIRE_IN_ORDER> mapWireOrder =
-{
-    { 1, WIRE_IN_ORDER::FIRST_WIRE },
-    { 2, WIRE_IN_ORDER::SECOND_WIRE },
-    { 3, WIRE_IN_ORDER::THIRD_WIRE },
-    { 4, WIRE_IN_ORDER::FOURTH_WIRE },
-    { 5, WIRE_IN_ORDER::FIFTH_WIRE },
-    { 6, WIRE_IN_ORDER::SIXTH_WIRE },
-};
