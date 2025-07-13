@@ -38,7 +38,8 @@ namespace sys_gui
 // Allow modification
 #pragma region Custom_data
 CData<uint8_t> CurrentStage;
-CData<TEXT_LABEL> CorrectTextLabel;
+CData<std::pair<POSTION_TYPE, uint8_t>> CurrentCorrectData;
+CData<std::vector<std::pair<POSTION_TYPE, uint8_t>>> ListStageData;
 #pragma endregion
 
 // Add auto reset state for custom data only

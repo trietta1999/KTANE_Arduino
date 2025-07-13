@@ -3,7 +3,9 @@
  */
 
 #include <algorithm>
+#include <random>
 #include <iterator>
+#include <numeric>
 #include "CommonLibrary.h"
 #include "CommonData.h"
 #include "CommonService.h"
@@ -73,50 +75,319 @@ bool NumberCheckInTimer(uint8_t num)
 
 // Allow modification
 #pragma region Custom_function
-std::tuple<TEXT_DISPLAY, uint8_t> GetRandomTextDisplay()
+bool StageModule(uint8_t displayNum, std::array<uint8_t, BUTTON_NUM> listValue)
 {
-    auto textDisplay = (TEXT_DISPLAY)RandomRange(((uint8_t)TEXT_DISPLAY::MIN) + 1, (uint8_t)TEXT_DISPLAY::MAX);
-    auto focusPos = std::get<FOCUSPOS_POS>(map_TextDisplayWithFocusPostion[textDisplay]);
+    auto stage = CurrentStage.GetValue();
+    CurrentCorrectData.SetValue(std::make_pair(POSTION_TYPE::INVALID, INCORRECT));
 
-    return std::make_tuple(textDisplay, focusPos);
-}
-
-std::vector<TEXT_LABEL> GetTextLabelListFromMap(uint8_t takeNum)
-{
-    // Convert map to text label list
-    std::vector<TEXT_LABEL> listTextLabel = { };
-    std::transform(map_TextLabel.begin(), map_TextLabel.end(),
-        std::back_inserter(listTextLabel),
-        [](const auto& pair) { return pair.first; });
-
-    // Get list text label
-    auto textLabel = (TEXT_LABEL)RandomRange(((uint8_t)TEXT_LABEL::MIN) + 1, (uint8_t)TEXT_LABEL::MAX);
-    auto listTextLabelItem = map_TextLabelList[textLabel];
-
-    // Take [takeNum] element trong list text label
-    auto randomIndex = RandomRange(0, listTextLabelItem.size() - takeNum);
-    std::vector<TEXT_LABEL> listSelectTextLabel(listTextLabelItem.begin() + randomIndex, (listTextLabelItem.begin() + randomIndex) + takeNum);
-
-    return listSelectTextLabel;
-}
-
-TEXT_LABEL SetCorrectTextLabel(uint8_t position, std::vector<TEXT_LABEL> listTextLabel)
-{
-    auto textLabel = listTextLabel[position - 1];
-    auto targetListTextLabel = map_TextLabelList[textLabel];
-
-    // Check first mapping text label in map label in
-    for (const auto& targetTextLabel : targetListTextLabel)
+    switch (stage)
     {
-        for (const auto& i_textLabel : listTextLabel)
-        {
-            if (i_textLabel == targetTextLabel)
-            {
-                return i_textLabel;
-            }
-        }
+    case 1:
+        return Stage1Module(displayNum, listValue);
+        break;
+
+    case 2:
+        return Stage2Module(displayNum, listValue);
+        break;
+
+    case 3:
+        return Stage3Module(displayNum, listValue);
+        break;
+
+    case 4:
+        return Stage4Module(displayNum, listValue);
+        break;
+
+    case 5:
+        return Stage5Module(displayNum, listValue);
+        break;
+
+    default:
+        return false;
+    }
+}
+
+bool Stage1Module(uint8_t displayNum, std::array<uint8_t, BUTTON_NUM> listValue)
+{
+    bool result = false;
+
+    switch (displayNum)
+    {
+        // If the display is 1, press the button in the second position
+    case 1:
+        // If the display is 2, press the button in the second position
+    case 2:
+    {
+        CurrentCorrectData.SetValue(std::make_pair(POSTION_TYPE::SECOND, listValue[(uint8_t)POSTION_TYPE::SECOND]));
+        result = true;
+    }
+    break;
+
+    // If the display is 3, press the button in the third position
+    case 3:
+    {
+        CurrentCorrectData.SetValue(std::make_pair(POSTION_TYPE::THIRD, listValue[(uint8_t)POSTION_TYPE::THIRD]));
+        result = true;
+    }
+    break;
+
+    // If the display is 4, press the button in the fourth position
+    case 4:
+    {
+        CurrentCorrectData.SetValue(std::make_pair(POSTION_TYPE::FOURTH, listValue[(uint8_t)POSTION_TYPE::FOURTH]));
+        result = true;
+    }
+    break;
+
+    default:
+        break;
     }
 
-    return TEXT_LABEL::MIN;
+    return result;
+}
+
+bool Stage2Module(uint8_t displayNum, std::array<uint8_t, BUTTON_NUM> listValue)
+{
+    bool result = false;
+    auto listStageData = ListStageData.GetValue();
+
+    switch (displayNum)
+    {
+        // If the display is 1, press the button labeled "4".
+    case 1:
+    {
+        auto index = std::find(listValue.begin(), listValue.end(), 4) - listValue.begin();
+
+        if (index < listValue.size())
+        {
+            CurrentCorrectData.SetValue(std::make_pair((POSTION_TYPE)index, 4));
+            result = true;
+        }
+    }
+    break;
+
+    // If the display is 2, press the button in the same position as you pressed in stage 1.
+    case 2:
+    {
+        auto stage1ButtonPos = std::get<POSITION_POS>(listStageData[0]);
+        CurrentCorrectData.SetValue(std::make_pair(stage1ButtonPos, listValue[(uint8_t)stage1ButtonPos]));
+        result = true;
+    }
+    break;
+
+    // If the display is 3, press the button in the first position.
+    case 3:
+    {
+        CurrentCorrectData.SetValue(std::make_pair(POSTION_TYPE::FIRST, listValue[(uint8_t)POSTION_TYPE::FIRST]));
+        result = true;
+    }
+    break;
+
+    // If the display is 4, press the button in the same position as you pressed in stage 1.
+    case 4:
+    {
+        auto stage1ButtonPos = std::get<POSITION_POS>(listStageData[0]);
+        CurrentCorrectData.SetValue(std::make_pair(stage1ButtonPos, listValue[(uint8_t)stage1ButtonPos]));
+        result = true;
+    }
+    break;
+
+    default:
+        break;
+    }
+
+    return result;
+}
+
+bool Stage3Module(uint8_t displayNum, std::array<uint8_t, BUTTON_NUM> listValue)
+{
+    bool result = false;
+    auto listStageData = ListStageData.GetValue();
+
+    switch (displayNum)
+    {
+        // If the display is 1, press the button with the same label you pressed in stage 2.
+    case 1:
+    {
+        auto stageData = listStageData[1];
+        auto index = std::find(listValue.begin(), listValue.end(), std::get<VALUE_POS>(stageData)) - listValue.begin();
+
+        if (index < listValue.size())
+        {
+            CurrentCorrectData.SetValue(std::make_pair((POSTION_TYPE)index, std::get<VALUE_POS>(stageData)));
+            result = true;
+        }
+    }
+    break;
+
+    // If the display is 2, press the button with the same label you pressed in stage 1.
+    case 2:
+    {
+        auto stageData = listStageData[0];
+        auto index = std::find(listValue.begin(), listValue.end(), std::get<VALUE_POS>(stageData)) - listValue.begin();
+
+        if (index < listValue.size())
+        {
+            CurrentCorrectData.SetValue(std::make_pair((POSTION_TYPE)index, std::get<VALUE_POS>(stageData)));
+            result = true;
+        }
+    }
+    break;
+
+    // If the display is 3, press the button in the third position.
+    case 3:
+    {
+        CurrentCorrectData.SetValue(std::make_pair(POSTION_TYPE::THIRD, listValue[(uint8_t)POSTION_TYPE::THIRD]));
+        result = true;
+    }
+    break;
+
+    // If the display is 4, press the button labeled "4".
+    case 4:
+    {
+        auto index = std::find(listValue.begin(), listValue.end(), 4) - listValue.begin();
+
+        if (index < listValue.size())
+        {
+            CurrentCorrectData.SetValue(std::make_pair((POSTION_TYPE)index, 4));
+            result = true;
+        }
+    }
+    break;
+
+    default:
+        break;
+    }
+
+    return result;
+}
+
+bool Stage4Module(uint8_t displayNum, std::array<uint8_t, BUTTON_NUM> listValue)
+{
+    bool result = false;
+    auto listStageData = ListStageData.GetValue();
+
+    switch (displayNum)
+    {
+        // If the display is 1, press the button in the same position as you pressed in stage 1.
+    case 1:
+    {
+        auto stage1ButtonPos = std::get<POSITION_POS>(listStageData[0]);
+        CurrentCorrectData.SetValue(std::make_pair(stage1ButtonPos, listValue[(uint8_t)stage1ButtonPos]));
+        result = true;
+    }
+    break;
+
+    // If the display is 2, press the button in the first position.
+    case 2:
+    {
+        CurrentCorrectData.SetValue(std::make_pair(POSTION_TYPE::FIRST, listValue[(uint8_t)POSTION_TYPE::FIRST]));
+        result = true;
+    }
+    break;
+
+    // If the display is 3, press the button in the same position as you pressed in stage 2.
+    case 3:
+        // If the display is 4, press the button in the same position as you pressed in stage 2.
+    case 4:
+    {
+        auto stage2ButtonPos = std::get<POSITION_POS>(listStageData[1]);
+        CurrentCorrectData.SetValue(std::make_pair(stage2ButtonPos, listValue[(uint8_t)stage2ButtonPos]));
+        result = true;
+    }
+    break;
+
+    default:
+        break;
+    }
+
+    return result;
+}
+
+bool Stage5Module(uint8_t displayNum, std::array<uint8_t, BUTTON_NUM> listValue)
+{
+    bool result = false;
+    auto listStageData = ListStageData.GetValue();
+
+    switch (displayNum)
+    {
+        // If the display is 1, press the button with the same label you pressed in stage 1.
+    case 1:
+    {
+        auto stageData = listStageData[0];
+        auto index = std::find(listValue.begin(), listValue.end(), std::get<VALUE_POS>(stageData)) - listValue.begin();
+
+        if (index < listValue.size())
+        {
+            CurrentCorrectData.SetValue(std::make_pair((POSTION_TYPE)index, std::get<VALUE_POS>(stageData)));
+            result = true;
+        }
+    }
+    break;
+
+    // If the display is 2, press the button with the same label you pressed in stage 2.
+    case 2:
+    {
+        auto stageData = listStageData[1];
+        auto index = std::find(listValue.begin(), listValue.end(), std::get<VALUE_POS>(stageData)) - listValue.begin();
+
+        if (index < listValue.size())
+        {
+            CurrentCorrectData.SetValue(std::make_pair((POSTION_TYPE)index, std::get<VALUE_POS>(stageData)));
+            result = true;
+        }
+    }
+    break;
+
+    // If the display is 3, press the button with the same label you pressed in stage 4.
+    case 3:
+    {
+        auto stageData = listStageData[3];
+        auto index = std::find(listValue.begin(), listValue.end(), std::get<VALUE_POS>(stageData)) - listValue.begin();
+
+        if (index < listValue.size())
+        {
+            CurrentCorrectData.SetValue(std::make_pair((POSTION_TYPE)index, std::get<VALUE_POS>(stageData)));
+            result = true;
+        }
+    }
+    break;
+
+    // If the display is 4, press the button with the same label you pressed in stage 3.
+    case 4:
+    {
+        auto stageData = listStageData[2];
+        auto index = std::find(listValue.begin(), listValue.end(), std::get<VALUE_POS>(stageData)) - listValue.begin();
+
+        if (index < listValue.size())
+        {
+            CurrentCorrectData.SetValue(std::make_pair((POSTION_TYPE)index, std::get<VALUE_POS>(stageData)));
+            result = true;
+        }
+    }
+    break;
+
+    default:
+        break;
+    }
+
+    return result;
+}
+
+std::array<uint8_t, BUTTON_NUM> GenerateArrayNumber()
+{
+    std::vector<uint8_t> rangeNum(9);
+    std::vector<uint8_t> vecResult;
+    std::array<uint8_t, BUTTON_NUM> arrResult;
+
+    std::iota(rangeNum.begin(), rangeNum.end(), 1);
+    auto a = rand();
+    std::mt19937 generator(a);
+
+    std::sample(rangeNum.begin(), rangeNum.end(), std::back_inserter(vecResult), BUTTON_NUM, generator);
+
+    std::copy(vecResult.begin(), vecResult.end(), arrResult.begin());
+
+    return arrResult;
 }
 #pragma endregion

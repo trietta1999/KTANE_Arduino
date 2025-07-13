@@ -20,9 +20,13 @@ bool NumberCheckInTimer(uint8_t);
 
 // Allow modification
 #pragma region Custom_function
-std::tuple<TEXT_DISPLAY, uint8_t> GetRandomTextDisplay();
-std::vector<TEXT_LABEL> GetTextLabelListFromMap(uint8_t);
-TEXT_LABEL SetCorrectTextLabel(uint8_t, std::vector<TEXT_LABEL>);
+bool StageModule(uint8_t, std::array<uint8_t, BUTTON_NUM>);
+bool Stage1Module(uint8_t, std::array<uint8_t, BUTTON_NUM>);
+bool Stage2Module(uint8_t, std::array<uint8_t, BUTTON_NUM>);
+bool Stage3Module(uint8_t, std::array<uint8_t, BUTTON_NUM>);
+bool Stage4Module(uint8_t, std::array<uint8_t, BUTTON_NUM>);
+bool Stage5Module(uint8_t, std::array<uint8_t, BUTTON_NUM>);
+std::array<uint8_t, BUTTON_NUM> GenerateArrayNumber();
 #pragma endregion
 
 #endif // !_COMMON_LIBRARY_H

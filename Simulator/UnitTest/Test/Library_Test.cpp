@@ -102,15 +102,254 @@ public:
         Assert::IsTrue(NumberCheckInTimer(2) == true);
     }
 
-    TEST_METHOD(TEST_GetTextLabelListFromMap)
+#pragma region Test_Stage1Module
+    void Test_Stage1Module_Setup()
     {
-        auto result = GetTextLabelListFromMap(BUTTON_NUM);
-        Assert::IsTrue(result.size() == BUTTON_NUM);
+        CurrentStage.SetValue(1);
     }
 
-    TEST_METHOD(TEST_SetCorrectTextLabel)
+    TEST_METHOD(TEST_Stage1Module_1)
     {
-        auto result = SetCorrectTextLabel(2, { TEXT_LABEL::E_RIGHT, TEXT_LABEL::E_NOTHING, TEXT_LABEL::E_READY, TEXT_LABEL::E_PRESS, TEXT_LABEL::E_UHHH, });
-        Assert::IsTrue(result == TEXT_LABEL::E_UHHH);
+        Test_Stage1Module_Setup();
+
+        Stage1Module(1, { 1, 2, 3, 4 });
+
+        Assert::IsTrue(std::get<POSITION_POS>(CurrentCorrectData.GetValue()) == POSTION_TYPE::SECOND);
+        Assert::IsTrue(std::get<VALUE_POS>(CurrentCorrectData.GetValue()) == 2);
     }
+
+    TEST_METHOD(TEST_Stage1Module_2)
+    {
+        Test_Stage1Module_Setup();
+
+        Stage1Module(2, { 1, 2, 3, 4 });
+
+        Assert::IsTrue(std::get<POSITION_POS>(CurrentCorrectData.GetValue()) == POSTION_TYPE::SECOND);
+        Assert::IsTrue(std::get<VALUE_POS>(CurrentCorrectData.GetValue()) == 2);
+    }
+
+    TEST_METHOD(TEST_Stage1Module_3)
+    {
+        Test_Stage1Module_Setup();
+
+        Stage1Module(3, { 1, 2, 3, 4 });
+
+        Assert::IsTrue(std::get<POSITION_POS>(CurrentCorrectData.GetValue()) == POSTION_TYPE::THIRD);
+        Assert::IsTrue(std::get<VALUE_POS>(CurrentCorrectData.GetValue()) == 3);
+    }
+
+    TEST_METHOD(TEST_Stage1Module_4)
+    {
+        Test_Stage1Module_Setup();
+
+        Stage1Module(4, { 1, 2, 3, 4 });
+
+        Assert::IsTrue(std::get<POSITION_POS>(CurrentCorrectData.GetValue()) == POSTION_TYPE::FOURTH);
+        Assert::IsTrue(std::get<VALUE_POS>(CurrentCorrectData.GetValue()) == 4);
+    }
+#pragma endregion
+
+#pragma region Test_Stage2Module
+    void Test_Stage2Module_Setup()
+    {
+        CurrentStage.SetValue(2);
+        ListStageData.SetValue({ { POSTION_TYPE::SECOND, 3 } });
+    }
+
+    TEST_METHOD(TEST_Stage2Module_1)
+    {
+        Test_Stage2Module_Setup();
+
+        Stage2Module(1, { 1, 2, 3, 4 });
+
+        Assert::IsTrue(std::get<POSITION_POS>(CurrentCorrectData.GetValue()) == POSTION_TYPE::FOURTH);
+        Assert::IsTrue(std::get<VALUE_POS>(CurrentCorrectData.GetValue()) == 4);
+    }
+
+    TEST_METHOD(TEST_Stage2Module_2)
+    {
+        Test_Stage2Module_Setup();
+
+        Stage2Module(2, { 1, 2, 3, 4 });
+
+        Assert::IsTrue(std::get<POSITION_POS>(CurrentCorrectData.GetValue()) == POSTION_TYPE::SECOND);
+        Assert::IsTrue(std::get<VALUE_POS>(CurrentCorrectData.GetValue()) == 2);
+    }
+
+    TEST_METHOD(TEST_Stage2Module_3)
+    {
+        Test_Stage2Module_Setup();
+
+        Stage2Module(3, { 1, 2, 3, 4 });
+
+        Assert::IsTrue(std::get<POSITION_POS>(CurrentCorrectData.GetValue()) == POSTION_TYPE::FIRST);
+        Assert::IsTrue(std::get<VALUE_POS>(CurrentCorrectData.GetValue()) == 1);
+    }
+
+    TEST_METHOD(TEST_Stage2Module_4)
+    {
+        Test_Stage2Module_Setup();
+
+        Stage2Module(4, { 1, 2, 3, 4 });
+
+        Assert::IsTrue(std::get<POSITION_POS>(CurrentCorrectData.GetValue()) == POSTION_TYPE::SECOND);
+        Assert::IsTrue(std::get<VALUE_POS>(CurrentCorrectData.GetValue()) == 2);
+    }
+#pragma endregion
+
+#pragma region Test_Stage3Module
+    void Test_Stage3Module_Setup()
+    {
+        CurrentStage.SetValue(3);
+        ListStageData.SetValue({
+            { POSTION_TYPE::SECOND, 3 },
+            { POSTION_TYPE::THIRD, 2 },
+            });
+    }
+
+    TEST_METHOD(TEST_Stage3Module_1)
+    {
+        Test_Stage3Module_Setup();
+
+        Stage3Module(1, { 1, 2, 3, 4 });
+
+        Assert::IsTrue(std::get<POSITION_POS>(CurrentCorrectData.GetValue()) == POSTION_TYPE::SECOND);
+        Assert::IsTrue(std::get<VALUE_POS>(CurrentCorrectData.GetValue()) == 2);
+    }
+
+    TEST_METHOD(TEST_Stage3Module_2)
+    {
+        Test_Stage3Module_Setup();
+
+        Stage3Module(2, { 1, 2, 3, 4 });
+
+        Assert::IsTrue(std::get<POSITION_POS>(CurrentCorrectData.GetValue()) == POSTION_TYPE::THIRD);
+        Assert::IsTrue(std::get<VALUE_POS>(CurrentCorrectData.GetValue()) == 3);
+    }
+
+    TEST_METHOD(TEST_Stage3Module_3)
+    {
+        Test_Stage3Module_Setup();
+
+        Stage3Module(3, { 1, 2, 3, 4 });
+
+        Assert::IsTrue(std::get<POSITION_POS>(CurrentCorrectData.GetValue()) == POSTION_TYPE::THIRD);
+        Assert::IsTrue(std::get<VALUE_POS>(CurrentCorrectData.GetValue()) == 3);
+    }
+
+    TEST_METHOD(TEST_Stage3Module_4)
+    {
+        Test_Stage3Module_Setup();
+
+        Stage3Module(4, { 1, 2, 3, 4 });
+
+        Assert::IsTrue(std::get<POSITION_POS>(CurrentCorrectData.GetValue()) == POSTION_TYPE::FOURTH);
+        Assert::IsTrue(std::get<VALUE_POS>(CurrentCorrectData.GetValue()) == 4);
+    }
+#pragma endregion
+
+#pragma region Test_Stage4Module
+    void Test_Stage4Module_Setup()
+    {
+        CurrentStage.SetValue(4);
+        ListStageData.SetValue({
+            { POSTION_TYPE::SECOND, 3 },
+            { POSTION_TYPE::THIRD, 2 },
+            { POSTION_TYPE::FOURTH, 1 },
+            });
+    }
+
+    TEST_METHOD(TEST_Stage4Module_1)
+    {
+        Test_Stage4Module_Setup();
+
+        Stage4Module(1, { 1, 2, 3, 4 });
+
+        Assert::IsTrue(std::get<POSITION_POS>(CurrentCorrectData.GetValue()) == POSTION_TYPE::SECOND);
+        Assert::IsTrue(std::get<VALUE_POS>(CurrentCorrectData.GetValue()) == 2);
+    }
+
+    TEST_METHOD(TEST_Stage4Module_2)
+    {
+        Test_Stage4Module_Setup();
+
+        Stage4Module(2, { 1, 2, 3, 4 });
+
+        Assert::IsTrue(std::get<POSITION_POS>(CurrentCorrectData.GetValue()) == POSTION_TYPE::FIRST);
+        Assert::IsTrue(std::get<VALUE_POS>(CurrentCorrectData.GetValue()) == 1);
+    }
+
+    TEST_METHOD(TEST_Stage4Module_3)
+    {
+        Test_Stage4Module_Setup();
+
+        Stage4Module(3, { 1, 2, 3, 4 });
+
+        Assert::IsTrue(std::get<POSITION_POS>(CurrentCorrectData.GetValue()) == POSTION_TYPE::THIRD);
+        Assert::IsTrue(std::get<VALUE_POS>(CurrentCorrectData.GetValue()) == 3);
+    }
+
+    TEST_METHOD(TEST_Stage4Module_4)
+    {
+        Test_Stage4Module_Setup();
+
+        Stage4Module(4, { 1, 2, 3, 4 });
+
+        Assert::IsTrue(std::get<POSITION_POS>(CurrentCorrectData.GetValue()) == POSTION_TYPE::THIRD);
+        Assert::IsTrue(std::get<VALUE_POS>(CurrentCorrectData.GetValue()) == 3);
+    }
+#pragma endregion
+
+#pragma region Test_Stage5Module
+    void Test_Stage5Module_Setup()
+    {
+        CurrentStage.SetValue(5);
+        ListStageData.SetValue({
+            { POSTION_TYPE::SECOND, 3 },
+            { POSTION_TYPE::THIRD, 2 },
+            { POSTION_TYPE::FOURTH, 1 },
+            { POSTION_TYPE::FIRST, 4 },
+            });
+    }
+
+    TEST_METHOD(TEST_Stage5Module_1)
+    {
+        Test_Stage5Module_Setup();
+
+        Stage5Module(1, { 1, 2, 3, 4 });
+
+        Assert::IsTrue(std::get<POSITION_POS>(CurrentCorrectData.GetValue()) == POSTION_TYPE::THIRD);
+        Assert::IsTrue(std::get<VALUE_POS>(CurrentCorrectData.GetValue()) == 3);
+    }
+
+    TEST_METHOD(TEST_Stage5Module_2)
+    {
+        Test_Stage5Module_Setup();
+
+        Stage5Module(2, { 1, 2, 3, 4 });
+
+        Assert::IsTrue(std::get<POSITION_POS>(CurrentCorrectData.GetValue()) == POSTION_TYPE::SECOND);
+        Assert::IsTrue(std::get<VALUE_POS>(CurrentCorrectData.GetValue()) == 2);
+    }
+
+    TEST_METHOD(TEST_Stage5Module_3)
+    {
+        Test_Stage5Module_Setup();
+
+        Stage5Module(3, { 1, 2, 3, 4 });
+
+        Assert::IsTrue(std::get<POSITION_POS>(CurrentCorrectData.GetValue()) == POSTION_TYPE::FOURTH);
+        Assert::IsTrue(std::get<VALUE_POS>(CurrentCorrectData.GetValue()) == 4);
+    }
+
+    TEST_METHOD(TEST_Stage5Module_4)
+    {
+        Test_Stage5Module_Setup();
+
+        Stage5Module(4, { 1, 2, 3, 4 });
+
+        Assert::IsTrue(std::get<POSITION_POS>(CurrentCorrectData.GetValue()) == POSTION_TYPE::FIRST);
+        Assert::IsTrue(std::get<VALUE_POS>(CurrentCorrectData.GetValue()) == 1);
+    }
+#pragma endregion
 };

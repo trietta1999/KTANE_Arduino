@@ -13,12 +13,7 @@
 
 bool regenerate = false;
 bool isIncorrectButton = false;
-std::vector<std::tuple<lv_obj_t*, lv_obj_t*, TEXT_LABEL>> listButton = { };
-
-#ifdef UNIT_TEST
-std::tuple<TEXT_DISPLAY, uint8_t> displayInfo = { };
-std::vector<TEXT_LABEL> listTextLabel = { };
-#endif
+std::vector<std::tuple<lv_obj_t*, lv_obj_t*>> listButton = { };
 
 void Init()
 {
@@ -28,69 +23,52 @@ void Init()
 
     // Create list button
     listButton = {
-        { ui_Button1, ui_lblButtonText1, TEXT_LABEL::MIN },
-        { ui_Button2, ui_lblButtonText2, TEXT_LABEL::MIN },
-        { ui_Button3, ui_lblButtonText3, TEXT_LABEL::MIN },
-        { ui_Button4, ui_lblButtonText4, TEXT_LABEL::MIN },
-        { ui_Button5, ui_lblButtonText5, TEXT_LABEL::MIN },
-        { ui_Button6, ui_lblButtonText6, TEXT_LABEL::MIN },
+        { ui_Button1, ui_lblButtonText1 },
+        { ui_Button2, ui_lblButtonText2 },
+        { ui_Button3, ui_lblButtonText3 },
+        { ui_Button4, ui_lblButtonText4 },
     };
 
     CurrentStage.SetValue(1);
+
+    // Update bar stage
+    lv_bar_set_value(ui_barStage, 1, LV_ANIM_ON);
+    lv_label_set_text(ui_lblBarValue, "1");
 }
 
 void AutoUpdate()
 {
-#ifndef UNIT_TEST
     if (CurrentStage.GetState() || isIncorrectButton || regenerate)
     {
-#endif
-#ifndef UNIT_TEST
-        auto displayInfo = GetRandomTextDisplay();
-        auto listTextLabel = GetTextLabelListFromMap(BUTTON_NUM);
-#endif
+        // Generate number
+        auto displayNum = RandomRange(1, 5);
+        auto listNum = GenerateArrayNumber();
 
-        // Set display
-        auto textDisplay = std::get<TEXT_POS>(displayInfo);
-        auto textDisplayStr = std::get<TEXT_POS>(map_TextDisplayWithFocusPostion[textDisplay]);
-        lv_label_set_text(ui_lblDisplay, textDisplayStr.c_str());
-
-        // Set button label
-        for (uint8_t i = 0; i < listButton.size(); i++)
+        // List number not mapped with display number
+        if (!StageModule(displayNum, listNum))
         {
-            auto& item = listButton[i];
-            auto textLabel = listTextLabel[i];
-            auto textLabelStr = map_TextLabel[textLabel];
-
-            // Set text label to button list
-            std::get<2>(item) = textLabel;
-
-            // Set text label
-            lv_label_set_text(std::get<1>(item), textLabelStr.c_str());
-        }
-
-        // Set correct text label
-        auto focusPos = std::get<FOCUSPOS_POS>(displayInfo);
-        auto correctLabel = SetCorrectTextLabel(focusPos, listTextLabel);
-
-        if (map_TextLabel[correctLabel] == "")
-        {
-            // Re-genrate correct label when it's empty
             regenerate = true;
-
-#ifdef _WIN64
-            debug_println("Re-generate...");
-#endif
         }
+        // List number mapped with display number
         else
         {
-            // Set correct label
-            CorrectTextLabel.SetValue(correctLabel);
             regenerate = false;
 
+            // Set display label
+            lv_label_set_text(ui_lblDisplay, std::to_string(displayNum).c_str());
+
+            // Set button label
+            for (uint8_t i = 0; i < listButton.size(); i++)
+            {
+                auto& item = listButton[i];
+                lv_label_set_text(std::get<1>(item), std::to_string(listNum[i]).c_str());
+            }
+
 #ifdef _WIN64
-        debug_println("Stage: " + std::to_string(CurrentStage.GetValue()));
-        debug_println("Corect label: " + map_TextLabel[CorrectTextLabel.GetValue()]);
+            debug_println("Stage: " + std::to_string(CurrentStage.GetValue()));
+            debug_println("Position: " + std::to_string((uint8_t)std::get<POSITION_POS>(CurrentCorrectData.GetValue()) + 1));
+            debug_println("Value: " + std::to_string((uint8_t)std::get<VALUE_POS>(CurrentCorrectData.GetValue())));
+            debug_println("");
 #endif
         }
 
@@ -99,10 +77,7 @@ void AutoUpdate()
         {
             isIncorrectButton = false;
         }
-#ifndef UNIT_TEST
     }
-#endif
-
 #ifndef UNIT_TEST
     if (sys_gui::SuccessState.GetState()) {
         if (sys_gui::SuccessState.GetValue() != INCORRECT)
@@ -127,27 +102,37 @@ void OnBrightnessChange(lv_event_t* e)
     sys_gui::Brightness.SetValue(lv_slider_get_value(ui_sldBrightness));
 }
 
-void OnButtonClick(lv_event_t * e)
+void OnButtonClick(lv_event_t* e)
 {
     auto currentButton = reinterpret_cast<lv_obj_t*>(e->current_target);
     auto find = std::find_if(listButton.begin(), listButton.end(),
-        [currentButton](const std::tuple<lv_obj_t*, lv_obj_t*, TEXT_LABEL>& item) {
+        [currentButton](const std::tuple<lv_obj_t*, lv_obj_t*>& item) {
             return std::get<0>(item) == currentButton;
         });
 
-    auto textLabel = std::get<2>(*find);
+    auto buttonLabel = std::get<1>(*find);
+    auto currentData = CurrentCorrectData.GetValue();
+    auto buttonText = std::stoi(std::string(lv_label_get_text(buttonLabel)));
 
-    if (textLabel == CorrectTextLabel.GetValue())
+    if (buttonText == std::get<VALUE_POS>(currentData))
+#ifndef UNIT_TEST
     {
-        auto stage = CurrentStage.GetValue();
+        // Update current stage data list
+        auto listStageData = ListStageData.GetValue();
+        listStageData.push_back(currentData);
+        ListStageData.SetValue(listStageData);
 
-        // Update bar stage
-        lv_bar_set_value(ui_barStage, stage, LV_ANIM_ON);
+        auto stage = CurrentStage.GetValue();
 
         if (stage < STAGE_NUM)
         {
             // Set to next stage
-            CurrentStage.SetValue(stage + 1);
+            stage++;
+            CurrentStage.SetValue(stage);
+
+            // Update bar stage
+            lv_bar_set_value(ui_barStage, stage, LV_ANIM_ON);
+            lv_label_set_text(ui_lblBarValue, std::to_string(stage).c_str());
         }
         else
         {
@@ -156,16 +141,38 @@ void OnButtonClick(lv_event_t * e)
 
 #ifndef UNIT_TEST
             // Send success to Host
-            CommonSendRequest(WM_SUCCESSSTATE_SET);
+            JsonDocument jsonDocIn;
+#ifdef _WIN64
+            jsonDocIn["module"] = CLIENT_NAME_FOR_JSON;
+#else
+            jsonDocIn["module"] = CLIENT_NAME;
+#endif
+            CommonSendRequestWithData(WM_SUCCESSSTATE_SET, jsonDocIn);
 #endif
         }
     }
     else
     {
+        // Reset to stage #1
+        CurrentStage.SetValue(1);
+
+        // Update bar stage
+        lv_bar_set_value(ui_barStage, 1, LV_ANIM_ON);
+        lv_label_set_text(ui_lblBarValue, "1");
+
         // Set error flag
         isIncorrectButton = true;
 
         // Send error to Host
+#ifndef UNIT_TEST
         CommonSendRequest(WM_STRIKESTATE_SET);
+#endif
     }
+#else
+        Assert::IsTrue(true);
+    else
+    {
+        Assert::IsTrue(false);
+    }
+#endif
 }

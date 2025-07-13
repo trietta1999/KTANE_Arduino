@@ -106,7 +106,10 @@ void ProcessData()
         }
         else if (read == "gui_correct")
         {
-            debug_println("Corect label: " + map_TextLabel[CorrectTextLabel.GetValue()]);
+            debug_println("Stage: " + std::to_string(CurrentStage.GetValue()));
+            debug_println("Position: " + std::to_string((uint8_t)std::get<POSITION_POS>(CurrentCorrectData.GetValue()) + 1));
+            debug_println("Value: " + std::to_string((uint8_t)std::get<VALUE_POS>(CurrentCorrectData.GetValue())));
+            debug_println("");
         }
     }
 #endif
