@@ -2743,6 +2743,17 @@
                         "strval": "DEFAULT",
                         "childs": [
                           {
+                            "nid": 10410,
+                            "strtype": "_style/Text_Color",
+                            "intarray": [
+                              0,
+                              0,
+                              0,
+                              255
+                            ],
+                            "InheritedType": 7
+                          },
+                          {
                             "nid": 10450,
                             "strtype": "_style/Text_Font",
                             "strval": "montserrat_30",

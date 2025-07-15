@@ -295,6 +295,8 @@ void ui_Main_screen_init(void)
     lv_obj_set_height(ui_lblBarValue, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_align(ui_lblBarValue, LV_ALIGN_CENTER);
     lv_label_set_text(ui_lblBarValue, "5");
+    lv_obj_set_style_text_color(ui_lblBarValue, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_lblBarValue, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_font(ui_lblBarValue, &lv_font_montserrat_30, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_imgResult = lv_image_create(ui_Main);
