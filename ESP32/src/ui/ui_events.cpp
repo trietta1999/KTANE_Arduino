@@ -6,6 +6,7 @@
 #ifdef _WIN64
 #include <iostream>
 #endif
+#include <algorithm>
 #include "ui.h"
 #include "../CommonData.h"
 #include "../CommonLibrary.h"
@@ -36,10 +37,7 @@ struct chart_info_t {
     void SetActive(uint8_t index)
     {
         // All data off
-        for (auto& data : this->listData)
-        {
-            data = CHANNEL_OFF;
-        }
+        std::fill(this->listData.begin(), this->listData.end(), CHANNEL_OFF);
 
         // Set active
         listData[index] = CHANNEL_ACTIVE;
@@ -147,9 +145,15 @@ void Init()
     lv_slider_set_value(ui_sldBrightness, sys_gui::Brightness.GetValue(), LV_ANIM_OFF);
 
     // Init chart
-    chartMorseCodeActiveInfo = new chart_info_t(MAX_SYMBOL, ui_chartMorseCode, COLOR_BLUE);
-    chartMorseCodeInfo = new chart_info_t(MAX_SYMBOL, ui_chartMorseCode, COLOR_RED);
-    chartRadioInfo = new chart_info_t(MAX_CHANNEL, ui_chartRadio, COLOR_RED);
+    chartMorseCodeActiveInfo = new chart_info_t(MAX_SYMBOL, ui_chartMorseCode, COLOR_BLUE); // Active cursor - lamp blinking chart
+#ifdef _WIN64
+    chartMorseCodeInfo = new chart_info_t(MAX_SYMBOL, ui_chartMorseCode, COLOR_RED); // Morse code chart
+#else
+    auto dummyChart = lv_chart_create(ui_Main);
+    lv_obj_add_flag(dummyChart, LV_OBJ_FLAG_HIDDEN);
+    chartMorseCodeInfo = new chart_info_t(MAX_SYMBOL, dummyChart, COLOR_RED); // Dummy morse code chart
+#endif
+    chartRadioInfo = new chart_info_t(MAX_CHANNEL, ui_chartRadio, COLOR_RED); // Radio channel chart
 
     // Get morse code info
 #ifdef UNIT_TEST

@@ -24,7 +24,6 @@ std::tuple<TEXT_TYPE, std::string> GetRandomText();
 std::vector<int32_t> FlatMorseCodeArray(std::vector<std::array<int32_t, MAX_MORSE_SYMBOL>>);
 std::array<int32_t, MAX_MORSE_SYMBOL> ConvertSymbolToDigitArray(std::string);
 std::vector<std::array<int32_t, MAX_MORSE_SYMBOL>> ConvertTextToMorseCode(std::string);
-//TEXT_LABEL SetCorrectTextLabel(uint8_t, std::vector<TEXT_LABEL>);
 #pragma endregion
 
 #endif // !_COMMON_LIBRARY_H
