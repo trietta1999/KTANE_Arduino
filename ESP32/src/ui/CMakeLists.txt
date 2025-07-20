@@ -3,34 +3,21 @@ SET(SOURCES ui_Main.c
     ui_comp_hook.c
     ui_helpers.c
     ui_events.cpp
-    ui_img_ae_png.c
+    ui_img_maze0_png.c
+    ui_img_assistant_navigation_png.c
+    ui_img_arrow_up_png.c
+    ui_img_arrow_left_png.c
+    ui_img_arrow_right_png.c
+    ui_img_arrow_down_png.c
     ui_img_success_png.c
     ui_img_fail_png.c
-    ui_img_at_png.c
-    ui_img_balloon_png.c
-    ui_img_bt_png.c
-    ui_img_copyright_png.c
-    ui_img_cursive_png.c
-    ui_img_doublek_png.c
-    ui_img_dragon_png.c
-    ui_img_euro_png.c
-    ui_img_filledstar_png.c
-    ui_img_hollowstar_png.c
-    ui_img_hookn_png.c
-    ui_img_leftc_png.c
-    ui_img_meltedthree_png.c
-    ui_img_nwithhat_png.c
-    ui_img_omega_png.c
-    ui_img_paragraph_png.c
-    ui_img_pitchfork_png.c
-    ui_img_pumpkin_png.c
-    ui_img_questionmark_png.c
-    ui_img_rightc_png.c
-    ui_img_six_png.c
-    ui_img_smileyface_png.c
-    ui_img_squidknife_png.c
-    ui_img_squigglyn_png.c
-    ui_img_tracks_png.c
-    ui_img_upsidedowny_png.c)
+    ui_img_maze1_png.c
+    ui_img_maze2_png.c
+    ui_img_maze3_png.c
+    ui_img_maze4_png.c
+    ui_img_maze5_png.c
+    ui_img_maze6_png.c
+    ui_img_maze7_png.c
+    ui_img_maze8_png.c)
 
 add_library(ui ${SOURCES})

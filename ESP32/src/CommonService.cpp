@@ -106,14 +106,15 @@ void ProcessData()
         }
         else if (read == "gui_correct")
         {
-            auto orderIndex = OrderIndex.GetValue();
-            debug_println("ColumnIndex: " + std::to_string(ColumnIndex.GetValue()));
-            debug_println("OrderIndex:");
-
-            for (uint8_t i = 0; i < orderIndex.size(); i++)
-            {
-                debug_println(std::to_string(orderIndex[i]));
-            }
+            debug_println("Maze index: " + std::to_string(MazeIndex.GetValue() + 1));
+        }
+        else if (read == "show_wall")
+        {
+            DebugState.SetValue(DEBUG_SHOW);
+        }
+        else if (read == "hide_wall")
+        {
+            DebugState.SetValue(DEBUG_HIDE);
         }
     }
 #endif

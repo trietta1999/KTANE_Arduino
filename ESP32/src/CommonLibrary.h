@@ -5,7 +5,6 @@
 #ifndef _COMMON_LIBRARY_H
 #define _COMMON_LIBRARY_H
 
-#include <vector>
 #include "CommonDataType.h"
 
  // Do not delete or rename
@@ -21,7 +20,7 @@ bool NumberCheckInTimer(uint8_t);
 
 // Allow modification
 #pragma region Custom_function
-std::vector<uint8_t> ShuffleIndex(uint8_t, uint8_t);
+bool CheckValidMoveDirection(int32_t, int32_t, MOVE_TYPE);
 #pragma endregion
 
 #endif // !_COMMON_LIBRARY_H

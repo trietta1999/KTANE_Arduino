@@ -12,6 +12,7 @@
 #include <cstdint>
 #include <tuple>
 #include <vector>
+#include <array>
 #include <string>
 #include <unordered_map>
 
@@ -19,11 +20,11 @@
 
 #ifdef _WIN64
 #define HOST_NAME mapWstr_MODULE_NAME[MODULE_NAME::HostTimer].c_str()
-#define CLIENT_NAME mapWstr_MODULE_NAME[MODULE_NAME::Keypads].c_str()
-#define CLIENT_NAME_FOR_JSON map_MODULE_NAME[MODULE_NAME::Keypads].c_str()
+#define CLIENT_NAME mapWstr_MODULE_NAME[MODULE_NAME::Mazes].c_str()
+#define CLIENT_NAME_FOR_JSON map_MODULE_NAME[MODULE_NAME::Mazes].c_str()
 #else
 #define HOST_NAME map_MODULE_NAME[MODULE_NAME::HostTimer].c_str()
-#define CLIENT_NAME map_MODULE_NAME[MODULE_NAME::Keypads].c_str()
+#define CLIENT_NAME map_MODULE_NAME[MODULE_NAME::Mazes].c_str()
 #endif
 
 #define MAX_SIZE 1000
@@ -184,27 +185,36 @@ EXTERN_MAP_ENUM_WSTR(MODULE_NAME)
 
 // Allow modification
 #pragma region Custom_datatype
-#define DEF_COLOR_TYPE(e, CREATE) \
-        CREATE(e, DEFAULT_COLOR) \
-        CREATE(e, RED) \
-        CREATE(e, GREEN) \
+#define GRID_POINT_COLOR 0x0A471A
+#define NAVIGATOR_COLOR 0xFF0000
+#define MOVER_COLOR 0xFFFFFF
 
-enum class COLOR_TYPE
+#define POINT_CAPACITY 100
+#define MAX_POINT_NUM 6
+#define MIN_POINT_NUM 1
+#define MAZE_TYPE_NUM 9
+
+#define DEBUG_SHOW 1
+#define DEBUG_HIDE 0
+
+#define ROW_T std::array<std::array<std::string, MAX_POINT_NUM>, MAX_POINT_NUM>
+#define LIST_IND_T std::vector<std::pair<int32_t, int32_t>>
+
+#define DEF_MOVE_TYPE(e, CREATE) \
+        CREATE(e, LEFT) \
+        CREATE(e, RIGHT) \
+        CREATE(e, UP) \
+        CREATE(e, DOWN) \
+
+enum class MOVE_TYPE
 {
-    DEF_COLOR_TYPE(COLOR_TYPE, TO_ENUM)
-    MAX
+    DEF_MOVE_TYPE(MOVE_TYPE, TO_ENUM)
 };
 
-EXTERN_MAP_ENUM_STR(COLOR_TYPE)
+EXTERN_MAP_ENUM_STR(MOVE_TYPE)
 
-extern std::unordered_map<COLOR_TYPE, COLOR> mapColor;
-
-#define KEYPAD_MAX_NUM 4
-#define MAX_COL 6
-#define MAX_ITEM 7
-#define KEYPAD_POS 0
-#define IMAGE_POS 1
-#define INDEX_POS 2
+extern std::vector<std::pair<LIST_IND_T, ROW_T>> listMazeType;
+extern std::unordered_map<MOVE_TYPE, char> mapMoveTypeChar;
 #pragma endregion
 
 #endif // !_COMMON_DATATYPE_H

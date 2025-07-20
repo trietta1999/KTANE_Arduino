@@ -6,7 +6,6 @@
 #define _COMMON_DATA_H
 
 #include "ArduinoJson-v7.4.1.h"
-#include <vector>
 #include "CommonDataType.h"
 #include "CData.h"
 
@@ -44,8 +43,10 @@ namespace sys_gui // GUI read/write -> Send data to HOST
 
 // Allow modification
 #pragma region Custom_data
-extern CData<uint8_t> ColumnIndex;
-extern CData<std::vector<uint8_t>> OrderIndex;
+extern CData<std::pair<int32_t, int32_t>> NavigatorPosition;
+extern CData<std::pair<int32_t, int32_t>> MoverPosition;
+extern CData<uint8_t> MazeIndex;
+extern CData<uint8_t> DebugState;
 #pragma endregion
 
 void UpdateAll();

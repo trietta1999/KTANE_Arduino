@@ -3,9 +3,9 @@
  */
 
 #include <algorithm>
-#include <random>
 #include "CommonLibrary.h"
 #include "CommonData.h"
+#include "CommonService.h"
 
  // Do not delete or rename
 #pragma region System_function
@@ -72,24 +72,16 @@ bool NumberCheckInTimer(uint8_t num)
 
 // Allow modification
 #pragma region Custom_function
-std::vector<uint8_t> ShuffleIndex(uint8_t size, uint8_t take_num)
+bool CheckValidMoveDirection(int32_t x, int32_t y, MOVE_TYPE moveType)
 {
-    std::vector<uint8_t> indexes(size);
-    std::vector<uint8_t> selectedIndexes(take_num);
+    auto pattern = listMazeType[MazeIndex.GetValue()].second[MAX_POINT_NUM - y][x - 1];
+    auto moveTypeChar = mapMoveTypeChar[moveType];
 
-    for (uint8_t i = 0; i < size; i++) {
-        indexes[i] = i;
-    }
-
-    std::mt19937 generator(sys_host::RandomSeed.GetValue());
-    std::shuffle(indexes.begin(), indexes.end(), generator);
-
-    for (uint8_t i = 0; i < take_num; i++)
+    if (pattern.find(moveTypeChar) != std::string::npos)
     {
-        selectedIndexes[i] = indexes[i];
+        return true;
     }
-    //std::sort(selectedIndexes.begin(), selectedIndexes.end());
 
-    return selectedIndexes;
+    return false;
 }
 #pragma endregion

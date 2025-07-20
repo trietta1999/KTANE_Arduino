@@ -37,8 +37,10 @@ namespace sys_gui
 
 // Allow modification
 #pragma region Custom_data
-CData<uint8_t> ColumnIndex;
-CData<std::vector<uint8_t>> OrderIndex;
+CData<std::pair<int32_t, int32_t>> NavigatorPosition;
+CData<std::pair<int32_t, int32_t>> MoverPosition;
+CData<uint8_t> MazeIndex;
+CData<uint8_t> DebugState;
 #pragma endregion
 
 // Add auto reset state for custom data only
@@ -46,4 +48,6 @@ void UpdateAll()
 {
     sys_gui::Brightness.ResetState();
     sys_gui::SuccessState.ResetState();
+    MoverPosition.ResetState();
+    DebugState.ResetState();
 }

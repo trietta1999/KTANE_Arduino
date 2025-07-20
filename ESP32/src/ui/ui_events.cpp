@@ -6,76 +6,70 @@
 #ifdef _WIN64
 #include <iostream>
 #endif
-#include <tuple>
 #include <algorithm>
 #include "ui.h"
 #include "../CommonData.h"
 #include "../CommonLibrary.h"
 #include "../CommonService.h"
 
-bool isCorrectKey = false;
-bool isIncorrect = false;
-uint8_t currentKeyIndex = 0;
-lv_obj_t* currentKeypad = nullptr;
-std::vector<std::tuple<lv_obj_t*, lv_obj_t*, uint8_t>> listKeypad = { };
+struct chart_info_t {
+    lv_obj_t* chart;
+    lv_chart_series_t* series;
+    std::vector<std::pair<int32_t, int32_t>> listData;
 
-/* Set image to column list, from left to right, top to bottom in each column.
-   Refer [On the Subject of Keypads] */
-lv_image_dsc_t listImage[MAX_COL][MAX_ITEM] = {
+    chart_info_t(int32_t size, lv_obj_t* chart, uint32_t seriesColor)
     {
-        ui_img_balloon_png,
-        ui_img_at_png,
-        ui_img_upsidedowny_png,
-        ui_img_squigglyn_png,
-        ui_img_squidknife_png,
-        ui_img_hookn_png,
-        ui_img_leftc_png,
-    },
+        this->chart = chart;
+        this->series = lv_chart_add_series(this->chart, lv_color_hex(seriesColor), LV_CHART_AXIS_PRIMARY_Y);
+
+        // Set chart properties
+        lv_obj_set_style_line_width(this->chart, 0, LV_PART_ITEMS); // Remove the lines
+        lv_chart_set_range(this->chart, LV_CHART_AXIS_PRIMARY_X, MIN_POINT_NUM, size);
+        lv_chart_set_range(this->chart, LV_CHART_AXIS_PRIMARY_Y, MIN_POINT_NUM, size);
+        lv_chart_set_div_line_count(this->chart, 0, 0);
+    }
+
+    void SetChartData()
     {
-        ui_img_euro_png,
-        ui_img_balloon_png,
-        ui_img_leftc_png,
-        ui_img_cursive_png,
-        ui_img_hollowstar_png,
-        ui_img_hookn_png,
-        ui_img_questionmark_png,
-    },
+        for (const auto& item : this->listData)
+        {
+            lv_chart_set_next_value2(this->chart, this->series, std::get<0>(item), std::get<1>(item));
+        }
+        lv_chart_set_next_value2(this->chart, this->series, std::get<0>(this->listData.back()), std::get<1>(this->listData.back()));
+
+        lv_chart_refresh(this->chart);
+    }
+
+    void SetPointMulti(std::vector<std::pair<int32_t, int32_t>> listCord)
     {
-        ui_img_copyright_png,
-        ui_img_pumpkin_png,
-        ui_img_cursive_png,
-        ui_img_doublek_png,
-        ui_img_meltedthree_png,
-        ui_img_upsidedowny_png,
-        ui_img_hollowstar_png,
-    },
-    {
-        ui_img_six_png,
-        ui_img_paragraph_png,
-        ui_img_bt_png,
-        ui_img_squidknife_png,
-        ui_img_doublek_png,
-        ui_img_questionmark_png,
-        ui_img_smileyface_png,
-    },
-    {
-        ui_img_pitchfork_png,
-        ui_img_smileyface_png,
-        ui_img_bt_png,
-        ui_img_rightc_png,
-        ui_img_paragraph_png,
-        ui_img_dragon_png,
-        ui_img_filledstar_png,
-    },
-    {
-        ui_img_six_png,
-        ui_img_euro_png,
-        ui_img_tracks_png,
-        ui_img_ae_png,
-        ui_img_pitchfork_png,
-        ui_img_nwithhat_png,
-        ui_img_omega_png,
-    },
+        this->listData = listCord;
+
+        // Clear all point
+        lv_chart_set_point_count(this->chart, 0);
+        lv_chart_set_point_count(this->chart, POINT_CAPACITY);
+
+        // Set new point
+        SetChartData();
+    }
+};
+
+chart_info_t* chartGrid = nullptr;
+chart_info_t* chartIndicator = nullptr;
+chart_info_t* chartNavigator = nullptr;
+chart_info_t* chartMover = nullptr;
+
+std::unordered_map<lv_obj_t*, MOVE_TYPE> mapButtonMoveType = { };
+
+std::vector<lv_image_dsc_t> listChartBgImg = {
+    ui_img_maze0_png,
+    ui_img_maze1_png,
+    ui_img_maze2_png,
+    ui_img_maze3_png,
+    ui_img_maze4_png,
+    ui_img_maze5_png,
+    ui_img_maze6_png,
+    ui_img_maze7_png,
+    ui_img_maze8_png,
 };
 
 void Init()
@@ -84,82 +78,83 @@ void Init()
     sys_gui::Brightness.SetValue(100);
     lv_slider_set_value(ui_sldBrightness, sys_gui::Brightness.GetValue(), LV_ANIM_OFF);
 
-    // Mapping key with image
-    listKeypad = {
-        { ui_btnKey1, ui_imgKey1, 0 },
-        { ui_btnKey2, ui_imgKey2, 0 },
-        { ui_btnKey3, ui_imgKey3, 0 },
-        { ui_btnKey4, ui_imgKey4, 0 },
+    // Hide debug image background
+    DebugState.SetValue(INCORRECT);
+    lv_obj_add_flag(ui_chartBgImg, LV_OBJ_FLAG_HIDDEN);
+
+    // Map move type to button
+    mapButtonMoveType = {
+        { ui_btnLeft, MOVE_TYPE::LEFT },
+        { ui_btnRight, MOVE_TYPE::RIGHT },
+        { ui_btnUp, MOVE_TYPE::UP },
+        { ui_btnDown, MOVE_TYPE::DOWN },
     };
 
-#ifndef UNIT_TEST
-    // Choose random column
-    auto columnIndex = RandomRange(0, MAX_COL);
-    ColumnIndex.SetValue(columnIndex);
+    // Init chart
+    chartGrid = new chart_info_t(MAX_POINT_NUM, ui_chartGrid, GRID_POINT_COLOR);
+    chartIndicator = new chart_info_t(MAX_POINT_NUM, ui_chartIndicator, 0);
+    chartNavigator = new chart_info_t(MAX_POINT_NUM, ui_chartNavigator, 0);
+    chartMover = new chart_info_t(MAX_POINT_NUM, ui_chartMover, MOVER_COLOR);
 
-    // Get random 4 item (keep ordering) in column
-    auto orderIndex = ShuffleIndex(MAX_ITEM, KEYPAD_MAX_NUM);
-    OrderIndex.SetValue(orderIndex);
-#else
-    auto columnIndex = ColumnIndex.GetValue();
-    auto orderIndex = OrderIndex.GetValue();
-#endif
-
-    for (uint8_t i = 0; i < KEYPAD_MAX_NUM; i++)
+    // Fill grid point
+    int32_t x = 0, y = 0;
+    for (x = MIN_POINT_NUM; x <= MAX_POINT_NUM; x++)
     {
-        // Set image of each order to button
-        //auto a = &listImage[columnIndex][orderIndex[i]];
-        lv_image_set_src(std::get<IMAGE_POS>(listKeypad[i]), &listImage[columnIndex][orderIndex[i]]);
-        // Update order index to keypad
-        std::get<INDEX_POS>(listKeypad[i]) = orderIndex[i];
+        for (y = MIN_POINT_NUM; y <= MAX_POINT_NUM; y++)
+        {
+            chartGrid->listData.push_back(std::make_pair(x, y));
+        }
     }
+    chartGrid->SetChartData();
 
-    // Sort keypad order from smallest to largest
-    std::sort(listKeypad.begin(), listKeypad.end(),
-        [](const auto& a, const auto& b) {
-            return std::get<INDEX_POS>(a) < std::get<INDEX_POS>(b);
-        });
+    // Select random maze type
+    MazeIndex.SetValue(RandomRange(0, MAZE_TYPE_NUM));
+    chartIndicator->SetPointMulti(listMazeType[MazeIndex.GetValue()].first);
 
+    // Random navigator position
+    NavigatorPosition.SetValue(std::make_pair((int32_t)RandomRange(1, MAX_POINT_NUM + 1), (int32_t)RandomRange(1, MAX_POINT_NUM + 1)));
+    chartNavigator->SetPointMulti({ NavigatorPosition.GetValue() });
 
-#if defined(_WIN64) && !defined(UNIT_TEST)
-    debug_println("ColumnIndex: " + std::to_string(ColumnIndex.GetValue()));
-    debug_println("OrderIndex:");
+    // Random mover position, must not same with navigation position
+    std::pair<int32_t, int32_t> moverPos = std::make_pair(0, 0);
+    auto navigationPos = NavigatorPosition.GetValue();
 
-    for (uint8_t i = 0; i < orderIndex.size(); i++)
+    do
     {
-        debug_println(std::to_string(orderIndex[i]));
-    }
+        moverPos = std::make_pair((int32_t)RandomRange(1, MAX_POINT_NUM + 1), (int32_t)RandomRange(1, MAX_POINT_NUM + 1));
+    } while (moverPos == navigationPos);
+
+    MoverPosition.SetValue(moverPos);
+    chartMover->SetPointMulti({ moverPos });
+
+#ifdef _WIN64
+    debug_println("Maze index: " + std::to_string(MazeIndex.GetValue() + 1));
 #endif
 }
 
 void AutoUpdate()
 {
-    // Update correct keypad
-    if (isCorrectKey)
+    if (MoverPosition.GetState())
     {
-        lv_obj_set_style_bg_color(currentKeypad, lv_color_hex(mapColor[COLOR_TYPE::GREEN]), LV_PART_MAIN | LV_STATE_DEFAULT);
-        lv_obj_remove_flag(currentKeypad, LV_OBJ_FLAG_CLICKABLE);
-
-        // Reset flag
-        isCorrectKey = false;
+        chartMover->SetPointMulti({ MoverPosition.GetValue() });
     }
 
-    // Update incorrect keypad
-    if (isIncorrect)
+    if (DebugState.GetState())
     {
-        // Change to red color
-        lv_obj_remove_flag(ui_wndTransparent, LV_OBJ_FLAG_HIDDEN);
-        lv_obj_set_style_bg_color(currentKeypad, lv_color_hex(mapColor[COLOR_TYPE::RED]), LV_PART_MAIN | LV_STATE_DEFAULT);
+        if (DebugState.GetValue() != INCORRECT)
+        {
+            if (DebugState.GetValue() == DEBUG_SHOW)
+            {
+                lv_obj_remove_flag(ui_chartBgImg, LV_OBJ_FLAG_HIDDEN);
 
-        // Create timer for non-blocking other task
-        lv_timer_create([](lv_timer_t* timer) {
-            // Change to default color
-            lv_obj_set_style_bg_color(currentKeypad, lv_color_hex(mapColor[COLOR_TYPE::DEFAULT_COLOR]), LV_PART_MAIN | LV_STATE_DEFAULT);
-            lv_obj_add_flag(ui_wndTransparent, LV_OBJ_FLAG_HIDDEN);
-            }, 1000, NULL)->repeat_count = 1;
-
-        // Reset error flag
-        isIncorrect = false;
+                // Set chart background
+                lv_obj_set_style_bg_image_src(ui_chartBgImg, &listChartBgImg[MazeIndex.GetValue()], LV_PART_MAIN | LV_STATE_DEFAULT);
+            }
+            else if (DebugState.GetValue() == DEBUG_HIDE)
+            {
+                lv_obj_add_flag(ui_chartBgImg, LV_OBJ_FLAG_HIDDEN);
+            }
+        }
     }
 
     if (sys_gui::SuccessState.GetState()) {
@@ -182,34 +177,76 @@ void AutoUpdate()
 void OnBrightnessChange(lv_event_t* e)
 {
     sys_gui::Brightness.SetValue(lv_slider_get_value(ui_sldBrightness));
-}
 
-void OnButtonKeypadClick(lv_event_t* e)
-{
-    currentKeypad = reinterpret_cast<lv_obj_t*>(e->current_target);
-
-    // Current button is mapped with current order
-    if (currentKeypad == std::get<KEYPAD_POS>(listKeypad[currentKeyIndex]))
+#ifdef _WIN64
+    if (lv_slider_get_value(ui_sldBrightness) >= 255)
     {
-        // Check next button later
-        currentKeyIndex++;
-
-        // Update correct keypad
-        isCorrectKey = true;
+        DebugState.SetValue(DEBUG_SHOW);
+    }
+    else if (lv_slider_get_value(ui_sldBrightness) <= 10)
+    {
+        DebugState.SetValue(DEBUG_HIDE);
     }
     else
     {
-        // Set error flag
-        isIncorrect = true;
+        DebugState.SetValue(INCORRECT);
+    }
+#endif
+}
 
+void OnButtonClick(lv_event_t* e)
+{
+    auto button = (lv_obj_t*)e->current_target;
+    auto moverPos = MoverPosition.GetValue();
+    auto navigatorPos = NavigatorPosition.GetValue();
+    auto validMove = CheckValidMoveDirection(moverPos.first, moverPos.second, mapButtonMoveType[button]);
+
+    // Wrong move direction
+    if (!validMove)
+    {
 #ifndef UNIT_TEST
         // Send error to Host
         CommonSendRequest(WM_STRIKESTATE_SET);
 #endif
+
+        return;
     }
 
-    // All button is corrected with order
-    if (currentKeyIndex >= KEYPAD_MAX_NUM)
+    // Calculate new mover position
+    if (button == ui_btnLeft)
+    {
+        if (moverPos.first > MIN_POINT_NUM)
+        {
+            moverPos.first -= 1;
+        }
+    }
+    else if (button == ui_btnRight)
+    {
+        if (moverPos.first < MAX_POINT_NUM)
+        {
+            moverPos.first += 1;
+        }
+    }
+    else if (button == ui_btnUp)
+    {
+        if (moverPos.second < MAX_POINT_NUM)
+        {
+            moverPos.second += 1;
+        }
+    }
+    else if (button == ui_btnDown)
+    {
+        if (moverPos.second > MIN_POINT_NUM)
+        {
+            moverPos.second -= 1;
+        }
+    }
+
+    // Update mover position
+    MoverPosition.SetValue(moverPos);
+
+    // Mover and navigator position are same
+    if (moverPos == navigatorPos)
     {
         sys_gui::SuccessState.SetValue(STATE_CHECKED);
 
