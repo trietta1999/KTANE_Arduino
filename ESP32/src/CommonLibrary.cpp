@@ -381,8 +381,8 @@ std::array<uint8_t, BUTTON_NUM> GenerateArrayNumber()
     std::array<uint8_t, BUTTON_NUM> arrResult;
 
     std::iota(rangeNum.begin(), rangeNum.end(), 1);
-    auto a = rand();
-    std::mt19937 generator(a);
+
+    std::mt19937 generator(rand());
 
     std::sample(rangeNum.begin(), rangeNum.end(), std::back_inserter(vecResult), BUTTON_NUM, generator);
 
