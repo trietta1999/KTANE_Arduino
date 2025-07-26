@@ -22,7 +22,7 @@ void Init()
 
     // Wire list
     listWire = { ui_barWire1, ui_barWire2, ui_barWire3, ui_barWire4, ui_barWire5, ui_barWire6 };
-    listSelect = { ui_swSelect1, ui_swSelect2, ui_swSelect3, ui_swSelect4, ui_swSelect5, ui_swSelect6 };
+    listSelect = { ui_btnSelect1, ui_btnSelect2, ui_btnSelect3, ui_btnSelect4, ui_btnSelect5, ui_btnSelect6 };
 
 #ifndef UNIT_TEST
     // Create random color wire list

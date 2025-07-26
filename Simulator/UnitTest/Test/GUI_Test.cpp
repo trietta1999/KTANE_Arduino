@@ -39,7 +39,7 @@ public:
         libraryTest->TEST_WireModule_3wire_1();
 
         lv_event_t e = { 0 };
-        e.current_target = ui_swSelect2;
+        e.current_target = ui_btnSelect2;
 
         OnWireSelect(&e);
 
@@ -51,7 +51,7 @@ public:
         libraryTest->TEST_WireModule_3wire_2();
 
         lv_event_t e = { 0 };
-        e.current_target = ui_swSelect3;
+        e.current_target = ui_btnSelect3;
 
         OnWireSelect(&e);
 
@@ -63,7 +63,7 @@ public:
         libraryTest->TEST_WireModule_3wire_3();
 
         lv_event_t e = { 0 };
-        e.current_target = ui_swSelect2;
+        e.current_target = ui_btnSelect2;
 
         OnWireSelect(&e);
 
@@ -75,7 +75,7 @@ public:
         libraryTest->TEST_WireModule_3wire_4();
 
         lv_event_t e = { 0 };
-        e.current_target = ui_swSelect3;
+        e.current_target = ui_btnSelect3;
 
         OnWireSelect(&e);
 
@@ -89,7 +89,7 @@ public:
         libraryTest->TEST_WireModule_4wire_1();
 
         lv_event_t e = { 0 };
-        e.current_target = ui_swSelect4;
+        e.current_target = ui_btnSelect4;
 
         OnWireSelect(&e);
 
@@ -101,7 +101,7 @@ public:
         libraryTest->TEST_WireModule_4wire_2();
 
         lv_event_t e = { 0 };
-        e.current_target = ui_swSelect2;
+        e.current_target = ui_btnSelect2;
 
         OnWireSelect(&e);
 
@@ -113,7 +113,7 @@ public:
         libraryTest->TEST_WireModule_4wire_3();
 
         lv_event_t e = { 0 };
-        e.current_target = ui_swSelect1;
+        e.current_target = ui_btnSelect1;
 
         OnWireSelect(&e);
 
@@ -125,7 +125,7 @@ public:
         libraryTest->TEST_WireModule_4wire_4();
 
         lv_event_t e = { 0 };
-        e.current_target = ui_swSelect4;
+        e.current_target = ui_btnSelect4;
 
         OnWireSelect(&e);
 
@@ -137,7 +137,7 @@ public:
         libraryTest->TEST_WireModule_4wire_5();
 
         lv_event_t e = { 0 };
-        e.current_target = ui_swSelect2;
+        e.current_target = ui_btnSelect2;
 
         OnWireSelect(&e);
 
@@ -151,7 +151,7 @@ public:
         libraryTest->TEST_WireModule_5wire_1();
 
         lv_event_t e = { 0 };
-        e.current_target = ui_swSelect4;
+        e.current_target = ui_btnSelect4;
 
         OnWireSelect(&e);
 
@@ -163,7 +163,7 @@ public:
         libraryTest->TEST_WireModule_5wire_2();
 
         lv_event_t e = { 0 };
-        e.current_target = ui_swSelect1;
+        e.current_target = ui_btnSelect1;
 
         OnWireSelect(&e);
 
@@ -175,7 +175,7 @@ public:
         libraryTest->TEST_WireModule_5wire_3();
 
         lv_event_t e = { 0 };
-        e.current_target = ui_swSelect2;
+        e.current_target = ui_btnSelect2;
 
         OnWireSelect(&e);
 
@@ -187,7 +187,7 @@ public:
         libraryTest->TEST_WireModule_5wire_4();
 
         lv_event_t e = { 0 };
-        e.current_target = ui_swSelect1;
+        e.current_target = ui_btnSelect1;
 
         OnWireSelect(&e);
 
@@ -201,7 +201,7 @@ public:
         libraryTest->TEST_WireModule_6wire_1();
 
         lv_event_t e = { 0 };
-        e.current_target = ui_swSelect3;
+        e.current_target = ui_btnSelect3;
 
         OnWireSelect(&e);
 
@@ -213,7 +213,7 @@ public:
         libraryTest->TEST_WireModule_6wire_2();
 
         lv_event_t e = { 0 };
-        e.current_target = ui_swSelect4;
+        e.current_target = ui_btnSelect4;
 
         OnWireSelect(&e);
 
@@ -225,7 +225,7 @@ public:
         libraryTest->TEST_WireModule_6wire_3();
 
         lv_event_t e = { 0 };
-        e.current_target = ui_swSelect6;
+        e.current_target = ui_btnSelect6;
 
         OnWireSelect(&e);
 
@@ -237,7 +237,7 @@ public:
         libraryTest->TEST_WireModule_6wire_4();
 
         lv_event_t e = { 0 };
-        e.current_target = ui_swSelect4;
+        e.current_target = ui_btnSelect4;
 
         OnWireSelect(&e);
 
