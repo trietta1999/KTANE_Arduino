@@ -19,11 +19,11 @@
 
 #ifdef _WIN64
 #define HOST_NAME mapWstr_MODULE_NAME[MODULE_NAME::HostTimer].c_str()
-#define CLIENT_NAME mapWstr_MODULE_NAME[MODULE_NAME::WhosOnFirst].c_str()
-#define CLIENT_NAME_FOR_JSON map_MODULE_NAME[MODULE_NAME::WhosOnFirst].c_str()
+#define CLIENT_NAME mapWstr_MODULE_NAME[MODULE_NAME::Passwords].c_str()
+#define CLIENT_NAME_FOR_JSON map_MODULE_NAME[MODULE_NAME::Passwords].c_str()
 #else
 #define HOST_NAME map_MODULE_NAME[MODULE_NAME::HostTimer].c_str()
-#define CLIENT_NAME map_MODULE_NAME[MODULE_NAME::WhosOnFirst].c_str()
+#define CLIENT_NAME map_MODULE_NAME[MODULE_NAME::Passwords].c_str()
 #endif
 
 #define MAX_SIZE 1000
@@ -184,88 +184,60 @@ EXTERN_MAP_ENUM_WSTR(MODULE_NAME)
 
 // Allow modification
 #pragma region Custom_datatype
-#define STAGE_NUM 3
-#define BUTTON_NUM 6
-#define TEXT_POS 0
-#define FOCUSPOS_POS 1
+#define LETTER_TAKE_NUM 5
 
-#define DEF_TEXT_LABEL(e, CREATE) \
-        CREATE(e, E_READY) \
+#define DEF_PASSWORD_TEXT(e, CREATE) \
+        CREATE(e, E_ABOUT) \
+        CREATE(e, E_EVERY) \
+        CREATE(e, E_LARGE) \
+        CREATE(e, E_PLANT) \
+        CREATE(e, E_SPELL) \
+        CREATE(e, E_THESE) \
+        CREATE(e, E_WHERE) \
+        CREATE(e, E_AFTER) \
         CREATE(e, E_FIRST) \
-        CREATE(e, E_NO) \
-        CREATE(e, E_BLANK) \
-        CREATE(e, E_NOTHING) \
-        CREATE(e, E_YES) \
-        CREATE(e, E_WHAT) \
-        CREATE(e, E_UHHH) \
-        CREATE(e, E_LEFT) \
+        CREATE(e, E_LEARN) \
+        CREATE(e, E_POINT) \
+        CREATE(e, E_STILL) \
+        CREATE(e, E_THING) \
+        CREATE(e, E_WHICH) \
+        CREATE(e, E_AGAIN) \
+        CREATE(e, E_FOUND) \
+        CREATE(e, E_NEVER) \
         CREATE(e, E_RIGHT) \
-        CREATE(e, E_MIDDLE) \
-        CREATE(e, E_OKAY) \
-        CREATE(e, E_WAIT) \
-        CREATE(e, E_PRESS) \
-        CREATE(e, E_YOU) \
-        CREATE(e, E_YOU_ARE) \
-        CREATE(e, E_YOUR) \
-        CREATE(e, E_YOURE) \
-        CREATE(e, E_UR) \
-        CREATE(e, E_U) \
-        CREATE(e, E_UH_HUH) \
-        CREATE(e, E_UH_UH) \
-        CREATE(e, E_WHAT_QMARK) \
-        CREATE(e, E_DONE) \
-        CREATE(e, E_NEXT) \
-        CREATE(e, E_HOLD) \
-        CREATE(e, E_SURE) \
-        CREATE(e, E_LIKE) \
-
-#define DEF_TEXT_DISPLAY(e, CREATE) \
-        CREATE(e, E_YES) \
-        CREATE(e, E_FIRST) \
-        CREATE(e, E_DISPLAY) \
-        CREATE(e, E_OKAY) \
-        CREATE(e, E_SAYS) \
-        CREATE(e, E_NOTHING) \
-        CREATE(e, E_EMPTY) \
-        CREATE(e, E_BLANK) \
-        CREATE(e, E_NO) \
-        CREATE(e, E_LED) \
-        CREATE(e, E_LEAD) \
-        CREATE(e, E_READ) \
-        CREATE(e, E_RED) \
-        CREATE(e, E_REED) \
-        CREATE(e, E_LEED) \
-        CREATE(e, E_HOLD_ON) \
-        CREATE(e, E_YOU) \
-        CREATE(e, E_YOU_ARE) \
-        CREATE(e, E_YOUR) \
-        CREATE(e, E_YOURE) \
-        CREATE(e, E_UR) \
-        CREATE(e, E_THERE) \
-        CREATE(e, E_THEYRE) \
+        CREATE(e, E_STUDY) \
+        CREATE(e, E_THINK) \
+        CREATE(e, E_WORLD) \
+        CREATE(e, E_BELOW) \
+        CREATE(e, E_GREAT) \
+        CREATE(e, E_OTHER) \
+        CREATE(e, E_SMALL) \
         CREATE(e, E_THEIR) \
-        CREATE(e, E_THEY_ARE) \
-        CREATE(e, E_SEE) \
-        CREATE(e, E_C) \
-        CREATE(e, E_CEE) \
+        CREATE(e, E_THREE) \
+        CREATE(e, E_WOULD) \
+        CREATE(e, E_COULD) \
+        CREATE(e, E_HOUSE) \
+        CREATE(e, E_PLACE) \
+        CREATE(e, E_SOUND) \
+        CREATE(e, E_THERE) \
+        CREATE(e, E_WATER) \
+        CREATE(e, E_WRITE) \
 
-enum class TEXT_LABEL
+enum class PASSWORD_TEXT
 {
     MIN,
-    DEF_TEXT_LABEL(TEXT_LABEL, TO_ENUM)
-    MAX
+    DEF_PASSWORD_TEXT(PASSWORD_TEXT, TO_ENUM)
+    MAX,
 };
 
-enum class TEXT_DISPLAY
+EXTERN_MAP_ENUM_STR(PASSWORD_TEXT)
+
+enum class BUTTON_TYPE
 {
-    MIN,
-    DEF_TEXT_DISPLAY(TEXT_DISPLAY, TO_ENUM)
-    MAX
+    NONE,
+    UP,
+    DOWN,
 };
-
-extern std::unordered_map<TEXT_LABEL, std::string> map_TextLabel;
-extern std::unordered_map<TEXT_DISPLAY, std::tuple<std::string, uint8_t>> map_TextDisplayWithFocusPostion;
-extern std::unordered_map<TEXT_LABEL, std::vector<TEXT_LABEL>> map_TextLabelList;
 #pragma endregion
 
 #endif // !_COMMON_DATATYPE_H

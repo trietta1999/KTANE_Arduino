@@ -43,8 +43,8 @@ namespace sys_gui // GUI read/write -> Send data to HOST
 
 // Allow modification
 #pragma region Custom_data
-extern CData<uint8_t> CurrentStage;
-extern CData<TEXT_LABEL> CorrectTextLabel;
+extern CData<std::string> CorrectPassword;
+extern CData<std::string> CurrentPassword;
 #pragma endregion
 
 void UpdateAll();

@@ -102,15 +102,19 @@ public:
         Assert::IsTrue(NumberCheckInTimer(2) == true);
     }
 
-    TEST_METHOD(TEST_GetTextLabelListFromMap)
+    TEST_METHOD(TEST_GenerateRandomString_1)
     {
-        auto result = GetTextLabelListFromMap(BUTTON_NUM);
-        Assert::IsTrue(result.size() == BUTTON_NUM);
+        auto result = GenerateRandomString(5, 'A');
+
+        Assert::IsTrue(result[0] == 'A');
+        Assert::IsTrue(result.length() == 9);
     }
 
-    TEST_METHOD(TEST_SetCorrectTextLabel)
+    TEST_METHOD(TEST_GenerateRandomString_2)
     {
-        auto result = SetCorrectTextLabel(2, { TEXT_LABEL::E_RIGHT, TEXT_LABEL::E_NOTHING, TEXT_LABEL::E_READY, TEXT_LABEL::E_PRESS, TEXT_LABEL::E_UHHH, });
-        Assert::IsTrue(result == TEXT_LABEL::E_UHHH);
+        auto result = GenerateRandomString(10, 'A');
+
+        Assert::IsTrue(result[0] == 'A');
+        Assert::IsTrue(result.length() == 19);
     }
 };

@@ -3,7 +3,7 @@
  */
 
 #include <algorithm>
-#include <iterator>
+#include <random>
 #include "CommonLibrary.h"
 #include "CommonData.h"
 #include "CommonService.h"
@@ -73,50 +73,33 @@ bool NumberCheckInTimer(uint8_t num)
 
 // Allow modification
 #pragma region Custom_function
-std::tuple<TEXT_DISPLAY, uint8_t> GetRandomTextDisplay()
+std::string GenerateRandomString(uint8_t takeNum, char rootLetter)
 {
-    auto textDisplay = (TEXT_DISPLAY)RandomRange(((uint8_t)TEXT_DISPLAY::MIN) + 1, (uint8_t)TEXT_DISPLAY::MAX);
-    auto focusPos = std::get<FOCUSPOS_POS>(map_TextDisplayWithFocusPostion[textDisplay]);
+    std::string outputString = "";
 
-    return std::make_tuple(textDisplay, focusPos);
-}
+    // Sample string
+    std::string characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-std::vector<TEXT_LABEL> GetTextLabelListFromMap(uint8_t takeNum)
-{
-    // Convert map to text label list
-    std::vector<TEXT_LABEL> listTextLabel = { };
-    std::transform(map_TextLabel.begin(), map_TextLabel.end(),
-        std::back_inserter(listTextLabel),
-        [](const auto& pair) { return pair.first; });
+    // Create letter list with first root letter
+    std::vector<char> listString = { rootLetter };
 
-    // Get list text label
-    auto textLabel = (TEXT_LABEL)RandomRange(((uint8_t)TEXT_LABEL::MIN) + 1, (uint8_t)TEXT_LABEL::MAX);
-    auto listTextLabelItem = map_TextLabelList[textLabel];
+    // Remove root letter from sample string to ensure no duplication
+    characters.erase(std::remove(characters.begin(), characters.end(), rootLetter), characters.end());
 
-    // Take [takeNum] element trong list text label
-    auto randomIndex = RandomRange(0, listTextLabelItem.size() - takeNum);
-    std::vector<TEXT_LABEL> listSelectTextLabel(listTextLabelItem.begin() + randomIndex, (listTextLabelItem.begin() + randomIndex) + takeNum);
+    std::mt19937 generator(rand());
 
-    return listSelectTextLabel;
-}
+    std::sample(characters.begin(), characters.end(), std::back_inserter(listString), takeNum - 1, generator);
 
-TEXT_LABEL SetCorrectTextLabel(uint8_t position, std::vector<TEXT_LABEL> listTextLabel)
-{
-    auto textLabel = listTextLabel[position - 1];
-    auto targetListTextLabel = map_TextLabelList[textLabel];
+    // Join letter list to string with "\n", except the last letter
+    for (uint8_t i = 0; i < listString.size(); i++) {
+        outputString.push_back(listString[i]);
 
-    // Check first mapping text label in map label in
-    for (const auto& targetTextLabel : targetListTextLabel)
-    {
-        for (const auto& i_textLabel : listTextLabel)
+        if (i < listString.size() - 1)
         {
-            if (i_textLabel == targetTextLabel)
-            {
-                return i_textLabel;
-            }
+            outputString.push_back('\n');
         }
     }
 
-    return TEXT_LABEL::MIN;
+    return outputString;
 }
 #pragma endregion

@@ -1,0 +1,16 @@
+{
+  "codename": "fontLCD",
+  "ttf_path": "/assets/small_pixel.ttf",
+  "bin_path": "/assets\\ui_font_fontLCD.bin",
+  "c_path": "/assets\\ui_font_fontLCD.c",
+  "cfg_path": "/assets\\ui_font_fontLCD.fcfg",
+  "size": 60,
+  "bpp": 2,
+  "letters": 0,
+  "ranges": [
+    "0x41-0x5a"
+  ],
+  "symbols": "",
+  "customparams": "--no-compress --no-prefilter",
+  "uploaded": false
+}

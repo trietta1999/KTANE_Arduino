@@ -37,8 +37,8 @@ namespace sys_gui
 
 // Allow modification
 #pragma region Custom_data
-CData<uint8_t> CurrentStage;
-CData<TEXT_LABEL> CorrectTextLabel;
+CData<std::string> CorrectPassword;
+CData<std::string> CurrentPassword;
 #pragma endregion
 
 // Add auto reset state for custom data only
@@ -46,5 +46,4 @@ void UpdateAll()
 {
     sys_gui::Brightness.ResetState();
     sys_gui::SuccessState.ResetState();
-    CurrentStage.ResetState();
 }

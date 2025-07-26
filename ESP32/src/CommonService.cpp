@@ -106,7 +106,7 @@ void ProcessData()
         }
         else if (read == "gui_correct")
         {
-            debug_println("Corect label: " + map_TextLabel[CorrectTextLabel.GetValue()]);
+            debug_println("Password: " + CorrectPassword.GetValue());
         }
     }
 #endif

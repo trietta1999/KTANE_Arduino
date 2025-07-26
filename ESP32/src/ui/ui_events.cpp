@@ -6,19 +6,63 @@
 #ifdef _WIN64
 #include <iostream>
 #endif
+#include <algorithm>
 #include "ui.h"
 #include "../CommonData.h"
 #include "../CommonLibrary.h"
 #include "../CommonService.h"
 
-bool regenerate = false;
-bool isIncorrectButton = false;
-std::vector<std::tuple<lv_obj_t*, lv_obj_t*, TEXT_LABEL>> listButton = { };
+struct roller_info_t {
+    lv_obj_t* roller;
+    std::string options;
+    uint8_t optionCount;
 
-#ifdef UNIT_TEST
-std::tuple<TEXT_DISPLAY, uint8_t> displayInfo = { };
-std::vector<TEXT_LABEL> listTextLabel = { };
-#endif
+    roller_info_t(lv_obj_t* roller, uint8_t optionCount)
+    {
+        this->roller = roller;
+        this->optionCount = optionCount;
+    }
+
+    void SetOptions(std::string options)
+    {
+        this->options = options;
+
+        lv_roller_set_options(this->roller, this->options.c_str(), LV_ROLLER_MODE_NORMAL);
+        lv_roller_set_selected(this->roller, RandomRange(1, this->optionCount), LV_ANIM_OFF); // Letter at index #0 is alway true
+    }
+
+    void SetSelected(uint8_t index)
+    {
+        lv_roller_set_selected(this->roller, index, LV_ANIM_OFF);
+    }
+
+    uint8_t GetCurrentIndex()
+    {
+        return lv_roller_get_selected(this->roller);
+    }
+
+    uint8_t GetCount()
+    {
+        return lv_roller_get_option_cnt(this->roller);;
+    }
+
+    std::string GetCurrentOption()
+    {
+        char buff[2] = "";
+        lv_roller_get_selected_str(this->roller, buff, sizeof(buff));
+
+        return std::string(buff);
+    }
+};
+
+roller_info_t* roller1 = nullptr;
+roller_info_t* roller2 = nullptr;
+roller_info_t* roller3 = nullptr;
+roller_info_t* roller4 = nullptr;
+roller_info_t* roller5 = nullptr;
+
+std::vector<std::pair<roller_info_t*, std::pair<lv_obj_t*, lv_obj_t*>>> listRollerWithButton = { };
+std::unordered_map<lv_obj_t*, BUTTON_TYPE> mapButtonType = { };
 
 void Init()
 {
@@ -26,84 +70,73 @@ void Init()
     sys_gui::Brightness.SetValue(100);
     lv_slider_set_value(ui_sldBrightness, sys_gui::Brightness.GetValue(), LV_ANIM_OFF);
 
-    // Create list button
-    listButton = {
-        { ui_Button1, ui_lblButtonText1, TEXT_LABEL::MIN },
-        { ui_Button2, ui_lblButtonText2, TEXT_LABEL::MIN },
-        { ui_Button3, ui_lblButtonText3, TEXT_LABEL::MIN },
-        { ui_Button4, ui_lblButtonText4, TEXT_LABEL::MIN },
-        { ui_Button5, ui_lblButtonText5, TEXT_LABEL::MIN },
-        { ui_Button6, ui_lblButtonText6, TEXT_LABEL::MIN },
+    // Init roller info
+    roller1 = new roller_info_t(ui_rollText1, LETTER_TAKE_NUM);
+    roller2 = new roller_info_t(ui_rollText2, LETTER_TAKE_NUM);
+    roller3 = new roller_info_t(ui_rollText3, LETTER_TAKE_NUM);
+    roller4 = new roller_info_t(ui_rollText4, LETTER_TAKE_NUM);
+    roller5 = new roller_info_t(ui_rollText5, LETTER_TAKE_NUM);
+
+    // Mapping roller object with button up/down
+    listRollerWithButton =
+    {
+        { roller1, { ui_btnUp1, ui_btnDown1 } },
+        { roller2, { ui_btnUp2, ui_btnDown2 } },
+        { roller3, { ui_btnUp3, ui_btnDown3 } },
+        { roller4, { ui_btnUp4, ui_btnDown4 } },
+        { roller5, { ui_btnUp5, ui_btnDown5 } },
     };
 
-    CurrentStage.SetValue(1);
+    // Mapping button up/down with button type
+    mapButtonType =
+    {
+        { ui_btnUp1, BUTTON_TYPE::UP },
+        { ui_btnUp2, BUTTON_TYPE::UP },
+        { ui_btnUp3, BUTTON_TYPE::UP },
+        { ui_btnUp4, BUTTON_TYPE::UP },
+        { ui_btnUp5, BUTTON_TYPE::UP },
+        { ui_btnDown1, BUTTON_TYPE::DOWN },
+        { ui_btnDown2, BUTTON_TYPE::DOWN },
+        { ui_btnDown3, BUTTON_TYPE::DOWN },
+        { ui_btnDown4, BUTTON_TYPE::DOWN },
+        { ui_btnDown5, BUTTON_TYPE::DOWN },
+    };
+
+    // Convert map to list of roller
+    std::vector<roller_info_t*> listRollerInfo = { };
+    std::transform(listRollerWithButton.begin(), listRollerWithButton.end(),
+        std::back_inserter(listRollerInfo),
+        [](const auto& pair) { return pair.first; });
+
+    // Get random password text
+#ifndef UNIT_TEST
+    auto passwordText = map_PASSWORD_TEXT[(PASSWORD_TEXT)RandomRange((uint8_t)PASSWORD_TEXT::MIN + 1, (uint8_t)PASSWORD_TEXT::MAX)].substr(2);
+    CorrectPassword.SetValue(passwordText);
+#else
+    auto passwordText = CorrectPassword.GetValue();
+#endif
+
+    for (uint8_t i = 0; i < passwordText.length(); i++)
+    {
+        // Generate random letter list
+        auto options = GenerateRandomString(LETTER_TAKE_NUM, passwordText[i]);
+
+        // Set options to roller
+        listRollerInfo[i]->SetOptions(options);
+
+#ifdef _WIN64
+        debug_println("Letter #" + std::to_string(i + 1));
+        debug_println(options);
+#endif
+    }
+
+#ifdef _WIN64
+    debug_println("Password: " + CorrectPassword.GetValue());
+#endif
 }
 
 void AutoUpdate()
 {
-#ifndef UNIT_TEST
-    if (CurrentStage.GetState() || isIncorrectButton || regenerate)
-    {
-#endif
-#ifndef UNIT_TEST
-        auto displayInfo = GetRandomTextDisplay();
-        auto listTextLabel = GetTextLabelListFromMap(BUTTON_NUM);
-#endif
-
-        // Set display
-        auto textDisplay = std::get<TEXT_POS>(displayInfo);
-        auto textDisplayStr = std::get<TEXT_POS>(map_TextDisplayWithFocusPostion[textDisplay]);
-        lv_label_set_text(ui_lblDisplay, textDisplayStr.c_str());
-
-        // Set button label
-        for (uint8_t i = 0; i < listButton.size(); i++)
-        {
-            auto& item = listButton[i];
-            auto textLabel = listTextLabel[i];
-            auto textLabelStr = map_TextLabel[textLabel];
-
-            // Set text label to button list
-            std::get<2>(item) = textLabel;
-
-            // Set text label
-            lv_label_set_text(std::get<1>(item), textLabelStr.c_str());
-        }
-
-        // Set correct text label
-        auto focusPos = std::get<FOCUSPOS_POS>(displayInfo);
-        auto correctLabel = SetCorrectTextLabel(focusPos, listTextLabel);
-
-        if (map_TextLabel[correctLabel] == "")
-        {
-            // Re-genrate correct label when it's empty
-            regenerate = true;
-
-#ifdef _WIN64
-            debug_println("Re-generate...");
-#endif
-        }
-        else
-        {
-            // Set correct label
-            CorrectTextLabel.SetValue(correctLabel);
-            regenerate = false;
-
-#ifdef _WIN64
-        debug_println("Stage: " + std::to_string(CurrentStage.GetValue()));
-        debug_println("Corect label: " + map_TextLabel[CorrectTextLabel.GetValue()]);
-#endif
-        }
-
-        // Reset error flag
-        if (isIncorrectButton)
-        {
-            isIncorrectButton = false;
-        }
-#ifndef UNIT_TEST
-    }
-#endif
-
-#ifndef UNIT_TEST
     if (sys_gui::SuccessState.GetState()) {
         if (sys_gui::SuccessState.GetValue() != INCORRECT)
         {
@@ -119,7 +152,6 @@ void AutoUpdate()
             }
         }
     }
-#endif
 }
 
 void OnBrightnessChange(lv_event_t* e)
@@ -127,51 +159,72 @@ void OnBrightnessChange(lv_event_t* e)
     sys_gui::Brightness.SetValue(lv_slider_get_value(ui_sldBrightness));
 }
 
-void OnButtonClick(lv_event_t * e)
+void OnButtonClick(lv_event_t* e)
 {
     auto currentButton = reinterpret_cast<lv_obj_t*>(e->current_target);
-    auto find = std::find_if(listButton.begin(), listButton.end(),
-        [currentButton](const std::tuple<lv_obj_t*, lv_obj_t*, TEXT_LABEL>& item) {
-            return std::get<0>(item) == currentButton;
+
+    // Get roller info result from current button
+    auto resultRollerInfo = std::find_if(listRollerWithButton.begin(), listRollerWithButton.end(),
+        [currentButton](const std::pair<roller_info_t*, std::pair<lv_obj_t*, lv_obj_t*>>& item) {
+            auto pairButton = item.second;
+            return ((pairButton.first == currentButton) || (pairButton.second == currentButton));
         });
 
-    auto textLabel = std::get<2>(*find);
+    auto rollerInfo = (*resultRollerInfo).first;
+    auto buttonType = mapButtonType[currentButton];
 
-    if (textLabel == CorrectTextLabel.GetValue())
+    auto currentIndex = rollerInfo->GetCurrentIndex();
+    auto optionCount = rollerInfo->GetCount();
+
+    // Set new selected index to roller info
+    if (buttonType == BUTTON_TYPE::DOWN)
     {
-        auto stage = CurrentStage.GetValue();
-
-        // Update bar stage
-        lv_bar_set_value(ui_barStage, stage, LV_ANIM_ON);
-
-        if (stage < STAGE_NUM)
+        rollerInfo->SetSelected(currentIndex - 1);
+    }
+    else if (buttonType == BUTTON_TYPE::UP)
+    {
+        if (currentIndex < optionCount - 1)
         {
-            // Set to next stage
-            CurrentStage.SetValue(stage + 1);
+            rollerInfo->SetSelected(currentIndex + 1);
         }
         else
         {
-            // Finish
-            sys_gui::SuccessState.SetValue(STATE_CHECKED);
+            rollerInfo->SetSelected(0);
+        }
+    }
+
+    // Set current password
+    CurrentPassword.SetValue(
+        roller1->GetCurrentOption() +
+        roller2->GetCurrentOption() +
+        roller3->GetCurrentOption() +
+        roller4->GetCurrentOption() +
+        roller5->GetCurrentOption()
+    );
+}
+
+void OnButtonSubmitClick(lv_event_t* e)
+{
+    if (CorrectPassword.GetValue() == CurrentPassword.GetValue())
+    {
+        sys_gui::SuccessState.SetValue(STATE_CHECKED);
 
 #ifndef UNIT_TEST
-            // Send success to Host
-            JsonDocument jsonDocIn;
+        // Send success to Host
+        JsonDocument jsonDocIn;
 #ifdef _WIN64
-            jsonDocIn["module"] = CLIENT_NAME_FOR_JSON;
+        jsonDocIn["module"] = CLIENT_NAME_FOR_JSON;
 #else
-            jsonDocIn["module"] = CLIENT_NAME;
+        jsonDocIn["module"] = CLIENT_NAME;
 #endif
-            CommonSendRequestWithData(WM_SUCCESSSTATE_SET, jsonDocIn);
+        CommonSendRequestWithData(WM_SUCCESSSTATE_SET, jsonDocIn);
 #endif
-        }
     }
     else
     {
-        // Set error flag
-        isIncorrectButton = true;
-
+#ifndef UNIT_TEST
         // Send error to Host
         CommonSendRequest(WM_STRIKESTATE_SET);
+#endif
     }
 }
