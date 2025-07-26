@@ -184,7 +184,7 @@ EXTERN_MAP_ENUM_WSTR(MODULE_NAME)
 
 // Allow modification
 #pragma region Custom_datatype
-#define LETTER_TAKE_NUM 5
+#define LETTER_TAKE_NUM 6
 
 #define DEF_PASSWORD_TEXT(e, CREATE) \
         CREATE(e, E_ABOUT) \

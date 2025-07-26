@@ -32,8 +32,8 @@ public:
         // Init GUI
         Init();
 
-        // Simulate button click
-        for (uint8_t i = 0; i < LETTER_TAKE_NUM; i++)
+        // Loop each roller
+        for (uint8_t i = 0; i < listRollerWithButton.size(); i++)
         {
             // Set object target is button up
             lv_event_t e = { 0 };
@@ -42,6 +42,7 @@ public:
             // Loop until current letter is correct
             while (true)
             {
+                // Simulate button click
                 OnButtonClick(&e);
 
                 if (CurrentPassword.GetValue()[i] == CorrectPassword.GetValue()[i])
@@ -66,8 +67,8 @@ public:
         // Init GUI
         Init();
 
-        // Simulate button click
-        for (uint8_t i = 0; i < LETTER_TAKE_NUM; i++)
+        // Loop each roller
+        for (uint8_t i = 0; i < listRollerWithButton.size(); i++)
         {
             // Set object target is button down
             lv_event_t e = { 0 };
@@ -76,6 +77,7 @@ public:
             // Loop until current letter is correct
             while (true)
             {
+                // Simulate button click
                 OnButtonClick(&e);
 
                 if (CurrentPassword.GetValue()[i] == CorrectPassword.GetValue()[i])
