@@ -171,6 +171,8 @@
     <ClCompile Include="..\..\ESP32\src\ui\ui.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_comp_hook.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_helpers.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_arrow_left_png.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_arrow_right_png.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_img_fail_png.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_img_success_png.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_Main.c" />

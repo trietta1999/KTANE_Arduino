@@ -10,7 +10,7 @@
 extern "C" {
 #endif
 
-void OnFreAdjustChange(lv_event_t * e);
+void OnButtonMoveClick(lv_event_t * e);
 void OnButtonTXClick(lv_event_t * e);
 void OnBrightnessChange(lv_event_t * e);
 

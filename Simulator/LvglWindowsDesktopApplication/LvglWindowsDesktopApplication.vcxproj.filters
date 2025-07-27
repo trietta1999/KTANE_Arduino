@@ -1467,6 +1467,12 @@
     <ClCompile Include="..\..\ESP32\src\ui\ui_Main.c">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_arrow_left_png.c">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_arrow_right_png.c">
+      <Filter>UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="LvglWindowsDesktopApplication.manifest" />

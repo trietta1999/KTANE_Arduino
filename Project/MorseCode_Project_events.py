@@ -14,3 +14,7 @@ def OnFreAdjustChange(event_struct):
 def OnButtonTXClick(event_struct):
     return
 
+
+def OnButtonMoveClick(event_struct):
+    return
+

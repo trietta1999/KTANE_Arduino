@@ -21,6 +21,7 @@ public:
 
     TEST_METHOD_CLEANUP(TESTMETHOD_Cleanup)
     {
+        currentRadioChannel = 0;
         sys_gui::SuccessState.SetValue(INCORRECT);
     }
 
@@ -244,10 +245,10 @@ public:
 
         // Init data
         Init();
-        lv_slider_set_value(ui_sldFreAdjust, (uint8_t)textType - 1, LV_ANIM_OFF);
+        currentRadioChannel = (uint8_t)textType - 1;
 
         // Operation
-        OnFreAdjustChange(nullptr);
+        OnButtonMoveClick(nullptr);
         OnButtonTXClick(nullptr);
 
         Assert::IsTrue(sys_gui::SuccessState.GetValue() == STATE_CHECKED);
@@ -262,10 +263,10 @@ public:
 
         // Init data
         Init();
-        lv_slider_set_value(ui_sldFreAdjust, (uint8_t)textType - 1, LV_ANIM_OFF);
+        currentRadioChannel = (uint8_t)textType - 1;
 
         // Operation
-        OnFreAdjustChange(nullptr);
+        OnButtonMoveClick(nullptr);
         OnButtonTXClick(nullptr);
 
         Assert::IsTrue(sys_gui::SuccessState.GetValue() == STATE_CHECKED);
@@ -280,10 +281,10 @@ public:
 
         // Init data
         Init();
-        lv_slider_set_value(ui_sldFreAdjust, (uint8_t)textType - 1, LV_ANIM_OFF);
+        currentRadioChannel = (uint8_t)textType - 1;
 
         // Operation
-        OnFreAdjustChange(nullptr);
+        OnButtonMoveClick(nullptr);
         OnButtonTXClick(nullptr);
 
         Assert::IsTrue(sys_gui::SuccessState.GetValue() == STATE_CHECKED);
@@ -298,10 +299,10 @@ public:
 
         // Init data
         Init();
-        lv_slider_set_value(ui_sldFreAdjust, (uint8_t)textType - 1, LV_ANIM_OFF);
+        currentRadioChannel = (uint8_t)textType - 1;
 
         // Operation
-        OnFreAdjustChange(nullptr);
+        OnButtonMoveClick(nullptr);
         OnButtonTXClick(nullptr);
 
         Assert::IsTrue(sys_gui::SuccessState.GetValue() == STATE_CHECKED);
@@ -316,10 +317,10 @@ public:
 
         // Init data
         Init();
-        lv_slider_set_value(ui_sldFreAdjust, (uint8_t)textType - 1, LV_ANIM_OFF);
+        currentRadioChannel = (uint8_t)textType - 1;
 
         // Operation
-        OnFreAdjustChange(nullptr);
+        OnButtonMoveClick(nullptr);
         OnButtonTXClick(nullptr);
 
         Assert::IsTrue(sys_gui::SuccessState.GetValue() == STATE_CHECKED);
@@ -334,10 +335,10 @@ public:
 
         // Init data
         Init();
-        lv_slider_set_value(ui_sldFreAdjust, (uint8_t)textType - 1, LV_ANIM_OFF);
+        currentRadioChannel = (uint8_t)textType - 1;
 
         // Operation
-        OnFreAdjustChange(nullptr);
+        OnButtonMoveClick(nullptr);
         OnButtonTXClick(nullptr);
 
         Assert::IsTrue(sys_gui::SuccessState.GetValue() == STATE_CHECKED);
@@ -352,10 +353,10 @@ public:
 
         // Init data
         Init();
-        lv_slider_set_value(ui_sldFreAdjust, (uint8_t)textType - 1, LV_ANIM_OFF);
+        currentRadioChannel = (uint8_t)textType - 1;
 
         // Operation
-        OnFreAdjustChange(nullptr);
+        OnButtonMoveClick(nullptr);
         OnButtonTXClick(nullptr);
 
         Assert::IsTrue(sys_gui::SuccessState.GetValue() == STATE_CHECKED);
@@ -370,10 +371,10 @@ public:
 
         // Init data
         Init();
-        lv_slider_set_value(ui_sldFreAdjust, (uint8_t)textType - 1, LV_ANIM_OFF);
+        currentRadioChannel = (uint8_t)textType - 1;
 
         // Operation
-        OnFreAdjustChange(nullptr);
+        OnButtonMoveClick(nullptr);
         OnButtonTXClick(nullptr);
 
         Assert::IsTrue(sys_gui::SuccessState.GetValue() == STATE_CHECKED);
@@ -388,10 +389,10 @@ public:
 
         // Init data
         Init();
-        lv_slider_set_value(ui_sldFreAdjust, (uint8_t)textType - 1, LV_ANIM_OFF);
+        currentRadioChannel = (uint8_t)textType - 1;
 
         // Operation
-        OnFreAdjustChange(nullptr);
+        OnButtonMoveClick(nullptr);
         OnButtonTXClick(nullptr);
 
         Assert::IsTrue(sys_gui::SuccessState.GetValue() == STATE_CHECKED);
@@ -406,10 +407,10 @@ public:
 
         // Init data
         Init();
-        lv_slider_set_value(ui_sldFreAdjust, (uint8_t)textType - 1, LV_ANIM_OFF);
+        currentRadioChannel = (uint8_t)textType - 1;
 
         // Operation
-        OnFreAdjustChange(nullptr);
+        OnButtonMoveClick(nullptr);
         OnButtonTXClick(nullptr);
 
         Assert::IsTrue(sys_gui::SuccessState.GetValue() == STATE_CHECKED);
@@ -424,10 +425,10 @@ public:
 
         // Init data
         Init();
-        lv_slider_set_value(ui_sldFreAdjust, (uint8_t)textType - 1, LV_ANIM_OFF);
+        currentRadioChannel = (uint8_t)textType - 1;
 
         // Operation
-        OnFreAdjustChange(nullptr);
+        OnButtonMoveClick(nullptr);
         OnButtonTXClick(nullptr);
 
         Assert::IsTrue(sys_gui::SuccessState.GetValue() == STATE_CHECKED);
@@ -442,10 +443,10 @@ public:
 
         // Init data
         Init();
-        lv_slider_set_value(ui_sldFreAdjust, (uint8_t)textType - 1, LV_ANIM_OFF);
+        currentRadioChannel = (uint8_t)textType - 1;
 
         // Operation
-        OnFreAdjustChange(nullptr);
+        OnButtonMoveClick(nullptr);
         OnButtonTXClick(nullptr);
 
         Assert::IsTrue(sys_gui::SuccessState.GetValue() == STATE_CHECKED);
@@ -460,10 +461,10 @@ public:
 
         // Init data
         Init();
-        lv_slider_set_value(ui_sldFreAdjust, (uint8_t)textType - 1, LV_ANIM_OFF);
+        currentRadioChannel = (uint8_t)textType - 1;
 
         // Operation
-        OnFreAdjustChange(nullptr);
+        OnButtonMoveClick(nullptr);
         OnButtonTXClick(nullptr);
 
         Assert::IsTrue(sys_gui::SuccessState.GetValue() == STATE_CHECKED);
@@ -478,10 +479,10 @@ public:
 
         // Init data
         Init();
-        lv_slider_set_value(ui_sldFreAdjust, (uint8_t)textType - 1, LV_ANIM_OFF);
+        currentRadioChannel = (uint8_t)textType - 1;
 
         // Operation
-        OnFreAdjustChange(nullptr);
+        OnButtonMoveClick(nullptr);
         OnButtonTXClick(nullptr);
 
         Assert::IsTrue(sys_gui::SuccessState.GetValue() == STATE_CHECKED);
@@ -496,10 +497,10 @@ public:
 
         // Init data
         Init();
-        lv_slider_set_value(ui_sldFreAdjust, (uint8_t)textType - 1, LV_ANIM_OFF);
+        currentRadioChannel = (uint8_t)textType - 1;
 
         // Operation
-        OnFreAdjustChange(nullptr);
+        OnButtonMoveClick(nullptr);
         OnButtonTXClick(nullptr);
 
         Assert::IsTrue(sys_gui::SuccessState.GetValue() == STATE_CHECKED);
@@ -514,10 +515,10 @@ public:
 
         // Init data
         Init();
-        lv_slider_set_value(ui_sldFreAdjust, (uint8_t)textType - 1, LV_ANIM_OFF);
+        currentRadioChannel = (uint8_t)textType - 1;
 
         // Operation
-        OnFreAdjustChange(nullptr);
+        OnButtonMoveClick(nullptr);
         OnButtonTXClick(nullptr);
 
         Assert::IsTrue(sys_gui::SuccessState.GetValue() == STATE_CHECKED);

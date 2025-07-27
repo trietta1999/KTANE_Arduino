@@ -45,6 +45,8 @@ struct chart_info_t {
     }
 };
 
+uint8_t currentRadioChannel = 0;
+
 chart_info_t* chartMorseCodeInfo = nullptr;
 chart_info_t* chartMorseCodeActiveInfo = nullptr;
 chart_info_t* chartRadioInfo = nullptr;
@@ -171,8 +173,8 @@ void Init()
     CorrectWord.SetValue(std::get<TEXT_STR_POS>(textInfo));
 
 #ifndef UNIT_TEST
-    // Init radio value
-    OnFreAdjustChange(nullptr);
+    // Init radio channel
+    OnButtonMoveClick(nullptr);
 
     // Bink lamp timer
     CreateBlinkLamp();
@@ -210,23 +212,6 @@ void OnBrightnessChange(lv_event_t* e)
     sys_gui::Brightness.SetValue(lv_slider_get_value(ui_sldBrightness));
 }
 
-void OnFreAdjustChange(lv_event_t* e)
-{
-    auto value = lv_slider_get_value(ui_sldFreAdjust);
-    auto frequency = mapTextFrequency[(TEXT_TYPE)(value + 1)];
-
-    // Update radio channel
-    chartRadioInfo->SetActive(value);
-
-    // Update frequency label
-    auto frequencyStr = std::to_string(frequency);
-    frequencyStr.insert(1, ".");
-    lv_label_set_text_fmt(ui_lblFrequency, "%s MHz", frequencyStr.c_str());
-
-    // Set temp frequency
-    TempFrequency.SetValue(frequency);
-}
-
 void OnButtonTXClick(lv_event_t* e)
 {
     if (TempFrequency.GetValue() == CorrectFrequency.GetValue())
@@ -251,4 +236,40 @@ void OnButtonTXClick(lv_event_t* e)
         CommonSendRequest(WM_STRIKESTATE_SET);
 #endif
     }
+}
+
+void OnButtonMoveClick(lv_event_t* e)
+{
+    if (e)
+    {
+        auto button = e->current_target;
+
+        if (button == ui_btnMoveLeft)
+        {
+            if (currentRadioChannel > 0)
+            {
+                currentRadioChannel--;
+            }
+        }
+        else if (button == ui_btnMoveRight)
+        {
+            if (currentRadioChannel < MAX_CHANNEL - 1)
+            {
+                currentRadioChannel++;
+            }
+        }
+    }
+
+    auto frequency = mapTextFrequency[(TEXT_TYPE)(currentRadioChannel + 1)];
+
+    // Update radio channel
+    chartRadioInfo->SetActive(currentRadioChannel);
+
+    // Update frequency label
+    auto frequencyStr = std::to_string(frequency);
+    frequencyStr.insert(1, ".");
+    lv_label_set_text_fmt(ui_lblFrequency, "%s MHz", frequencyStr.c_str());
+
+    // Set temp frequency
+    TempFrequency.SetValue(frequency);
 }
