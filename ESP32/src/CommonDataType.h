@@ -186,7 +186,6 @@ EXTERN_MAP_ENUM_WSTR(MODULE_NAME)
 #define COLOR uint32_t
 
 #define DEF_WIRECOLOR_TYPE(e, CREATE) \
-        CREATE(e, NONE) \
         CREATE(e, RED) \
         CREATE(e, WHITE) \
         CREATE(e, BLUE) \

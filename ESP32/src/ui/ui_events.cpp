@@ -32,15 +32,19 @@ void Init()
     WireModule();
 
     // Set color to GUI wires
-    auto mumOfWire = WireColorList.GetValue().size();
+    auto listWireColor = WireColorList.GetValue();
+    auto mumOfWire = listWireColor.size();
+
     for (uint8_t i = 0; i < listWire.size(); i++)
     {
         if (i < mumOfWire)
         {
-            lv_obj_set_style_bg_color(listWire.at(i), lv_color_hex(mapColor[WireColorList.GetValue().at(i)]), LV_PART_INDICATOR | LV_STATE_DEFAULT);
+            // Set color to wire
+            lv_obj_set_style_bg_color(listWire.at(i), lv_color_hex(mapColor[listWireColor.at(i)]), LV_PART_INDICATOR | LV_STATE_DEFAULT);
         }
         else
         {
+            // Hide/disable unuse wire
             lv_obj_add_state(listWire.at(i), LV_STATE_DISABLED);
             lv_obj_add_state(listSelect.at(i), LV_STATE_DISABLED);
             lv_obj_clear_state(listSelect.at(i), LV_STATE_CHECKED);
