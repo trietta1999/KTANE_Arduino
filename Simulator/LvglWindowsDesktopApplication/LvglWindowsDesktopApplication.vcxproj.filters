@@ -806,6 +806,10 @@
     <ClInclude Include="..\..\ESP32\src\ArduinoJson-v7.4.1.h">
       <Filter>Library</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\ESP32\Hardware.h" />
+    <ClInclude Include="..\..\ESP32\src\ui\ui_Main.h">
+      <Filter>UI</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\ESP32\src\ui\ui.h">
       <Filter>UI</Filter>
     </ClInclude>
@@ -815,7 +819,6 @@
     <ClInclude Include="..\..\ESP32\src\ui\ui_helpers.h">
       <Filter>UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\ESP32\Hardware.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)..\LvglPlatform\lvgl\.typos.toml">
@@ -1450,6 +1453,9 @@
       <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ESP32\src\ui\ui_events.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\ui\ui_font_digit.c">
       <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ESP32\src\ui\ui_helpers.c">

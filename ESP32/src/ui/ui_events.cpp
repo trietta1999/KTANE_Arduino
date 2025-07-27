@@ -11,14 +11,192 @@
 #include "../CommonLibrary.h"
 #include "../CommonService.h"
 
-bool regenerate = false;
-bool isIncorrectButton = false;
-std::vector<std::tuple<lv_obj_t*, lv_obj_t*, TEXT_LABEL>> listButton = { };
+#define IS_TIMER_DONE(timer) timer->outputCondition && !timer->textTypingTimer
 
-#ifdef UNIT_TEST
-std::tuple<TEXT_DISPLAY, uint8_t> displayInfo = { };
-std::vector<TEXT_LABEL> listTextLabel = { };
+struct text_typing_timer_t
+{
+    std::string text;
+    std::string subText;
+    uint16_t index;
+
+    bool outputCondition;
+
+    lv_obj_t* display;
+    lv_timer_t* textTypingTimer;
+    uint32_t period;
+
+    void StartTimer(lv_obj_t* display, uint32_t period, std::string text)
+    {
+        // Init data
+        this->text = text;
+        this->subText = "";
+        this->index = 0;
+        this->outputCondition = false;
+        this->display = display;
+        this->period = period;
+
+        // Create timer
+        this->textTypingTimer = lv_timer_create([](lv_timer_t* timer) {
+            auto data = reinterpret_cast<text_typing_timer_t*>(lv_timer_get_user_data(timer));
+
+            if (data->outputCondition)
+            {
+                // Delete timer
+                lv_timer_del(timer);
+                timer = nullptr;
+                data->textTypingTimer = nullptr;
+
+                return;
+            }
+
+            // Set and show sub text
+            if (data->index < data->text.length())
+            {
+                data->subText += data->text[data->index];
+                lv_label_set_text(data->display, data->subText.c_str());
+                data->index++;
+            }
+            // Set condition output flag
+            else
+            {
+                data->outputCondition = true;
+                lv_timer_set_period(timer, TIMER_SLEEP);
+
+                return;
+            }
+            }, this->period, this);
+    }
+};
+
+struct countdown_timer_t
+{
+    lv_obj_t* label;
+    int8_t second;
+    int32_t subSecond;
+    bool stop;
+    bool timeOut;
+    lv_timer_t* countdownTimer;
+
+    void StartTimer(lv_obj_t* label, int8_t second)
+    {
+        // Init data
+        this->label = label;
+        this->second = second;
+        this->subSecond = 0;
+        this->stop = false;
+        this->timeOut = false;
+
+        this->countdownTimer = lv_timer_create([](lv_timer_t* timer) {
+            auto data = reinterpret_cast<countdown_timer_t*>(lv_timer_get_user_data(timer));
+
+            // Check stop from external OR timeout
+            if (data->stop || (data->second < 0))
+            {
+                // Delete timer
+                lv_timer_del(timer);
+                timer = nullptr;
+                data->countdownTimer = nullptr;
+
+                // Clear timer label
+                lv_label_set_text(data->label, "");
+
+                // Set timeout flag
+                if (data->second < 0)
+                {
+                    data->timeOut = true;
+                }
+
+                return;
+            }
+
+            // Set and show label timer
+            lv_label_set_text(data->label, std::to_string(data->second).c_str());
+
+            if (data->subSecond >= COUNTDOWN_PERIOD)
+            {
+                // Reset internal period
+                // Count down second
+                data->subSecond = 0;
+                data->second--;
+
+                if (data->second <= 5)
+                {
+#ifdef _WIN64
+                    ::Beep(BEEP_FRE, BEEP_INCREASE_DURATION);
+#else
+                    // Arduino process
 #endif
+                }
+            }
+            else
+            {
+                // Count up internal period
+                data->subSecond += TIMER_PERIOD_100;
+            }
+
+            }, COUNTDOWN_PERIOD / 10, this);
+    }
+};
+
+std::unordered_map<lv_obj_t*, ANSWER_TYPE> mapButtonAnswerType = { };
+
+text_typing_timer_t* answerTimer = nullptr;
+text_typing_timer_t* commentTimer = nullptr;
+text_typing_timer_t* completeTimer = nullptr;
+countdown_timer_t* countdownTimer = nullptr;
+
+bool moduleActivateState = false;
+bool commentEnableState = false;
+bool completeEnableState = false;
+bool errorState = false;
+
+lv_obj_t* currentButton = nullptr;
+
+void InitQuestion(bool renew = true)
+{
+    question_t question;
+
+    // Create random question
+    if (renew)
+    {
+        question = listQuestion[RandomRange(0, listQuestion.size())];
+        CurrentQuestion.SetValue(question);
+    }
+    // Get current question
+    else
+    {
+        question = CurrentQuestion.GetValue();
+    }
+
+    // Set question to label
+    lv_label_set_text_fmt(ui_lblDisplay1, "%s\nY/N", question.ask.c_str());
+    lv_label_set_text(ui_lblDisplay2, "");
+
+    // Activate module
+    moduleActivateState = true;
+
+    if (renew)
+    {
+        // Start countdown timer
+        countdownTimer->StartTimer(ui_lblTimer, MAX_COUNTDOWN_SEC);
+    }
+
+#ifdef ARDUINO
+    lv_obj_add_flag(ui_btnDebug, LV_OBJ_FLAG_HIDDEN);
+#endif
+
+#ifdef _WIN64
+    ::Beep(BEEP_FRE, 1000);
+#else
+    // Arduino process
+#endif
+}
+
+void SetButtonStatus(lv_state_t state, bool isAdd)
+{
+    lv_obj_set_state(ui_btnNo, state, isAdd);
+    lv_obj_set_state(ui_btnYes, state, isAdd);
+}
 
 void Init()
 {
@@ -26,84 +204,120 @@ void Init()
     sys_gui::Brightness.SetValue(100);
     lv_slider_set_value(ui_sldBrightness, sys_gui::Brightness.GetValue(), LV_ANIM_OFF);
 
-    // Create list button
-    listButton = {
-        { ui_Button1, ui_lblButtonText1, TEXT_LABEL::MIN },
-        { ui_Button2, ui_lblButtonText2, TEXT_LABEL::MIN },
-        { ui_Button3, ui_lblButtonText3, TEXT_LABEL::MIN },
-        { ui_Button4, ui_lblButtonText4, TEXT_LABEL::MIN },
-        { ui_Button5, ui_lblButtonText5, TEXT_LABEL::MIN },
-        { ui_Button6, ui_lblButtonText6, TEXT_LABEL::MIN },
+    // Mapped button với answer type
+    mapButtonAnswerType = {
+        { ui_btnYes, ANSWER_TYPE::YES },
+        { ui_btnNo, ANSWER_TYPE::NO },
     };
 
-    CurrentStage.SetValue(1);
+    // Init timer
+    answerTimer = new text_typing_timer_t();
+    commentTimer = new text_typing_timer_t();
+    completeTimer = new text_typing_timer_t();
+    countdownTimer = new countdown_timer_t();
+
+    // Create random module activate timer
+    lv_timer_create([](lv_timer_t* timer) {
+        auto num = RandomRange(0, 100);
+
+        // Check any value, if true, then 10% probability module will be activated
+        if (num < 10)
+        {
+            if (!moduleActivateState)
+            {
+                InitQuestion();
+            }
+        }
+        }, TIMER_SLEEP * 5, nullptr); // 5s
 }
 
 void AutoUpdate()
 {
-#ifndef UNIT_TEST
-    if (CurrentStage.GetState() || isIncorrectButton || regenerate)
+    // Comment flag is enable and answer timer is done
+    if (commentEnableState && IS_TIMER_DONE(answerTimer))
     {
-#endif
-#ifndef UNIT_TEST
-        auto displayInfo = GetRandomTextDisplay();
-        auto listTextLabel = GetTextLabelListFromMap(BUTTON_NUM);
-#endif
+        // Reset answer timer flag
+        lv_label_set_text(answerTimer->display, "");
+        answerTimer->outputCondition = false;
 
-        // Set display
-        auto textDisplay = std::get<TEXT_POS>(displayInfo);
-        auto textDisplayStr = std::get<TEXT_POS>(map_TextDisplayWithFocusPostion[textDisplay]);
-        lv_label_set_text(ui_lblDisplay, textDisplayStr.c_str());
+        // Start comment timer
+        commentTimer->StartTimer(ui_lblDisplay1, TIMER_PERIOD_100, CurrentQuestion.GetValue().comment);
 
-        // Set button label
-        for (uint8_t i = 0; i < listButton.size(); i++)
-        {
-            auto& item = listButton[i];
-            auto textLabel = listTextLabel[i];
-            auto textLabelStr = map_TextLabel[textLabel];
-
-            // Set text label to button list
-            std::get<2>(item) = textLabel;
-
-            // Set text label
-            lv_label_set_text(std::get<1>(item), textLabelStr.c_str());
-        }
-
-        // Set correct text label
-        auto focusPos = std::get<FOCUSPOS_POS>(displayInfo);
-        auto correctLabel = SetCorrectTextLabel(focusPos, listTextLabel);
-
-        if (map_TextLabel[correctLabel] == "")
-        {
-            // Re-genrate correct label when it's empty
-            regenerate = true;
-
-#ifdef _WIN64
-            debug_println("Re-generate...");
-#endif
-        }
-        else
-        {
-            // Set correct label
-            CorrectTextLabel.SetValue(correctLabel);
-            regenerate = false;
-
-#ifdef _WIN64
-        debug_println("Stage: " + std::to_string(CurrentStage.GetValue()));
-        debug_println("Corect label: " + map_TextLabel[CorrectTextLabel.GetValue()]);
-#endif
-        }
-
-        // Reset error flag
-        if (isIncorrectButton)
-        {
-            isIncorrectButton = false;
-        }
-#ifndef UNIT_TEST
+        // Reset comment enable flag
+        commentEnableState = false;
     }
-#endif
+    // Complete flag is enable and answer timer is done
+    else if (completeEnableState && IS_TIMER_DONE(answerTimer))
+    {
+        // Start complete timer
+        lv_label_set_text(answerTimer->display, "");
+        completeTimer->StartTimer(ui_lblDisplay1, TIMER_PERIOD_100, COMPLETE_MSG);
 
+        // Stop countdown timer
+        countdownTimer->stop = true;
+
+        // Reset complete enable flasg
+        completeEnableState = false;
+    }
+
+    // Comment timer is done
+    if (IS_TIMER_DONE(commentTimer))
+    {
+        // Check error state
+        if (errorState)
+        {
 #ifndef UNIT_TEST
+            // Send error to Host
+            CommonSendRequest(WM_STRIKESTATE_SET);
+#endif
+            // Reset error flag
+            errorState = false;
+        }
+
+        // Reset comment timer flag
+        commentTimer->outputCondition = false;
+
+        // Question again, not create new question
+        InitQuestion(false);
+
+        // Enable all button
+        SetButtonStatus(LV_STATE_DISABLED, false);
+    }
+
+    // Complete timer is done
+    if (IS_TIMER_DONE(completeTimer))
+    {
+        // Reset complete timer flag
+        completeTimer->outputCondition = false;
+
+        // Enable all button
+        SetButtonStatus(LV_STATE_DISABLED, false);
+
+        // Deactivate module
+        moduleActivateState = false;
+    }
+
+    // Timeout countdown
+    if (countdownTimer->timeOut)
+    {
+#ifndef UNIT_TEST
+        // Send error to Host
+        CommonSendRequest(WM_STRIKESTATE_SET);
+#endif
+        // Reset timeout flag
+        countdownTimer->timeOut = false;
+
+        // Enable all button
+        SetButtonStatus(LV_STATE_DISABLED, false);
+
+        // Clear all display
+        lv_label_set_text(ui_lblDisplay1, "");
+        lv_label_set_text(ui_lblDisplay2, "");
+
+        // Deactivate module
+        moduleActivateState = false;
+    }
+
     if (sys_gui::SuccessState.GetState()) {
         if (sys_gui::SuccessState.GetValue() != INCORRECT)
         {
@@ -119,7 +333,6 @@ void AutoUpdate()
             }
         }
     }
-#endif
 }
 
 void OnBrightnessChange(lv_event_t* e)
@@ -127,51 +340,60 @@ void OnBrightnessChange(lv_event_t* e)
     sys_gui::Brightness.SetValue(lv_slider_get_value(ui_sldBrightness));
 }
 
-void OnButtonClick(lv_event_t * e)
+void OnButtonClick(lv_event_t* e)
 {
-    auto currentButton = reinterpret_cast<lv_obj_t*>(e->current_target);
-    auto find = std::find_if(listButton.begin(), listButton.end(),
-        [currentButton](const std::tuple<lv_obj_t*, lv_obj_t*, TEXT_LABEL>& item) {
-            return std::get<0>(item) == currentButton;
-        });
-
-    auto textLabel = std::get<2>(*find);
-
-    if (textLabel == CorrectTextLabel.GetValue())
+    // Module activated
+    if (moduleActivateState)
     {
-        auto stage = CurrentStage.GetValue();
+        currentButton = reinterpret_cast<lv_obj_t*>(e->current_target);
+        auto answer = mapButtonAnswerType[currentButton];
+        auto currentQuestion = CurrentQuestion.GetValue();
 
-        // Update bar stage
-        lv_bar_set_value(ui_barStage, stage, LV_ANIM_ON);
+        // Disable all button
+        SetButtonStatus(LV_STATE_DISABLED, true);
 
-        if (stage < STAGE_NUM)
+        answerTimer->StartTimer(ui_lblDisplay2, TIMER_PERIOD_200, map_ANSWER_TYPE[answer]);
+
+        // Answer is incorrect
+        if (answer != currentQuestion.answer)
         {
-            // Set to next stage
-            CurrentStage.SetValue(stage + 1);
+            // Can not be explode flag
+            if (!currentQuestion.canStrikeWhenFalse)
+            {
+                // Enable comment flag
+                commentEnableState = true;
+            }
+            // Can be explode flag
+            else
+            {
+                // Enable comment flag
+                commentEnableState = true;
+
+                // Set error flag
+                errorState = true;
+            }
         }
+        // Answer is correct
         else
         {
-            // Finish
-            sys_gui::SuccessState.SetValue(STATE_CHECKED);
-
-#ifndef UNIT_TEST
-            // Send success to Host
-            JsonDocument jsonDocIn;
-#ifdef _WIN64
-            jsonDocIn["module"] = CLIENT_NAME_FOR_JSON;
-#else
-            jsonDocIn["module"] = CLIENT_NAME;
-#endif
-            CommonSendRequestWithData(WM_SUCCESSSTATE_SET, jsonDocIn);
-#endif
+            // Enable complete flag
+            completeEnableState = true;
         }
     }
-    else
-    {
-        // Set error flag
-        isIncorrectButton = true;
+}
 
-        // Send error to Host
-        CommonSendRequest(WM_STRIKESTATE_SET);
+void OnButtonDebugClick(lv_event_t* e)
+{
+#ifdef _WIN64
+    // Delete countdown timer
+    if (countdownTimer->countdownTimer)
+    {
+        lv_timer_del(countdownTimer->countdownTimer);
+        countdownTimer->countdownTimer = nullptr;
     }
+
+    // Create new question
+    InitQuestion();
+
+#endif
 }

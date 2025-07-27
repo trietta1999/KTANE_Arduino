@@ -3,7 +3,7 @@
  */
 
 #include <algorithm>
-#include <iterator>
+#include <random>
 #include "CommonLibrary.h"
 #include "CommonData.h"
 #include "CommonService.h"
@@ -73,50 +73,5 @@ bool NumberCheckInTimer(uint8_t num)
 
 // Allow modification
 #pragma region Custom_function
-std::tuple<TEXT_DISPLAY, uint8_t> GetRandomTextDisplay()
-{
-    auto textDisplay = (TEXT_DISPLAY)RandomRange(((uint8_t)TEXT_DISPLAY::MIN) + 1, (uint8_t)TEXT_DISPLAY::MAX);
-    auto focusPos = std::get<FOCUSPOS_POS>(map_TextDisplayWithFocusPostion[textDisplay]);
 
-    return std::make_tuple(textDisplay, focusPos);
-}
-
-std::vector<TEXT_LABEL> GetTextLabelListFromMap(uint8_t takeNum)
-{
-    // Convert map to text label list
-    std::vector<TEXT_LABEL> listTextLabel = { };
-    std::transform(map_TextLabel.begin(), map_TextLabel.end(),
-        std::back_inserter(listTextLabel),
-        [](const auto& pair) { return pair.first; });
-
-    // Get list text label
-    auto textLabel = (TEXT_LABEL)RandomRange(((uint8_t)TEXT_LABEL::MIN) + 1, (uint8_t)TEXT_LABEL::MAX);
-    auto listTextLabelItem = map_TextLabelList[textLabel];
-
-    // Take [takeNum] element trong list text label
-    auto randomIndex = RandomRange(0, listTextLabelItem.size() - takeNum);
-    std::vector<TEXT_LABEL> listSelectTextLabel(listTextLabelItem.begin() + randomIndex, (listTextLabelItem.begin() + randomIndex) + takeNum);
-
-    return listSelectTextLabel;
-}
-
-TEXT_LABEL SetCorrectTextLabel(uint8_t position, std::vector<TEXT_LABEL> listTextLabel)
-{
-    auto textLabel = listTextLabel[position - 1];
-    auto targetListTextLabel = map_TextLabelList[textLabel];
-
-    // Check first mapping text label in map label in
-    for (const auto& targetTextLabel : targetListTextLabel)
-    {
-        for (const auto& i_textLabel : listTextLabel)
-        {
-            if (i_textLabel == targetTextLabel)
-            {
-                return i_textLabel;
-            }
-        }
-    }
-
-    return TEXT_LABEL::MIN;
-}
 #pragma endregion

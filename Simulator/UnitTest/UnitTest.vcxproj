@@ -170,6 +170,7 @@
     <ClCompile Include="..\..\ESP32\src\CommonService.cpp" />
     <ClCompile Include="..\..\ESP32\src\ui\ui.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_comp_hook.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_font_digit.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_helpers.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_img_fail_png.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_img_success_png.c" />
@@ -528,6 +529,7 @@
     <ClInclude Include="..\..\ESP32\src\ui\ui.h" />
     <ClInclude Include="..\..\ESP32\src\ui\ui_events.h" />
     <ClInclude Include="..\..\ESP32\src\ui\ui_helpers.h" />
+    <ClInclude Include="..\..\ESP32\src\ui\ui_Main.h" />
     <ClInclude Include="..\LvglPlatform\lvgl\src\core\lv_global.h" />
     <ClInclude Include="..\LvglPlatform\lvgl\src\core\lv_group.h" />
     <ClInclude Include="..\LvglPlatform\lvgl\src\core\lv_obj.h" />
