@@ -1,0 +1,16 @@
+{
+  "codename": "digit",
+  "ttf_path": "/assets/digital-7 (mono).ttf",
+  "bin_path": "/assets\\ui_font_digit.bin",
+  "c_path": "/assets\\ui_font_digit.c",
+  "cfg_path": "/assets\\ui_font_digit.fcfg",
+  "size": 60,
+  "bpp": 2,
+  "letters": 0,
+  "ranges": [
+    "0x30-0x39"
+  ],
+  "symbols": "",
+  "customparams": "--no-compress --no-prefilter",
+  "uploaded": false
+}

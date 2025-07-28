@@ -3,7 +3,11 @@ SET(SOURCES ui_Main.c
     ui_comp_hook.c
     ui_helpers.c
     ui_events.cpp
+    ui_img_flash_on_png.c
+    ui_img_flash_off_png.c
+    ui_img_output_png.c
     ui_img_success_png.c
-    ui_img_fail_png.c)
+    ui_img_fail_png.c
+    fonts/ui_font_digit.c)
 
 add_library(ui ${SOURCES})

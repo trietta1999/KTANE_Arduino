@@ -3,22 +3,99 @@
 // LVGL version: 9.1.0
 // Project name: SquareLine_Project
 
-#ifdef _WIN64
-#include <iostream>
-#endif
 #include "ui.h"
 #include "../CommonData.h"
 #include "../CommonLibrary.h"
 #include "../CommonService.h"
 
-bool regenerate = false;
-bool isIncorrectButton = false;
-std::vector<std::tuple<lv_obj_t*, lv_obj_t*, TEXT_LABEL>> listButton = { };
+struct countdown_timer_t
+{
+    int8_t second;
+    int8_t maxSecond;
+    bool timeOut;
+    lv_timer_t* countdownTimer;
 
-#ifdef UNIT_TEST
-std::tuple<TEXT_DISPLAY, uint8_t> displayInfo = { };
-std::vector<TEXT_LABEL> listTextLabel = { };
+    void StartTimer(int8_t second)
+    {
+        // Init data
+        this->second = second + 1;
+        this->maxSecond = second;
+        this->timeOut = false;
+
+        // Set current second
+        CurrentSecond.SetValue(second);
+
+        this->countdownTimer = lv_timer_create([](lv_timer_t* timer) {
+            auto data = reinterpret_cast<countdown_timer_t*>(lv_timer_get_user_data(timer));
+
+            // Check timeout
+            if ((data->second <= 0))
+            {
+                // Delete timer
+                lv_timer_del(timer);
+                timer = nullptr;
+                data->countdownTimer = nullptr;
+
+                // Set timeout flag
+                data->timeOut = true;
+
+                return;
+            }
+
+            // Update second
+            if (CounterType.GetValue() == COUNTER_TYPE::DOWN)
+            {
+                // Count down
+                if (data->second > 0)
+                {
+                    data->second--;
+                }
+            }
+            else
+            {
+                // Count up
+                if (data->second < data->maxSecond)
+                {
+                    data->second++;
+                }
+            }
+
+            // Update current second
+            CurrentSecond.SetValue(data->second);
+            }, TIMER_PERIOD_1000, this);
+    }
+};
+
+countdown_timer_t* countdownTimer = nullptr;
+
+void InitModule(bool renew = true)
+{
+    // Set counter type
+    CounterType.SetValue(COUNTER_TYPE::DOWN);
+
+    // Delete countdown timer
+    if (countdownTimer->countdownTimer)
+    {
+        lv_timer_del(countdownTimer->countdownTimer);
+        countdownTimer->countdownTimer = nullptr;
+    }
+
+    // Create countdown timer
+    countdownTimer->StartTimer(MAX_COUNTDOWN_SEC);
+
+    // Set charger label to focus
+    lv_obj_add_state(ui_lblCharger, LV_STATE_FOCUSED);
+    lv_bar_set_value(ui_barCharger, BAR_ON, LV_ANIM_ON);
+
+    // Enable handle
+    lv_obj_add_flag(ui_conHandleHolder, LV_OBJ_FLAG_CLICKABLE);
+
+#ifdef _WIN64
+    ::Beep(BEEP_FRE, 1000);
+#else
+    // Arduino process
 #endif
+}
 
 void Init()
 {
@@ -26,84 +103,97 @@ void Init()
     sys_gui::Brightness.SetValue(100);
     lv_slider_set_value(ui_sldBrightness, sys_gui::Brightness.GetValue(), LV_ANIM_OFF);
 
-    // Create list button
-    listButton = {
-        { ui_Button1, ui_lblButtonText1, TEXT_LABEL::MIN },
-        { ui_Button2, ui_lblButtonText2, TEXT_LABEL::MIN },
-        { ui_Button3, ui_lblButtonText3, TEXT_LABEL::MIN },
-        { ui_Button4, ui_lblButtonText4, TEXT_LABEL::MIN },
-        { ui_Button5, ui_lblButtonText5, TEXT_LABEL::MIN },
-        { ui_Button6, ui_lblButtonText6, TEXT_LABEL::MIN },
-    };
+    // Init timer
+    countdownTimer = new countdown_timer_t();
 
-    CurrentStage.SetValue(1);
+    // Disable handle
+    lv_obj_remove_flag(ui_conHandleHolder, LV_OBJ_FLAG_CLICKABLE);
+
+    // Create random module activate timer
+    lv_timer_create([](lv_timer_t* timer) {
+#ifdef _WIN64
+        if (countdownTimer->countdownTimer)
+        {
+            // Delete timer
+            lv_timer_del(timer);
+            timer = nullptr;
+
+            return;
+        }
+#endif
+
+        auto num = RandomRange(0, 100);
+
+        // Check any value, if true, then 10% probability module will be activated
+        if (num < 10)
+        {
+            InitModule();
+
+            // Delete timer
+            lv_timer_del(timer);
+            timer = nullptr;
+        }
+        }, TIMER_PERIOD_1000 * 10, nullptr); // 10s
 }
 
 void AutoUpdate()
 {
-#ifndef UNIT_TEST
-    if (CurrentStage.GetState() || isIncorrectButton || regenerate)
+    if (CounterType.GetState())
     {
-#endif
-#ifndef UNIT_TEST
-        auto displayInfo = GetRandomTextDisplay();
-        auto listTextLabel = GetTextLabelListFromMap(BUTTON_NUM);
-#endif
-
-        // Set display
-        auto textDisplay = std::get<TEXT_POS>(displayInfo);
-        auto textDisplayStr = std::get<TEXT_POS>(map_TextDisplayWithFocusPostion[textDisplay]);
-        lv_label_set_text(ui_lblDisplay, textDisplayStr.c_str());
-
-        // Set button label
-        for (uint8_t i = 0; i < listButton.size(); i++)
+        // Count down mode
+        if (CounterType.GetValue() == COUNTER_TYPE::DOWN)
         {
-            auto& item = listButton[i];
-            auto textLabel = listTextLabel[i];
-            auto textLabelStr = map_TextLabel[textLabel];
-
-            // Set text label to button list
-            std::get<2>(item) = textLabel;
-
-            // Set text label
-            lv_label_set_text(std::get<1>(item), textLabelStr.c_str());
+            // Reset to default period
+            lv_timer_set_period(countdownTimer->countdownTimer, TIMER_PERIOD_1000);
         }
-
-        // Set correct text label
-        auto focusPos = std::get<FOCUSPOS_POS>(displayInfo);
-        auto correctLabel = SetCorrectTextLabel(focusPos, listTextLabel);
-
-        if (map_TextLabel[correctLabel] == "")
-        {
-            // Re-genrate correct label when it's empty
-            regenerate = true;
-
-#ifdef _WIN64
-            debug_println("Re-generate...");
-#endif
-        }
+        // Count up mode
         else
         {
-            // Set correct label
-            CorrectTextLabel.SetValue(correctLabel);
-            regenerate = false;
-
-#ifdef _WIN64
-        debug_println("Stage: " + std::to_string(CurrentStage.GetValue()));
-        debug_println("Corect label: " + map_TextLabel[CorrectTextLabel.GetValue()]);
-#endif
+            // Speed up period
+            lv_timer_set_period(countdownTimer->countdownTimer, TIMER_PERIOD_100);
         }
-
-        // Reset error flag
-        if (isIncorrectButton)
-        {
-            isIncorrectButton = false;
-        }
-#ifndef UNIT_TEST
     }
+
+    if (CurrentSecond.GetState())
+    {
+        auto second = CurrentSecond.GetValue();
+
+        if (second >= 0)
+        {
+            // Update label timer
+            lv_label_set_text(ui_lblTimer, std::to_string(second).c_str());
+
+            // Update level bar value
+            lv_bar_set_value(ui_barLevel, MAX_COUNTDOWN_SEC - second, LV_ANIM_ON);
+
+            // Humming sound
+#ifdef ARDUINO
+            // Arduino process
 #endif
+        }
+    }
+
+    if (countdownTimer->timeOut)
+    {
+        // Clear label timer
+        lv_label_set_text(ui_lblTimer, "");
+
+        // Reset timeout flag
+        countdownTimer->timeOut = false;
+
+        // Update charger state
+        lv_obj_remove_state(ui_lblCharger, LV_STATE_FOCUSED);
+        lv_obj_add_state(ui_lblCharger, LV_STATE_DISABLED);
+
+        // Disable handle
+        lv_obj_remove_flag(ui_conHandleHolder, LV_OBJ_FLAG_CLICKABLE);
 
 #ifndef UNIT_TEST
+        // Send error to Host
+        CommonSendRequest(WM_STRIKESTATE_SET);
+#endif
+    }
+
     if (sys_gui::SuccessState.GetState()) {
         if (sys_gui::SuccessState.GetValue() != INCORRECT)
         {
@@ -119,7 +209,6 @@ void AutoUpdate()
             }
         }
     }
-#endif
 }
 
 void OnBrightnessChange(lv_event_t* e)
@@ -127,51 +216,28 @@ void OnBrightnessChange(lv_event_t* e)
     sys_gui::Brightness.SetValue(lv_slider_get_value(ui_sldBrightness));
 }
 
-void OnButtonClick(lv_event_t * e)
+void OnDebugClick(lv_event_t* e)
 {
-    auto currentButton = reinterpret_cast<lv_obj_t*>(e->current_target);
-    auto find = std::find_if(listButton.begin(), listButton.end(),
-        [currentButton](const std::tuple<lv_obj_t*, lv_obj_t*, TEXT_LABEL>& item) {
-            return std::get<0>(item) == currentButton;
-        });
-
-    auto textLabel = std::get<2>(*find);
-
-    if (textLabel == CorrectTextLabel.GetValue())
-    {
-        auto stage = CurrentStage.GetValue();
-
-        // Update bar stage
-        lv_bar_set_value(ui_barStage, stage, LV_ANIM_ON);
-
-        if (stage < STAGE_NUM)
-        {
-            // Set to next stage
-            CurrentStage.SetValue(stage + 1);
-        }
-        else
-        {
-            // Finish
-            sys_gui::SuccessState.SetValue(STATE_CHECKED);
-
-#ifndef UNIT_TEST
-            // Send success to Host
-            JsonDocument jsonDocIn;
 #ifdef _WIN64
-            jsonDocIn["module"] = CLIENT_NAME_FOR_JSON;
-#else
-            jsonDocIn["module"] = CLIENT_NAME;
-#endif
-            CommonSendRequestWithData(WM_SUCCESSSTATE_SET, jsonDocIn);
-#endif
-        }
-    }
-    else
+    // Delete countdown timer
+    if (countdownTimer->countdownTimer)
     {
-        // Set error flag
-        isIncorrectButton = true;
-
-        // Send error to Host
-        CommonSendRequest(WM_STRIKESTATE_SET);
+        lv_timer_del(countdownTimer->countdownTimer);
+        countdownTimer->countdownTimer = nullptr;
     }
+
+    InitModule();
+#endif
+}
+
+void OnHandlePress(lv_event_t* e)
+{
+    // Update counter type
+    CounterType.SetValue(COUNTER_TYPE::UP);
+}
+
+void OnHandleRelease(lv_event_t* e)
+{
+    // Update counter type
+    CounterType.SetValue(COUNTER_TYPE::DOWN);
 }
