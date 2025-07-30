@@ -101,4 +101,68 @@ public:
         sys_host::TimeClock.SetValue(std::make_pair(22, 22));
         Assert::IsTrue(NumberCheckInTimer(2) == true);
     }
+
+    TEST_METHOD(TEST_GetRotationInfoIt_1)
+    {
+        auto result = GetRotationInfoIt(KNOB_DIRECTION_TYPE::UP);
+
+        Assert::IsTrue(result->first == KNOB_DIRECTION_TYPE::UP);
+        Assert::IsTrue(result->second == 0);
+    }
+
+    TEST_METHOD(TEST_GetRotationInfoIt_2)
+    {
+        auto result = GetRotationInfoIt(KNOB_DIRECTION_TYPE::RIGHT);
+
+        Assert::IsTrue(result->first == KNOB_DIRECTION_TYPE::RIGHT);
+        Assert::IsTrue(result->second == 900);
+    }
+
+    TEST_METHOD(TEST_GetRotationInfoIt_3)
+    {
+        auto result = GetRotationInfoIt(KNOB_DIRECTION_TYPE::DOWN);
+
+        Assert::IsTrue(result->first == KNOB_DIRECTION_TYPE::DOWN);
+        Assert::IsTrue(result->second == 1800);
+    }
+
+    TEST_METHOD(TEST_GetRotationInfoIt_4)
+    {
+        auto result = GetRotationInfoIt(KNOB_DIRECTION_TYPE::LEFT);
+
+        Assert::IsTrue(result->first == KNOB_DIRECTION_TYPE::LEFT);
+        Assert::IsTrue(result->second == -900);
+    }
+
+    TEST_METHOD(TEST_GetRotationInfo_1)
+    {
+        auto result = GetRotationInfo(KNOB_DIRECTION_TYPE::UP);
+
+        Assert::IsTrue(result.first == KNOB_DIRECTION_TYPE::UP);
+        Assert::IsTrue(result.second == 0);
+    }
+
+    TEST_METHOD(TEST_GetRotationInfo_2)
+    {
+        auto result = GetRotationInfo(KNOB_DIRECTION_TYPE::RIGHT);
+
+        Assert::IsTrue(result.first == KNOB_DIRECTION_TYPE::RIGHT);
+        Assert::IsTrue(result.second == 900);
+    }
+
+    TEST_METHOD(TEST_GetRotationInfo_3)
+    {
+        auto result = GetRotationInfo(KNOB_DIRECTION_TYPE::DOWN);
+
+        Assert::IsTrue(result.first == KNOB_DIRECTION_TYPE::DOWN);
+        Assert::IsTrue(result.second == 1800);
+    }
+
+    TEST_METHOD(TEST_GetRotationInfo_4)
+    {
+        auto result = GetRotationInfo(KNOB_DIRECTION_TYPE::LEFT);
+
+        Assert::IsTrue(result.first == KNOB_DIRECTION_TYPE::LEFT);
+        Assert::IsTrue(result.second == -900);
+    }
 };

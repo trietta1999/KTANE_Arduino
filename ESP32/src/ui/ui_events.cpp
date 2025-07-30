@@ -68,6 +68,7 @@ bool moduleActivateState = false;
 
 void InitModule()
 {
+#ifndef UNIT_TEST
     // Choose random direction type
     auto directionType = (KNOB_DIRECTION_TYPE)RandomRange((uint8_t)KNOB_DIRECTION_TYPE::MIN + 1, (uint8_t)KNOB_DIRECTION_TYPE::MAX);
     CorrectDirectionType.SetValue(directionType);
@@ -75,6 +76,10 @@ void InitModule()
     // Choose random led pattern index
     auto ledPatternIndex = RandomRange(0, 2);
     CurrentPatternIndex.SetValue(ledPatternIndex);
+#else
+    auto directionType = CorrectDirectionType.GetValue();
+    auto ledPatternIndex = CurrentPatternIndex.GetValue();
+#endif
 
     // Choose led pattern
     auto ledPattern = mapLedPattern[directionType][ledPatternIndex];
@@ -124,6 +129,7 @@ void InitModule()
     // Activate module
     moduleActivateState = true;
 
+#ifndef UNIT_TEST
 #ifdef _WIN64
     debug_println("Correct direction type: " + map_KNOB_DIRECTION_TYPE[directionType]);
     debug_println("Correct pattern index: " + std::to_string(CurrentPatternIndex.GetValue() + 1));
@@ -131,6 +137,7 @@ void InitModule()
     ::Beep(BEEP_FRE, 1000);
 #else
     // Arduino process
+#endif
 #endif
 }
 
@@ -159,6 +166,7 @@ void Init()
     // Init timer
     countdownTimer = new countdown_timer_t();
 
+#ifndef UNIT_TEST
     // Create random module activate timer
     lv_timer_create([](lv_timer_t* timer) {
         auto num = RandomRange(0, 100);
@@ -172,6 +180,7 @@ void Init()
             }
         }
         }, TIMER_PERIOD_1000 * 5, nullptr); // 5s
+#endif
 }
 
 void AutoUpdate()
@@ -209,7 +218,12 @@ void AutoUpdate()
             CommonSendRequest(WM_STRIKESTATE_SET);
 #endif
         }
-
+#ifdef UNIT_TEST
+        else
+        {
+            sys_gui::SuccessState.SetValue(STATE_CHECKED);
+        }
+#endif
         // Reset led label state
         for (uint8_t i = 0; i < MAX_LED_PER_SIDE * 2; i++)
         {
@@ -220,6 +234,7 @@ void AutoUpdate()
         moduleActivateState = false;
     }
 
+#ifndef UNIT_TEST
     if (sys_gui::SuccessState.GetState()) {
         if (sys_gui::SuccessState.GetValue() != INCORRECT)
         {
@@ -235,6 +250,7 @@ void AutoUpdate()
             }
         }
     }
+#endif
 }
 
 void OnBrightnessChange(lv_event_t* e)
