@@ -37,8 +37,10 @@ namespace sys_gui
 
 // Allow modification
 #pragma region Custom_data
-CData<uint8_t> CurrentStage;
-CData<TEXT_LABEL> CorrectTextLabel;
+CData<uint8_t> CurrentPatternIndex;
+CData<KNOB_DIRECTION_TYPE> CorrectDirectionType;
+CData<KNOB_DIRECTION_TYPE> CurrentDirectionType;
+CData<int8_t> CurrentSecond;
 #pragma endregion
 
 // Add auto reset state for custom data only
@@ -46,5 +48,6 @@ void UpdateAll()
 {
     sys_gui::Brightness.ResetState();
     sys_gui::SuccessState.ResetState();
-    CurrentStage.ResetState();
+    CurrentDirectionType.ResetState();
+    CurrentSecond.ResetState();
 }

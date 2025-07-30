@@ -20,9 +20,9 @@ bool NumberCheckInTimer(uint8_t);
 
 // Allow modification
 #pragma region Custom_function
-std::tuple<TEXT_DISPLAY, uint8_t> GetRandomTextDisplay();
-std::vector<TEXT_LABEL> GetTextLabelListFromMap(uint8_t);
-TEXT_LABEL SetCorrectTextLabel(uint8_t, std::vector<TEXT_LABEL>);
+int64_t ScaleTranslate(int64_t x, int64_t in_min, int64_t in_max, int64_t out_min, int64_t out_max);
+std::pair<KNOB_DIRECTION_TYPE, int16_t> GetRotationInfo(KNOB_DIRECTION_TYPE);
+std::vector<std::pair<KNOB_DIRECTION_TYPE, int16_t>>::iterator GetRotationInfoIt(KNOB_DIRECTION_TYPE);
 #pragma endregion
 
 #endif // !_COMMON_LIBRARY_H

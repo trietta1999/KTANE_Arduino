@@ -806,6 +806,7 @@
     <ClInclude Include="..\..\ESP32\src\ArduinoJson-v7.4.1.h">
       <Filter>Library</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\ESP32\Hardware.h" />
     <ClInclude Include="..\..\ESP32\src\ui\ui.h">
       <Filter>UI</Filter>
     </ClInclude>
@@ -815,7 +816,12 @@
     <ClInclude Include="..\..\ESP32\src\ui\ui_helpers.h">
       <Filter>UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\ESP32\Hardware.h" />
+    <ClInclude Include="..\..\ESP32\src\ui\ui_HelpScreen.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ESP32\src\ui\ui_Main.h">
+      <Filter>UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)..\LvglPlatform\lvgl\.typos.toml">
@@ -1443,19 +1449,49 @@
     <ClCompile Include="..\..\ESP32\src\CommonService.cpp">
       <Filter>Library</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\ui\ui_events.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\ESP32\src\ui\ui.c">
       <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ESP32\src\ui\ui_comp_hook.c">
       <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ESP32\src\ui\ui_events.cpp">
+    <ClCompile Include="..\..\ESP32\src\ui\ui_font_digit.c">
       <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ESP32\src\ui\ui_helpers.c">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\ui\ui_HelpScreen.c">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_arrow_down_png.c">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_arrow_right_png.c">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_arrow_up_png.c">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_back_png.c">
+      <Filter>UI</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\ESP32\src\ui\ui_img_fail_png.c">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_help_center_png.c">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_rotate_left_png.c">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_rotate_right_png.c">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_speedometer_png.c">
       <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ESP32\src\ui\ui_img_success_png.c">

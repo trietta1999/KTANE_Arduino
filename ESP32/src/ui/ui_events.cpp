@@ -11,14 +11,128 @@
 #include "../CommonLibrary.h"
 #include "../CommonService.h"
 
-bool regenerate = false;
-bool isIncorrectButton = false;
-std::vector<std::tuple<lv_obj_t*, lv_obj_t*, TEXT_LABEL>> listButton = { };
+struct countdown_timer_t
+{
+    int8_t second;
+    bool timeOut;
+    lv_timer_t* countdownTimer;
 
-#ifdef UNIT_TEST
-std::tuple<TEXT_DISPLAY, uint8_t> displayInfo = { };
-std::vector<TEXT_LABEL> listTextLabel = { };
+    void StartTimer(int8_t second)
+    {
+        // Init data
+        this->second = second + 1;
+        this->timeOut = false;
+
+        // Set current second
+        CurrentSecond.SetValue(second);
+
+        this->countdownTimer = lv_timer_create([](lv_timer_t* timer) {
+            auto data = reinterpret_cast<countdown_timer_t*>(lv_timer_get_user_data(timer));
+
+            // Check timeout
+            if ((data->second <= 0))
+            {
+                // Delete timer
+                lv_timer_del(timer);
+                timer = nullptr;
+                data->countdownTimer = nullptr;
+
+                // Set timeout flag
+                data->timeOut = true;
+
+                return;
+            }
+
+            // Update second
+            data->second--;
+
+            if (data->second <= 5)
+            {
+#ifdef _WIN64
+                ::Beep(BEEP_FRE, BEEP_INCREASE_DURATION);
+#else
+                // Arduino process
 #endif
+            }
+
+            // Update current second
+            CurrentSecond.SetValue(data->second);
+            }, TIMER_PERIOD_1000, this);
+    }
+};
+
+std::vector<lv_obj_t*> listLed = { };
+
+countdown_timer_t* countdownTimer = nullptr;
+bool moduleActivateState = false;
+
+void InitModule()
+{
+    // Choose random direction type
+    auto directionType = (KNOB_DIRECTION_TYPE)RandomRange((uint8_t)KNOB_DIRECTION_TYPE::MIN + 1, (uint8_t)KNOB_DIRECTION_TYPE::MAX);
+    CorrectDirectionType.SetValue(directionType);
+
+    // Choose random led pattern index
+    auto ledPatternIndex = RandomRange(0, 2);
+    CurrentPatternIndex.SetValue(ledPatternIndex);
+
+    // Choose led pattern
+    auto ledPattern = mapLedPattern[directionType][ledPatternIndex];
+
+    // Take selected random direction type as the root, rotate the list
+    std::rotate(listKnobDirectionTypeRotation.begin(), GetRotationInfoIt(directionType), listKnobDirectionTypeRotation.end());
+
+    // Re-order direction type
+    for (uint8_t i = (uint8_t)KNOB_DIRECTION_TYPE::UP; i < (uint8_t)KNOB_DIRECTION_TYPE::MAX; i++)
+    {
+        listKnobDirectionTypeRotation[i - 1].first = (KNOB_DIRECTION_TYPE)i;
+    }
+
+    // Set current rotation
+    CurrentDirectionType.SetValue(KNOB_DIRECTION_TYPE::UP);
+
+    // Init default knob direction
+    lv_image_set_rotation(ui_imgKnob, GetRotationInfo(KNOB_DIRECTION_TYPE::UP).second);
+
+    // Init "UP" label rotation to default UP direction
+    lv_obj_set_style_transform_rotation(ui_lblUp, GetRotationInfo(KNOB_DIRECTION_TYPE::UP).second, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+    // Convert basic array to vector
+    std::vector<LED_STATUS_T> listLedStatus = { };
+    listLedStatus.insert(listLedStatus.end(), std::begin(ledPattern.row11), std::end(ledPattern.row11));
+    listLedStatus.insert(listLedStatus.end(), std::begin(ledPattern.row12), std::end(ledPattern.row12));
+    listLedStatus.insert(listLedStatus.end(), std::begin(ledPattern.row21), std::end(ledPattern.row21));
+    listLedStatus.insert(listLedStatus.end(), std::begin(ledPattern.row22), std::end(ledPattern.row22));
+
+    // Update led label state
+    uint8_t ledIndex = 0;
+    for (ledIndex = 0; ledIndex < listLed.size(); ledIndex++)
+    {
+        if (listLedStatus[ledIndex] == L_ON)
+        {
+            lv_obj_add_state(listLed[ledIndex], LV_STATE_CHECKED);
+        }
+        else
+        {
+            lv_obj_remove_state(listLed[ledIndex], LV_STATE_CHECKED);
+        }
+    }
+
+    // Start countdown timer
+    countdownTimer->StartTimer(MAX_COUNTDOWN_SEC);
+
+    // Activate module
+    moduleActivateState = true;
+
+#ifdef _WIN64
+    debug_println("Correct direction type: " + map_KNOB_DIRECTION_TYPE[directionType]);
+    debug_println("Correct pattern index: " + std::to_string(CurrentPatternIndex.GetValue() + 1));
+
+    ::Beep(BEEP_FRE, 1000);
+#else
+    // Arduino process
+#endif
+}
 
 void Init()
 {
@@ -26,84 +140,86 @@ void Init()
     sys_gui::Brightness.SetValue(100);
     lv_slider_set_value(ui_sldBrightness, sys_gui::Brightness.GetValue(), LV_ANIM_OFF);
 
-    // Create list button
-    listButton = {
-        { ui_Button1, ui_lblButtonText1, TEXT_LABEL::MIN },
-        { ui_Button2, ui_lblButtonText2, TEXT_LABEL::MIN },
-        { ui_Button3, ui_lblButtonText3, TEXT_LABEL::MIN },
-        { ui_Button4, ui_lblButtonText4, TEXT_LABEL::MIN },
-        { ui_Button5, ui_lblButtonText5, TEXT_LABEL::MIN },
-        { ui_Button6, ui_lblButtonText6, TEXT_LABEL::MIN },
+    // Init led label list
+    listLed = {
+        ui_lblLed1,
+        ui_lblLed2,
+        ui_lblLed3,
+        ui_lblLed4,
+        ui_lblLed5,
+        ui_lblLed6,
+        ui_lblLed7,
+        ui_lblLed8,
+        ui_lblLed9,
+        ui_lblLed10,
+        ui_lblLed11,
+        ui_lblLed12,
     };
 
-    CurrentStage.SetValue(1);
+    // Init timer
+    countdownTimer = new countdown_timer_t();
+
+    // Create random module activate timer
+    lv_timer_create([](lv_timer_t* timer) {
+        auto num = RandomRange(0, 100);
+
+        // Check any value, if true, then 10% probability module will be activated
+        if (num < 10)
+        {
+            if (!moduleActivateState)
+            {
+                InitModule();
+            }
+        }
+        }, TIMER_PERIOD_1000 * 5, nullptr); // 5s
 }
 
 void AutoUpdate()
 {
-#ifndef UNIT_TEST
-    if (CurrentStage.GetState() || isIncorrectButton || regenerate)
+    if (CurrentDirectionType.GetState())
     {
-#endif
-#ifndef UNIT_TEST
-        auto displayInfo = GetRandomTextDisplay();
-        auto listTextLabel = GetTextLabelListFromMap(BUTTON_NUM);
-#endif
-
-        // Set display
-        auto textDisplay = std::get<TEXT_POS>(displayInfo);
-        auto textDisplayStr = std::get<TEXT_POS>(map_TextDisplayWithFocusPostion[textDisplay]);
-        lv_label_set_text(ui_lblDisplay, textDisplayStr.c_str());
-
-        // Set button label
-        for (uint8_t i = 0; i < listButton.size(); i++)
-        {
-            auto& item = listButton[i];
-            auto textLabel = listTextLabel[i];
-            auto textLabelStr = map_TextLabel[textLabel];
-
-            // Set text label to button list
-            std::get<2>(item) = textLabel;
-
-            // Set text label
-            lv_label_set_text(std::get<1>(item), textLabelStr.c_str());
-        }
-
-        // Set correct text label
-        auto focusPos = std::get<FOCUSPOS_POS>(displayInfo);
-        auto correctLabel = SetCorrectTextLabel(focusPos, listTextLabel);
-
-        if (map_TextLabel[correctLabel] == "")
-        {
-            // Re-genrate correct label when it's empty
-            regenerate = true;
-
-#ifdef _WIN64
-            debug_println("Re-generate...");
-#endif
-        }
-        else
-        {
-            // Set correct label
-            CorrectTextLabel.SetValue(correctLabel);
-            regenerate = false;
-
-#ifdef _WIN64
-        debug_println("Stage: " + std::to_string(CurrentStage.GetValue()));
-        debug_println("Corect label: " + map_TextLabel[CorrectTextLabel.GetValue()]);
-#endif
-        }
-
-        // Reset error flag
-        if (isIncorrectButton)
-        {
-            isIncorrectButton = false;
-        }
-#ifndef UNIT_TEST
+        // Update knob
+        lv_image_set_rotation(ui_imgKnob, GetRotationInfo(CurrentDirectionType.GetValue()).second);
     }
-#endif
 
+    if (CurrentSecond.GetState())
+    {
+        auto second = CurrentSecond.GetValue();
+
+        if (second >= 0)
+        {
+            // Update label timer
+            lv_label_set_text(ui_lblTimer, std::to_string(second).c_str());
+        }
+    }
+
+    if (countdownTimer->timeOut)
+    {
+        // Clear label timer
+        lv_label_set_text(ui_lblTimer, "");
+
+        // Reset timeout flag
+        countdownTimer->timeOut = false;
+
+        // Incorrect direction type
+        if (CurrentDirectionType.GetValue() != CorrectDirectionType.GetValue())
+        {
 #ifndef UNIT_TEST
+            // Send error to Host
+            CommonSendRequest(WM_STRIKESTATE_SET);
+#endif
+        }
+
+        // Reset led label state
+        for (uint8_t i = 0; i < MAX_LED_PER_SIDE * 2; i++)
+        {
+            lv_obj_remove_state(listLed[i], LV_STATE_CHECKED);
+        }
+
+        // Deactivate module
+        moduleActivateState = false;
+    }
+
     if (sys_gui::SuccessState.GetState()) {
         if (sys_gui::SuccessState.GetValue() != INCORRECT)
         {
@@ -119,7 +235,6 @@ void AutoUpdate()
             }
         }
     }
-#endif
 }
 
 void OnBrightnessChange(lv_event_t* e)
@@ -127,51 +242,27 @@ void OnBrightnessChange(lv_event_t* e)
     sys_gui::Brightness.SetValue(lv_slider_get_value(ui_sldBrightness));
 }
 
-void OnButtonClick(lv_event_t * e)
+void OnDebugClick(lv_event_t* e)
 {
-    auto currentButton = reinterpret_cast<lv_obj_t*>(e->current_target);
-    auto find = std::find_if(listButton.begin(), listButton.end(),
-        [currentButton](const std::tuple<lv_obj_t*, lv_obj_t*, TEXT_LABEL>& item) {
-            return std::get<0>(item) == currentButton;
-        });
-
-    auto textLabel = std::get<2>(*find);
-
-    if (textLabel == CorrectTextLabel.GetValue())
-    {
-        auto stage = CurrentStage.GetValue();
-
-        // Update bar stage
-        lv_bar_set_value(ui_barStage, stage, LV_ANIM_ON);
-
-        if (stage < STAGE_NUM)
-        {
-            // Set to next stage
-            CurrentStage.SetValue(stage + 1);
-        }
-        else
-        {
-            // Finish
-            sys_gui::SuccessState.SetValue(STATE_CHECKED);
-
-#ifndef UNIT_TEST
-            // Send success to Host
-            JsonDocument jsonDocIn;
 #ifdef _WIN64
-            jsonDocIn["module"] = CLIENT_NAME_FOR_JSON;
-#else
-            jsonDocIn["module"] = CLIENT_NAME;
+    InitModule();
 #endif
-            CommonSendRequestWithData(WM_SUCCESSSTATE_SET, jsonDocIn);
-#endif
-        }
+}
+
+void OnKnobClick(lv_event_t* e)
+{
+    // Get current direction type
+    auto direction = (uint8_t)CurrentDirectionType.GetValue();
+
+    // Increase to next direction
+    direction++;
+
+    if (direction < (uint8_t)KNOB_DIRECTION_TYPE::MAX)
+    {
+        CurrentDirectionType.SetValue((KNOB_DIRECTION_TYPE)direction);
     }
     else
     {
-        // Set error flag
-        isIncorrectButton = true;
-
-        // Send error to Host
-        CommonSendRequest(WM_STRIKESTATE_SET);
+        CurrentDirectionType.SetValue(KNOB_DIRECTION_TYPE::UP);
     }
 }

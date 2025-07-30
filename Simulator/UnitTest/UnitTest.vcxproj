@@ -170,8 +170,18 @@
     <ClCompile Include="..\..\ESP32\src\CommonService.cpp" />
     <ClCompile Include="..\..\ESP32\src\ui\ui.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_comp_hook.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_font_digit.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_helpers.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_HelpScreen.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_arrow_down_png.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_arrow_right_png.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_arrow_up_png.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_back_png.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_img_fail_png.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_help_center_png.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_rotate_left_png.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_rotate_right_png.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_speedometer_png.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_img_success_png.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_Main.c" />
     <ClCompile Include="Test\GUI_Test.cpp" />
@@ -528,6 +538,8 @@
     <ClInclude Include="..\..\ESP32\src\ui\ui.h" />
     <ClInclude Include="..\..\ESP32\src\ui\ui_events.h" />
     <ClInclude Include="..\..\ESP32\src\ui\ui_helpers.h" />
+    <ClInclude Include="..\..\ESP32\src\ui\ui_HelpScreen.h" />
+    <ClInclude Include="..\..\ESP32\src\ui\ui_Main.h" />
     <ClInclude Include="..\LvglPlatform\lvgl\src\core\lv_global.h" />
     <ClInclude Include="..\LvglPlatform\lvgl\src\core\lv_group.h" />
     <ClInclude Include="..\LvglPlatform\lvgl\src\core\lv_obj.h" />

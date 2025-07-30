@@ -106,7 +106,9 @@ void ProcessData()
         }
         else if (read == "gui_correct")
         {
-            debug_println("Corect label: " + map_TextLabel[CorrectTextLabel.GetValue()]);
+            debug_println("\"Y\" is answered to \"VENT GAS?\" There is a two second delay");
+            debug_println("\"N\" is answered to \"DETONATE?\" There is a two second delay.");
+            debug_println("Answering \"N\" to \"VENT GAS?\" will only pop up a message \"VENTING PREVENTS EXPLOSIONS\" but does not cause a strike nor reset the timer.");
         }
     }
 #endif

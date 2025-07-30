@@ -1,5 +1,5 @@
 
-def OnButtonKeypadClick(event_struct):
+def OnDebugClick(event_struct):
     return
 
 
@@ -7,6 +7,6 @@ def OnBrightnessChange(event_struct):
     return
 
 
-def OnButtonClick(event_struct):
+def OnKnobClick(event_struct):
     return
 
