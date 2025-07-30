@@ -185,10 +185,12 @@ void InitQuestion(bool renew = true)
     lv_obj_add_flag(ui_btnDebug, LV_OBJ_FLAG_HIDDEN);
 #endif
 
+#ifndef UNIT_TEST
 #ifdef _WIN64
     ::Beep(BEEP_FRE, 1000);
 #else
     // Arduino process
+#endif
 #endif
 }
 
@@ -216,6 +218,7 @@ void Init()
     completeTimer = new text_typing_timer_t();
     countdownTimer = new countdown_timer_t();
 
+#ifndef UNIT_TEST
     // Create random module activate timer
     lv_timer_create([](lv_timer_t* timer) {
         auto num = RandomRange(0, 100);
@@ -229,6 +232,7 @@ void Init()
             }
         }
         }, TIMER_SLEEP * 5, nullptr); // 5s
+#endif
 }
 
 void AutoUpdate()
@@ -318,6 +322,7 @@ void AutoUpdate()
         moduleActivateState = false;
     }
 
+#ifndef UNIT_TEST
     if (sys_gui::SuccessState.GetState()) {
         if (sys_gui::SuccessState.GetValue() != INCORRECT)
         {
@@ -333,6 +338,7 @@ void AutoUpdate()
             }
         }
     }
+#endif
 }
 
 void OnBrightnessChange(lv_event_t* e)
