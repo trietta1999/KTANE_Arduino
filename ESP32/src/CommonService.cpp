@@ -104,10 +104,6 @@ void ProcessData()
             debug_println("SerialNum: " + sys_host::SerialNum.GetValue());
             debug_println("==================================");
         }
-        else if (read == "gui_correct")
-        {
-            debug_println("Corect label: " + map_TextLabel[CorrectTextLabel.GetValue()]);
-        }
     }
 #endif
 

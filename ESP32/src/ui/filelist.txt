@@ -1,7 +1,17 @@
 ui_Main.c
+ui_Main1.c
 ui.c
 ui_comp_hook.c
 ui_helpers.c
 ui_events.cpp
+ui_img_battery_box_png.c
+ui_img_aa_battery_png.c
+ui_img_dvi_d_png.c
 ui_img_success_png.c
 ui_img_fail_png.c
+ui_img_d_battery_png.c
+ui_img_parallel_png.c
+ui_img_ps2_png.c
+ui_img_rj45_png.c
+ui_img_serial_png.c
+ui_img_stereo_rca_png.c

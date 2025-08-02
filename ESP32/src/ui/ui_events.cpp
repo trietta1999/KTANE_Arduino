@@ -3,22 +3,14 @@
 // LVGL version: 9.1.0
 // Project name: SquareLine_Project
 
-#ifdef _WIN64
-#include <iostream>
-#endif
 #include "ui.h"
 #include "../CommonData.h"
 #include "../CommonLibrary.h"
 #include "../CommonService.h"
 
-bool regenerate = false;
-bool isIncorrectButton = false;
-std::vector<std::tuple<lv_obj_t*, lv_obj_t*, TEXT_LABEL>> listButton = { };
-
-#ifdef UNIT_TEST
-std::tuple<TEXT_DISPLAY, uint8_t> displayInfo = { };
-std::vector<TEXT_LABEL> listTextLabel = { };
-#endif
+std::vector<lv_obj_t*> listBattery = { };
+std::unordered_map<BATTERY_TYPE, lv_img_dsc_t> mapBatteryTypeImg = { };
+std::unordered_map<COMPORT_TYPE, lv_img_dsc_t> mapComPortTypeImg = { };
 
 void Init()
 {
@@ -26,84 +18,57 @@ void Init()
     sys_gui::Brightness.SetValue(100);
     lv_slider_set_value(ui_sldBrightness, sys_gui::Brightness.GetValue(), LV_ANIM_OFF);
 
-    // Create list button
-    listButton = {
-        { ui_Button1, ui_lblButtonText1, TEXT_LABEL::MIN },
-        { ui_Button2, ui_lblButtonText2, TEXT_LABEL::MIN },
-        { ui_Button3, ui_lblButtonText3, TEXT_LABEL::MIN },
-        { ui_Button4, ui_lblButtonText4, TEXT_LABEL::MIN },
-        { ui_Button5, ui_lblButtonText5, TEXT_LABEL::MIN },
-        { ui_Button6, ui_lblButtonText6, TEXT_LABEL::MIN },
+    // Create battery list
+    listBattery = {
+        ui_imgBat1,
+        ui_imgBat2,
+        ui_imgBat3,
+        ui_imgBat4,
     };
 
-    CurrentStage.SetValue(1);
+    // Create battery type map
+    mapBatteryTypeImg = {
+        { BATTERY_TYPE::AA, ui_img_aa_battery_png },
+        { BATTERY_TYPE::D, ui_img_d_battery_png },
+    };
+
+    // Create com port type map
+    mapComPortTypeImg = {
+        { COMPORT_TYPE::DVID, ui_img_dvi_d_png },
+        { COMPORT_TYPE::Parallel, ui_img_parallel_png },
+        { COMPORT_TYPE::PS2, ui_img_ps2_png },
+        { COMPORT_TYPE::RJ45, ui_img_rj45_png },
+        { COMPORT_TYPE::Serial, ui_img_serial_png },
+        { COMPORT_TYPE::Stereo_RCA, ui_img_stereo_rca_png },
+    };
+
+    // Get battery info
+    auto batteryNum = sys_host::BatteryNum.GetValue();
+    auto batteryType = sys_host::BatteryType.GetValue();
+
+    // Set indicator
+    lv_label_set_text(ui_lblIndicator, map_LABEL_INDICATOR[sys_host::LabelIndicator.GetValue()].c_str());
+
+    // Set serial
+    lv_label_set_text(ui_lblSerial, sys_host::SerialNum.GetValue().c_str());
+
+    // Set battery type image and visible
+    for (uint8_t i = 0; i < listBattery.size(); i++)
+    {
+        lv_image_set_src(listBattery[i], &mapBatteryTypeImg[batteryType]);
+
+        if (i >= batteryNum)
+        {
+            lv_obj_add_flag(listBattery[i], LV_OBJ_FLAG_HIDDEN);
+        }
+    }
+
+    // Set comport type image
+    lv_image_set_src(ui_imgComPort, &mapComPortTypeImg[sys_host::ComPortType.GetValue()]);
 }
 
 void AutoUpdate()
 {
-#ifndef UNIT_TEST
-    if (CurrentStage.GetState() || isIncorrectButton || regenerate)
-    {
-#endif
-#ifndef UNIT_TEST
-        auto displayInfo = GetRandomTextDisplay();
-        auto listTextLabel = GetTextLabelListFromMap(BUTTON_NUM);
-#endif
-
-        // Set display
-        auto textDisplay = std::get<TEXT_POS>(displayInfo);
-        auto textDisplayStr = std::get<TEXT_POS>(map_TextDisplayWithFocusPostion[textDisplay]);
-        lv_label_set_text(ui_lblDisplay, textDisplayStr.c_str());
-
-        // Set button label
-        for (uint8_t i = 0; i < listButton.size(); i++)
-        {
-            auto& item = listButton[i];
-            auto textLabel = listTextLabel[i];
-            auto textLabelStr = map_TextLabel[textLabel];
-
-            // Set text label to button list
-            std::get<2>(item) = textLabel;
-
-            // Set text label
-            lv_label_set_text(std::get<1>(item), textLabelStr.c_str());
-        }
-
-        // Set correct text label
-        auto focusPos = std::get<FOCUSPOS_POS>(displayInfo);
-        auto correctLabel = SetCorrectTextLabel(focusPos, listTextLabel);
-
-        if (map_TextLabel[correctLabel] == "")
-        {
-            // Re-genrate correct label when it's empty
-            regenerate = true;
-
-#ifdef _WIN64
-            debug_println("Re-generate...");
-#endif
-        }
-        else
-        {
-            // Set correct label
-            CorrectTextLabel.SetValue(correctLabel);
-            regenerate = false;
-
-#ifdef _WIN64
-        debug_println("Stage: " + std::to_string(CurrentStage.GetValue()));
-        debug_println("Corect label: " + map_TextLabel[CorrectTextLabel.GetValue()]);
-#endif
-        }
-
-        // Reset error flag
-        if (isIncorrectButton)
-        {
-            isIncorrectButton = false;
-        }
-#ifndef UNIT_TEST
-    }
-#endif
-
-#ifndef UNIT_TEST
     if (sys_gui::SuccessState.GetState()) {
         if (sys_gui::SuccessState.GetValue() != INCORRECT)
         {
@@ -119,59 +84,9 @@ void AutoUpdate()
             }
         }
     }
-#endif
 }
 
 void OnBrightnessChange(lv_event_t* e)
 {
     sys_gui::Brightness.SetValue(lv_slider_get_value(ui_sldBrightness));
-}
-
-void OnButtonClick(lv_event_t * e)
-{
-    auto currentButton = reinterpret_cast<lv_obj_t*>(e->current_target);
-    auto find = std::find_if(listButton.begin(), listButton.end(),
-        [currentButton](const std::tuple<lv_obj_t*, lv_obj_t*, TEXT_LABEL>& item) {
-            return std::get<0>(item) == currentButton;
-        });
-
-    auto textLabel = std::get<2>(*find);
-
-    if (textLabel == CorrectTextLabel.GetValue())
-    {
-        auto stage = CurrentStage.GetValue();
-
-        // Update bar stage
-        lv_bar_set_value(ui_barStage, stage, LV_ANIM_ON);
-
-        if (stage < STAGE_NUM)
-        {
-            // Set to next stage
-            CurrentStage.SetValue(stage + 1);
-        }
-        else
-        {
-            // Finish
-            sys_gui::SuccessState.SetValue(STATE_CHECKED);
-
-#ifndef UNIT_TEST
-            // Send success to Host
-            JsonDocument jsonDocIn;
-#ifdef _WIN64
-            jsonDocIn["module"] = CLIENT_NAME_FOR_JSON;
-#else
-            jsonDocIn["module"] = CLIENT_NAME;
-#endif
-            CommonSendRequestWithData(WM_SUCCESSSTATE_SET, jsonDocIn);
-#endif
-        }
-    }
-    else
-    {
-        // Set error flag
-        isIncorrectButton = true;
-
-        // Send error to Host
-        CommonSendRequest(WM_STRIKESTATE_SET);
-    }
 }

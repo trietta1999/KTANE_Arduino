@@ -101,16 +101,4 @@ public:
         sys_host::TimeClock.SetValue(std::make_pair(22, 22));
         Assert::IsTrue(NumberCheckInTimer(2) == true);
     }
-
-    TEST_METHOD(TEST_GetTextLabelListFromMap)
-    {
-        auto result = GetTextLabelListFromMap(BUTTON_NUM);
-        Assert::IsTrue(result.size() == BUTTON_NUM);
-    }
-
-    TEST_METHOD(TEST_SetCorrectTextLabel)
-    {
-        auto result = SetCorrectTextLabel(2, { TEXT_LABEL::E_RIGHT, TEXT_LABEL::E_NOTHING, TEXT_LABEL::E_READY, TEXT_LABEL::E_PRESS, TEXT_LABEL::E_UHHH, });
-        Assert::IsTrue(result == TEXT_LABEL::E_UHHH);
-    }
 };
