@@ -31,8 +31,8 @@ void InitData()
 #else
     uint32_t seed = esp_random();
 
-    serial::setup();
-    ble::setup();
+    serial::Setup();
+    ble::Setup();
 #endif
     // Set random seed
     srand(seed);
@@ -267,7 +267,7 @@ void ProcessRequest(HWND hwnd, uint32_t msg, JsonDocument jsonDocIn)
 
     ::SendMessage(hwnd, WM_RESPONSE, NULL, NULL);
 #else
-    serial::send_message(reinterpret_cast<const char*>(hwnd), WM_RESPONSE, 0, jsonDocStr);
+    serial::SendMessage(reinterpret_cast<const char*>(hwnd), WM_RESPONSE, 0, jsonDocStr);
 #endif
 #else
     // Client process
@@ -306,7 +306,7 @@ JsonDocument CommonSendRequest(uint32_t msg)
     ::SendMessage(hwnd, WM_SET_CLIENT_HANDLE, NULL, NULL);
     ::SendMessage(hwnd, WM_REQUEST, msg, NULL);
 #else
-    serial::send_message(HOST_NAME, WM_REQUEST, msg, nullptr);
+    serial::SendMessage(HOST_NAME, WM_REQUEST, msg, nullptr);
 #endif
 
     return sys_host::JsonResponse.GetValue();
@@ -344,7 +344,7 @@ JsonDocument CommonSendRequestWithData(uint32_t msg, JsonDocument jsonValue)
 #else
     char jsonDocStr[MAX_SIZE] = { 0 };
     serializeJson(jsonValue, jsonDocStr);
-    serial::send_message(HOST_NAME, WM_REQUEST_WITH_DATA, msg, jsonDocStr);
+    serial::SendMessage(HOST_NAME, WM_REQUEST_WITH_DATA, msg, jsonDocStr);
 #endif
 
     return sys_host::JsonResponse.GetValue();
