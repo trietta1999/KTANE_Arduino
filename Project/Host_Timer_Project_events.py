@@ -26,3 +26,7 @@ def Score_OnLoaded(event_struct):
 def Score_OnRollerOrderChange(event_struct):
     return
 
+
+def OrderPlay_OnLoaded(event_struct):
+    return
+
