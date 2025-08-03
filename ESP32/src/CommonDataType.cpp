@@ -15,7 +15,7 @@ MAP_ENUM_WSTR(MODULE_NAME, DEF_MODULE_NAME)
 
 MAP_ENUM_STR(COLOR_TYPE, DEF_COLOR_TYPE)
 
-std::unordered_map<COLOR_TYPE, COLOR> mapColor =
+std::unordered_map<COLOR_TYPE, uint32_t> mapColor =
 {
     { COLOR_TYPE::DEFAULT_COLOR, 0xFFFFFF },
     { COLOR_TYPE::RED, 0xFF0000 },
