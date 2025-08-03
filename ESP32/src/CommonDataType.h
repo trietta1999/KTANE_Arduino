@@ -51,9 +51,10 @@ enum
     WM_REQUEST,           // Request/get from other message
     WM_REQUEST_WITH_DATA, // Request/get from other message with data
     WM_RESPONSE,          // Response message from host to client
-    WM_SET_CLIENTSTATE,   // Notify to set ON/OFF status to specific client
+    WM_SET_CLIENTSTATE,   // Notify to set ON/OFF status to all client
     WM_START_ALL,         // Notify for starting all client
     WM_TIMER_GET,         // Client get timer from host
+    WM_TIMER_SET,         // Host set timer
     WM_STRIKENUM_GET,     // Client get strike count from host
     WM_STRIKESTATE_SET,   // Client notify host to set strike status
     WM_SUCCESSSTATE_SET,  // Client notify host to set client success status
@@ -135,6 +136,8 @@ enum
         CREATE(e, VentingGas) \
         CREATE(e, CapacitorDischarge) \
         CREATE(e, Knobs) \
+        CREATE(e, SystemInfo) \
+        CREATE(e, Transporter) \
 
 enum class LABEL_INDICATOR
 {
@@ -218,7 +221,14 @@ enum class WIRE_IN_ORDER
 };
 EXTERN_MAP_ENUM_STR(WIRE_IN_ORDER)
 
-extern std::unordered_map<WIRECOLOR_TYPE, COLOR> mapColor;
+extern std::unordered_map<COLOR_TYPE, uint32_t> mapColor;
+
+#define KEYPAD_MAX_NUM 4
+#define MAX_COL 6
+#define MAX_ITEM 7
+#define KEYPAD_POS 0
+#define IMAGE_POS 1
+#define INDEX_POS 2
 #pragma endregion
 
 #endif // !_COMMON_DATATYPE_H
