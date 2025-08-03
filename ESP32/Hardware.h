@@ -12,11 +12,11 @@
 BluetoothSerial SerialBT;
 
 namespace serial {
-void setup() {
+void Setup() {
   Serial.begin(9600);
 }
 
-void send_message(const char* target, uint32_t base_msg, uint32_t msg, const char* data) {
+void SendMessage(const char* target, uint32_t base_msg, uint32_t msg, const char* data) {
   if (data) {
     Serial.println(DATA_HEADER + target + "|" + base_msg + "|" + msg + "|" + data + DATA_TRAILER);
     SerialBT.println(DATA_HEADER + target + "|" + base_msg + "|" + msg + "|" + data + DATA_TRAILER);
@@ -28,7 +28,7 @@ void send_message(const char* target, uint32_t base_msg, uint32_t msg, const cha
 }
 
 namespace ble {
-void setup() {
+void Setup() {
   SerialBT.begin(CLIENT_NAME);
 }
 }
