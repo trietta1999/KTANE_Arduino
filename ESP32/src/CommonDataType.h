@@ -38,11 +38,35 @@
 #else
 #include <Arduino.h>
 #define WM_USER 0x0400
-#define HWND void*
-#define DATA_HEADER String("REQUEST|")
-#define DATA_TRAILER String("|ENDREQUEST")
-#define debug_println(a) SerialBT.println(std::string(a).c_str())
+#define HWND uint8_t
+
+#define debug_println(a) Serial.println(std::string(a).c_str())
 #define MILLISEC_GET millis()
+
+#define WIFI_SSID "KTANE_Arduino"
+#define WIFI_PASS "KTANE_Arduino"
+
+#define SV_PORT 80
+
+#define SV_IP_ADD_1 192
+#define SV_IP_ADD_2 168
+#define SV_IP_ADD_3 0
+#define SV_IP_ADD_4 1
+
+#define SV_NETMASK_1 255
+#define SV_NETMASK_2 255
+#define SV_NETMASK_3 255
+#define SV_NETMASK_4 0
+
+#define HTTP_OK 200
+#define HTTP_NOT_FOUND 404
+
+struct data_pack_t {
+    uint8_t target;
+    uint32_t base_msg;
+    uint32_t msg;
+    char data[MAX_SIZE];
+};
 #endif
 
 enum

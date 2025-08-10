@@ -800,9 +800,6 @@
     <ClInclude Include="..\..\ESP32\src\CommonDataType.h">
       <Filter>Library\CommonData</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\ESP32\src\CommonService.h">
-      <Filter>Library</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\ESP32\src\ArduinoJson-v7.4.1.h">
       <Filter>Library</Filter>
     </ClInclude>
@@ -815,9 +812,14 @@
     <ClInclude Include="..\..\ESP32\src\ui\ui_helpers.h">
       <Filter>UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\ESP32\Hardware.h" />
     <ClInclude Include="..\..\ESP32\src\ui\ui_Main.h">
       <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ESP32\src\CommonService.h">
+      <Filter>Library\CommonService</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ESP32\Hardware.h">
+      <Filter>Library\CommonService</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1432,6 +1434,9 @@
     <Filter Include="Library\CommonData">
       <UniqueIdentifier>{7f6f08a5-ed2c-4889-8bf2-1dc5ab66c3da}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Library\CommonService">
+      <UniqueIdentifier>{56cd8a02-3b2a-4304-a4cd-a9c53a77970a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\ESP32\src\CommonLibrary.cpp">
@@ -1442,9 +1447,6 @@
     </ClCompile>
     <ClCompile Include="..\..\ESP32\src\CommonDataType.cpp">
       <Filter>Library\CommonData</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ESP32\src\CommonService.cpp">
-      <Filter>Library</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ESP32\src\ui\ui.c">
       <Filter>UI</Filter>
@@ -1466,6 +1468,9 @@
     </ClCompile>
     <ClCompile Include="..\..\ESP32\src\ui\ui_Main.c">
       <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\CommonService.cpp">
+      <Filter>Library\CommonService</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
