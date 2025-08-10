@@ -105,7 +105,7 @@ void ProcessData()
         }
         else if (read == "gui_correct")
         {
-            debug_println("Correct direction type: " + map_KNOB_DIRECTION_TYPE[directionType]);
+            debug_println("Correct direction type: " + map_KNOB_DIRECTION_TYPE[CorrectDirectionType.GetValue()]);
             debug_println("Correct pattern index: " + std::to_string(CurrentPatternIndex.GetValue() + 1));
         }
     }
