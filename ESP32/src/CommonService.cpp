@@ -2,6 +2,9 @@
  * @brief Common service library
  */
 
+#include "CommonService.h"
+#include "CommonData.h"
+#include "CommonLibrary.h"
 #ifdef _WIN64
 #include <iostream>
 #include <iomanip>
@@ -9,9 +12,6 @@
 #include <esp_random.h>
 #include "../Hardware.h"
 #endif
-#include "CommonService.h"
-#include "CommonData.h"
-#include "CommonLibrary.h"
 
 #ifdef _WIN64
 void AttachConsoleWindow()
@@ -29,10 +29,9 @@ void InitData()
 #ifdef _WIN64
     uint32_t seed = time(0);
 #else
-    uint32_t seed = esp_random();
+    HardwareSetup();
 
-    serial::Setup();
-    ble::Setup();
+    uint32_t seed = esp_random();
 #endif
     // Set random seed
     srand(seed);
@@ -90,8 +89,8 @@ void ProcessData()
 {
 #ifndef _WIN64
     // Read data from serial bluetooth
-    if (SerialBT.available()) {
-        String read = SerialBT.readStringUntil('\n');
+    if (Serial.available()) {
+        String read = Serial.readStringUntil('\n');
 
         // Print init data
         if (read == "sys_data") {
@@ -105,6 +104,9 @@ void ProcessData()
             debug_println("==================================");
         }
     }
+
+    // Re-connect WiFi if disconnected
+    WiFiReconnect();
 #endif
 
 #ifdef HOST_TIMER
@@ -255,7 +257,12 @@ void ProcessRequest(HWND hwnd, uint32_t msg, JsonDocument jsonDocIn)
 
     ::SendMessage(hwnd, WM_RESPONSE, NULL, NULL);
 #else
-    serial::SendMessage(reinterpret_cast<const char*>(hwnd), WM_RESPONSE, 0, jsonDocStr);
+    data_pack_t byteData = { 0 };
+    byteData.target = hwnd;
+    byteData.base_msg = WM_RESPONSE;
+    byteData.msg = 0;
+
+    SendMessage(byteData);
 #endif
 #else
     // Client process
@@ -294,7 +301,12 @@ JsonDocument CommonSendRequest(uint32_t msg)
     ::SendMessage(hwnd, WM_SET_CLIENT_HANDLE, NULL, NULL);
     ::SendMessage(hwnd, WM_REQUEST, msg, NULL);
 #else
-    serial::SendMessage(HOST_NAME, WM_REQUEST, msg, nullptr);
+    data_pack_t byteData = { 0 };
+    byteData.target = (uint8_t)MODULE_NAME::HostTimer;
+    byteData.base_msg = WM_REQUEST;
+    byteData.msg = msg;
+
+    SendMessage(byteData);
 #endif
 
     return sys_host::JsonResponse.GetValue();
@@ -332,7 +344,14 @@ JsonDocument CommonSendRequestWithData(uint32_t msg, JsonDocument jsonValue)
 #else
     char jsonDocStr[MAX_SIZE] = { 0 };
     serializeJson(jsonValue, jsonDocStr);
-    serial::SendMessage(HOST_NAME, WM_REQUEST_WITH_DATA, msg, jsonDocStr);
+
+    data_pack_t byteData = { 0 };
+    byteData.target = (uint8_t)MODULE_NAME::HostTimer;
+    byteData.base_msg = WM_REQUEST_WITH_DATA;
+    byteData.msg = msg;
+    strcpy(byteData.data, jsonDocStr);
+
+    SendMessage(byteData);
 #endif
 
     return sys_host::JsonResponse.GetValue();
