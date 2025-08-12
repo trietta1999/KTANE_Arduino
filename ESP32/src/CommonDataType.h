@@ -76,7 +76,7 @@ enum
     WM_REQUEST,           // Request/get from other message
     WM_REQUEST_WITH_DATA, // Request/get from other message with data
     WM_RESPONSE,          // Response message from host to client
-    WM_SET_CLIENTSTATE,   // Notify to set ON/OFF status to all client
+    WM_SET_CLIENTSTATE,   // Notify to set ON/OFF status to selected clients
     WM_START_ALL,         // Notify for starting all client
     WM_TIMER_GET,         // Client get timer from host
     WM_TIMER_SET,         // Host set timer
