@@ -156,23 +156,6 @@ void ProcessRequest(HWND hwnd, uint32_t msg, JsonDocument jsonDocIn)
 
     switch (msg)
     {
-    case WM_SET_CLIENTSTATE:
-    {
-        auto mapModuleStatus = sys_gui::ModuleStatusMap.GetValue();
-
-        if (mapModuleStatus[jsonDocIn["module"].as<const char*>()] == MODULE_STATUS::ON)
-        {
-            jsonDocIn["state"] = (uint8_t)MODULE_STATUS::ON;
-        }
-        else
-        {
-            jsonDocIn["state"] = (uint8_t)MODULE_STATUS::OFF;
-        }
-
-        jsonDoc = jsonDocIn;
-    }
-    break;
-
     case WM_START_ALL:
     {
         jsonDoc["start"] = (uint8_t)MODULE_STATUS::START;
@@ -237,7 +220,6 @@ void ProcessRequest(HWND hwnd, uint32_t msg, JsonDocument jsonDocIn)
     }
 
     char jsonDocStr[MAX_SIZE] = { 0 };
-
     serializeJson(jsonDoc, jsonDocStr);
 
 #ifdef _WIN64
