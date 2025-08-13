@@ -1448,9 +1448,6 @@
     <ClCompile Include="..\..\ESP32\src\ui\ui_events.cpp">
       <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ESP32\src\CommonService.cpp">
-      <Filter>Library</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ESP32\src\ui\ui.c">
       <Filter>UI</Filter>
     </ClCompile>
@@ -1549,6 +1546,9 @@
     </ClCompile>
     <ClCompile Include="..\..\ESP32\src\ui\ui_Main.c">
       <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\CommonService.cpp">
+      <Filter>Library\CommonService</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ESP32\src\CommonService.cpp">
       <Filter>Library\CommonService</Filter>
