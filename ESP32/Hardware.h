@@ -10,6 +10,7 @@
 #include <HTTPClient.h>
 #include "src/CommonDataType.h"
 
+#define INPUT_PIN 22
 #define BUZZER_PIN 26
 
 void WiFiReconnect() {
@@ -30,9 +31,22 @@ void HardwareSetup() {
   // Setup serial
   Serial.begin(115200);
 
+  // Setup I/O
+  pinMode(BUZZER_PIN, OUTPUT);
+  pinMode(INPUT_PIN, INPUT_PULLUP);
+
+  // Wait for activate signal
+  while (digitalRead(INPUT_PIN)) {
+    delay(10);
+  }
+
   //Setup WiFi
   WiFi.mode(WIFI_STA);
   WiFi.begin(WIFI_SSID, WIFI_PASS);
+  WiFi.config(
+    IPAddress(IP_ADD_1, IP_ADD_2, IP_ADD_3, IP_ADD_4),
+    IPAddress(IP_ADD_1, IP_ADD_2, IP_ADD_3, IP_ADD_4),
+    IPAddress(NETMASK_1, NETMASK_2, NETMASK_3, NETMASK_4));
 
   // Wait for WiFi connect
   WiFiReconnect();
@@ -40,9 +54,6 @@ void HardwareSetup() {
   Serial.println("WiFi connected");
   Serial.print("IP Address: ");
   Serial.println(WiFi.localIP());
-
-  // Setup I/O
-  pinMode(BUZZER_PIN, OUTPUT);
 }
 
 void SendMessage(data_pack_t byteData) {
@@ -50,7 +61,7 @@ void SendMessage(data_pack_t byteData) {
 
   // Init server path
   char serverPath[30] = { 0 };
-  sprintf(serverPath, "http://%d.%d.%d.%d:%d", SV_IP_ADD_1, SV_IP_ADD_2, SV_IP_ADD_3, SV_IP_ADD_4, SV_PORT);
+  sprintf(serverPath, "http://%d.%d.%d.%d:%d", IP_ADD_1, IP_ADD_2, IP_ADD_3, (uint8_t)MODULE_NAME::Transporter, SV_PORT);
 
   // Begin request
   http.begin(serverPath);
@@ -64,7 +75,7 @@ void SendMessage(data_pack_t byteData) {
   jsonDoc[STR(data)] = byteData.data;
 
   // Convert json to string
-  char jsonDocStr[MAX_SIZE] = { 0 };
+  String jsonDocStr = "";
   serializeJson(jsonDoc, jsonDocStr);
 
   // Post data
