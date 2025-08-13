@@ -47,16 +47,17 @@
 #define WIFI_PASS "KTANE_Arduino"
 
 #define SV_PORT 80
+#define HOST_PORT 81
 
-#define SV_IP_ADD_1 192
-#define SV_IP_ADD_2 168
-#define SV_IP_ADD_3 0
-#define SV_IP_ADD_4 1
+#define IP_ADD_1 192
+#define IP_ADD_2 168
+#define IP_ADD_3 0
+#define IP_ADD_4 (uint8_t)MODULE_NAME::MorseCode
 
-#define SV_NETMASK_1 255
-#define SV_NETMASK_2 255
-#define SV_NETMASK_3 255
-#define SV_NETMASK_4 0
+#define NETMASK_1 255
+#define NETMASK_2 255
+#define NETMASK_3 255
+#define NETMASK_4 0
 
 #define HTTP_OK 200
 #define HTTP_NOT_FOUND 404
