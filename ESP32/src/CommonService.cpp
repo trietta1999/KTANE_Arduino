@@ -252,6 +252,7 @@ void ProcessRequest(HWND hwnd, uint32_t msg, JsonDocument jsonDocIn)
     byteData.target = hwnd;
     byteData.base_msg = WM_RESPONSE;
     byteData.msg = 0;
+    strcpy(byteData.data, jsonDocStr);
 
     SendMessage(byteData);
 #endif
