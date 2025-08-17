@@ -79,8 +79,19 @@ void setup() {
 }
 
 void IOProcessData() {
+  // Change brightness
   if (sys_gui::Brightness.GetState()) {
     analogWrite(BL_PIN, sys_gui::Brightness.GetValue());
+  }
+
+  // Deactivate module
+  if (!digitalRead(INPUT_PIN)) {
+    if (sys_gui::SuccessState.GetValue() != STATE_CHECKED) {
+      sys_gui::SuccessState.SetValue(STATE_UNCHECK);
+    }
+
+    // Send response to Transporter
+    CommonSendRequest(WM_CLIENT_RESPONSE);
   }
 }
 
