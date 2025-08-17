@@ -8,9 +8,7 @@
 #ifndef _WIN64
 #include <WiFi.h>
 #include <HTTPClient.h>
-#include "src/CommonDataType.h"
-
-#define BUZZER_PIN 26
+#include "src/CommonData.h"
 
 void WiFiReconnect() {
   if (WiFi.status() != WL_CONNECTED) {
@@ -54,14 +52,16 @@ void SendMessage(data_pack_t byteData) {
 
   // Init server path
   char serverPath[30] = { 0 };
-  sprintf(serverPath, "http://%d.%d.%d.%d:%d", IP_ADD_1, IP_ADD_2, IP_ADD_3, (uint8_t)MODULE_NAME::Transporter, SV_PORT);
+  sprintf(serverPath, "http://%d.%d.%d.%d:%d", IP_ADD_1, IP_ADD_2, IP_ADD_3, (uint8_t)MODULE_NAME::Transporter, (uint8_t)MODULE_NAME::Transporter);
+
+  String payload = "";
+  JsonDocument jsonDoc;
 
   // Begin request
   http.begin(serverPath);
   http.addHeader("Content-Type", "application/json");
 
   // Convert struct to json
-  JsonDocument jsonDoc;
   jsonDoc[STR(target)] = byteData.target;
   jsonDoc[STR(base_msg)] = byteData.base_msg;
   jsonDoc[STR(msg)] = byteData.msg;
@@ -75,8 +75,16 @@ void SendMessage(data_pack_t byteData) {
   int32_t httpResponseCode = http.POST(jsonDocStr);
 
   if (httpResponseCode == HTTP_OK) {
-    String payload = http.getString();
+    // Get response string
+    payload = http.getString();
     Serial.println(payload);
+
+    // Convert message data to json
+    jsonDoc.clear();
+    deserializeJson(jsonDoc, payload);
+
+    // Set json data common data
+    sys_host::JsonResponse.SetValue(jsonDoc);
   } else {
     // Re-send request
     SendMessage(byteData);
