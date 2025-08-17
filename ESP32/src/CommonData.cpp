@@ -30,7 +30,6 @@ namespace sys_gui
 {
     CData<uint8_t> SuccessState;
     CData<uint8_t> Brightness;
-    CData<bool> IsStarted;
     CData<std::unordered_map<std::string, MODULE_STATUS>> ModuleStatusMap;
 }
 #pragma endregion
