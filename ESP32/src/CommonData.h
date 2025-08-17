@@ -37,7 +37,6 @@ namespace sys_gui // GUI read/write -> Send data to HOST
 {
     extern CData<uint8_t> SuccessState;
     extern CData<uint8_t> Brightness;
-    extern CData<bool> IsStarted;
     extern CData<std::unordered_map<std::string, MODULE_STATUS>> ModuleStatusMap;
 }
 #pragma endregion
