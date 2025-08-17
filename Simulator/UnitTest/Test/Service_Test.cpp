@@ -156,7 +156,6 @@ public:
         sys_host::SerialNum.SetValue("ABCDEFGHI2");
         sys_host::StrikeNum.SetValue(2);
         sys_host::StrikeState.SetValue(false);
-        sys_gui::IsStarted.SetValue(true);
         sys_gui::ModuleStatusMap.SetValue({
             { "A", MODULE_STATUS::ON },
             { "B", MODULE_STATUS::OFF },
@@ -248,7 +247,6 @@ public:
         Assert::IsTrue(jsonDoc[STR(BatteryNum)] == (uint8_t)2);
         Assert::IsTrue(jsonDoc[STR(SerialNum)] == "ABCDEFGHI2");
         Assert::IsTrue(jsonDoc[STR(StrikeNum)] == (uint8_t)2);
-        Assert::IsTrue(jsonDoc[STR(IsStarted)] == true);
     }
 
     TEST_METHOD(TEST_ProcessRequest_WM_STOP_ALL)
