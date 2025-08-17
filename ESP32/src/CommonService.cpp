@@ -25,14 +25,17 @@ void AttachConsoleWindow()
 
 void InitData()
 {
-#ifdef HOST_TIMER
-#ifdef _WIN64
-    uint32_t seed = time(0);
-#else
+#ifndef _WIN64
     HardwareSetup();
-
-    uint32_t seed = esp_random();
 #endif
+
+#ifdef HOST_TIMER
+#ifndef _WIN64
+    uint32_t seed = esp_random();
+#else
+    uint32_t seed = time(0);
+#endif
+
     // Set random seed
     srand(seed);
 
@@ -48,7 +51,6 @@ void InitData()
     sys_host::StrikeNum.SetValue(0);
     sys_host::TimeCycle.SetValue(TIMECYCLE_0);
     sys_gui::SuccessState.SetValue(INCORRECT);
-    sys_gui::IsStarted.SetValue(false);
 #else
     // Get init data from HostTimer
     auto jsonDoc = CommonSendRequest(WM_SYSINIT_GET);
@@ -61,7 +63,6 @@ void InitData()
     sys_host::BatteryNum.SetValue(jsonDoc[STR(BatteryNum)].as<uint8_t>());
     sys_host::SerialNum.SetValue(jsonDoc[STR(SerialNum)].as<const char*>());
     sys_host::StrikeNum.SetValue(jsonDoc[STR(StrikeNum)].as<uint8_t>());
-    sys_gui::IsStarted.SetValue(jsonDoc[STR(IsStarted)].as<bool>());
     sys_gui::SuccessState.SetValue(INCORRECT);
 
     // Set random seed
@@ -208,7 +209,6 @@ void ProcessRequest(HWND hwnd, uint32_t msg, JsonDocument jsonDocIn)
         jsonDoc[STR(BatteryNum)] = sys_host::BatteryNum.GetValue();
         jsonDoc[STR(SerialNum)] = sys_host::SerialNum.GetValue();
         jsonDoc[STR(StrikeNum)] = sys_host::StrikeNum.GetValue();
-        jsonDoc[STR(IsStarted)] = sys_gui::IsStarted.GetValue();
     }
     break;
 
