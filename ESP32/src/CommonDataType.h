@@ -5,14 +5,11 @@
 #ifndef _COMMON_DATATYPE_H
 #define _COMMON_DATATYPE_H
 
-#ifdef ARDUINO // Temporary Service for Arduino
-#define HOST_TIMER
-#endif
-
 #include <cstdint>
 #include <tuple>
 #include <array>
 #include <vector>
+#include <array>
 #include <string>
 #include <unordered_map>
 
@@ -43,11 +40,11 @@
 #define debug_println(a) Serial.println(std::string(a).c_str())
 #define MILLISEC_GET millis()
 
+#define INPUT_PIN 22
+#define BUZZER_PIN 26
+
 #define WIFI_SSID "KTANE_Arduino"
 #define WIFI_PASS "KTANE_Arduino"
-
-#define SV_PORT 80
-#define HOST_PORT 81
 
 #define IP_ADD_1 192
 #define IP_ADD_2 168
@@ -61,6 +58,7 @@
 
 #define HTTP_OK 200
 #define HTTP_NOT_FOUND 404
+#define HTTP_RESPONSE "OK"
 
 struct data_pack_t {
     uint8_t target;
@@ -77,6 +75,7 @@ enum
     WM_REQUEST,           // Request/get from other message
     WM_REQUEST_WITH_DATA, // Request/get from other message with data
     WM_RESPONSE,          // Response message from host to client
+    WM_CLIENT_RESPONSE,   // Response message from client to host
     WM_SET_CLIENTSTATE,   // Notify to set ON/OFF status to selected clients
     WM_START_ALL,         // Notify for starting all client
     WM_TIMER_GET,         // Client get timer from host
@@ -86,6 +85,7 @@ enum
     WM_SUCCESSSTATE_SET,  // Client notify host to set client success status
     WM_SYSINIT_GET,       // Client get init system data from host
     WM_STOP_ALL,          // Notify for stoping all client
+    WM_STOP_COMPLETE,     // Notify for all client stopped to Host
 };
 
 #define STRIKE_NUM_MAX 3
