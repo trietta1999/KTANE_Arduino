@@ -61,7 +61,6 @@
 #define HTTP_RESPONSE "OK"
 
 struct data_pack_t {
-    uint8_t target;
     uint32_t base_msg;
     uint32_t msg;
     char data[MAX_SIZE];
@@ -77,9 +76,7 @@ enum
     WM_RESPONSE,          // Response message from host to client
     WM_CLIENT_RESPONSE,   // Response message from client to host
     WM_SET_CLIENTSTATE,   // Notify to set ON/OFF status to selected clients
-    WM_START_ALL,         // Notify for starting all client
     WM_TIMER_GET,         // Client get timer from host
-    WM_TIMER_SET,         // Host set timer
     WM_STRIKENUM_GET,     // Client get strike count from host
     WM_STRIKESTATE_SET,   // Client notify host to set strike status
     WM_SUCCESSSTATE_SET,  // Client notify host to set client success status
