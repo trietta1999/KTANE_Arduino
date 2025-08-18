@@ -803,6 +803,12 @@
     <ClInclude Include="..\..\ESP32\src\ArduinoJson-v7.4.1.h">
       <Filter>Library</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\ESP32\src\CommonService.h">
+      <Filter>Library\CommonService</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ESP32\Hardware.h">
+      <Filter>Library\CommonService</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\ESP32\src\ui\ui.h">
       <Filter>UI</Filter>
     </ClInclude>
@@ -818,22 +824,16 @@
     <ClInclude Include="..\..\ESP32\src\ui\ui_Main.h">
       <Filter>UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\ESP32\src\CommonService.h">
-      <Filter>Library\CommonService</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ESP32\Hardware.h">
-      <Filter>Library\CommonService</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ESP32\src\ui\ui_OrderPlay.h">
+    <ClInclude Include="..\..\ESP32\src\ui\ui_ModuleSelect.h">
       <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ESP32\src\ui\ui_Score.h">
       <Filter>UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\ESP32\src\ui\ui_Setting.h">
+    <ClInclude Include="..\..\ESP32\src\ui\ui_TimerSelect.h">
       <Filter>UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\ESP32\src\ui\ui_TimerSetting.h">
+    <ClInclude Include="..\..\ESP32\src\ui\ui_Information.h">
       <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1466,6 +1466,9 @@
     <ClCompile Include="..\..\ESP32\src\ui\ui_events.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\CommonService.cpp">
+      <Filter>Library\CommonService</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\ESP32\src\ui\ui.c">
       <Filter>UI</Filter>
     </ClCompile>
@@ -1478,13 +1481,16 @@
     <ClCompile Include="..\..\ESP32\src\ui\ui_font_Digit.c">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\ui\ui_font_Digit_45.c">
+      <Filter>UI</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\ESP32\src\ui\ui_font_XFail.c">
       <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ESP32\src\ui\ui_helpers.c">
       <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ESP32\src\ui\ui_img_back_png.c">
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_arrow_right_png.c">
       <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ESP32\src\ui\ui_img_exit_png.c">
@@ -1499,13 +1505,7 @@
     <ClCompile Include="..\..\ESP32\src\ui\ui_img_play_png.c">
       <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ESP32\src\ui\ui_img_setting_png.c">
-      <Filter>UI</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ESP32\src\ui\ui_img_success_png.c">
-      <Filter>UI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ESP32\src\ui\ui_img_timer_png.c">
       <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ESP32\src\ui\ui_Login.c">
@@ -1514,25 +1514,22 @@
     <ClCompile Include="..\..\ESP32\src\ui\ui_Main.c">
       <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ESP32\src\CommonService.cpp">
-      <Filter>Library\CommonService</Filter>
+    <ClCompile Include="..\..\ESP32\src\ui\ui_ModuleSelect.c">
+      <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ESP32\src\ui\ui_Score.c">
       <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ESP32\src\ui\ui_Setting.c">
+    <ClCompile Include="..\..\ESP32\src\ui\ui_TimerSelect.c">
       <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ESP32\src\ui\ui_TimerSetting.c">
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_arrow_left_png.c">
       <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ESP32\src\ui\ui_font_Digit_45.c">
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_info_i_png.c">
       <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ESP32\src\ui\ui_img_order_play_png.c">
-      <Filter>UI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ESP32\src\ui\ui_OrderPlay.c">
+    <ClCompile Include="..\..\ESP32\src\ui\ui_Information.c">
       <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ESP32\src\CommonService.cpp">

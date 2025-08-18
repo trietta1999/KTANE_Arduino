@@ -5,7 +5,7 @@
 
 #include "ui.h"
 
-lv_obj_t * ui_Setting = NULL;
+lv_obj_t * ui_ModuleSelect = NULL;
 lv_obj_t * ui_Panel2 = NULL;
 lv_obj_t * ui_Label6 = NULL;
 lv_obj_t * ui_Container1 = NULL;
@@ -44,25 +44,25 @@ void ui_event_btnSettingBack(lv_event_t * e)
     lv_event_code_t event_code = lv_event_get_code(e);
 
     if(event_code == LV_EVENT_CLICKED) {
-        _ui_screen_change(&ui_Main, LV_SCR_LOAD_ANIM_MOVE_RIGHT, 100, 0, &ui_Main_screen_init);
-        Setting_OnButtonBackClick(e);
+        _ui_screen_change(&ui_TimerSelect, LV_SCR_LOAD_ANIM_MOVE_LEFT, 100, 0, &ui_TimerSelect_screen_init);
+        ModuleSelect_OnButtonNextClick(e);
     }
 }
 
 // build funtions
 
-void ui_Setting_screen_init(void)
+void ui_ModuleSelect_screen_init(void)
 {
-    ui_Setting = lv_obj_create(NULL);
-    lv_obj_remove_flag(ui_Setting, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
-    lv_obj_set_flex_flow(ui_Setting, LV_FLEX_FLOW_ROW_WRAP);
-    lv_obj_set_flex_align(ui_Setting, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
-    lv_obj_set_style_bg_color(ui_Setting, lv_color_hex(0xBEBEBE), LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_opa(ui_Setting, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_pad_row(ui_Setting, 3, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_pad_column(ui_Setting, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+    ui_ModuleSelect = lv_obj_create(NULL);
+    lv_obj_remove_flag(ui_ModuleSelect, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
+    lv_obj_set_flex_flow(ui_ModuleSelect, LV_FLEX_FLOW_ROW_WRAP);
+    lv_obj_set_flex_align(ui_ModuleSelect, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
+    lv_obj_set_style_bg_color(ui_ModuleSelect, lv_color_hex(0xBEBEBE), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_ModuleSelect, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_row(ui_ModuleSelect, 3, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_pad_column(ui_ModuleSelect, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    ui_Panel2 = lv_obj_create(ui_Setting);
+    ui_Panel2 = lv_obj_create(ui_ModuleSelect);
     lv_obj_set_width(ui_Panel2, 315);
     lv_obj_set_height(ui_Panel2, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_x(ui_Panel2, 10);
@@ -91,6 +91,8 @@ void ui_Setting_screen_init(void)
     lv_obj_remove_flag(ui_Label6, LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE |
                        LV_OBJ_FLAG_SNAPPABLE | LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_SCROLL_ELASTIC | LV_OBJ_FLAG_SCROLL_MOMENTUM |
                        LV_OBJ_FLAG_SCROLL_CHAIN);     /// Flags
+    lv_obj_set_style_text_color(ui_Label6, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_Label6, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_font(ui_Label6, &lv_font_montserrat_16, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_Container1 = lv_obj_create(ui_Panel2);
@@ -119,6 +121,8 @@ void ui_Setting_screen_init(void)
     lv_obj_remove_flag(ui_cbSettingModule1,
                        LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE |
                        LV_OBJ_FLAG_SNAPPABLE);     /// Flags
+    lv_obj_set_style_text_color(ui_cbSettingModule1, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_cbSettingModule1, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_cbSettingModule2 = lv_checkbox_create(ui_Container1);
     lv_checkbox_set_text(ui_cbSettingModule2, "The Button");
@@ -131,6 +135,8 @@ void ui_Setting_screen_init(void)
     lv_obj_remove_flag(ui_cbSettingModule2,
                        LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE |
                        LV_OBJ_FLAG_SNAPPABLE);     /// Flags
+    lv_obj_set_style_text_color(ui_cbSettingModule2, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_cbSettingModule2, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_cbSettingModule3 = lv_checkbox_create(ui_Container1);
     lv_checkbox_set_text(ui_cbSettingModule3, "Keypads");
@@ -143,6 +149,8 @@ void ui_Setting_screen_init(void)
     lv_obj_remove_flag(ui_cbSettingModule3,
                        LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE |
                        LV_OBJ_FLAG_SNAPPABLE);     /// Flags
+    lv_obj_set_style_text_color(ui_cbSettingModule3, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_cbSettingModule3, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_cbSettingModule4 = lv_checkbox_create(ui_Container1);
     lv_checkbox_set_text(ui_cbSettingModule4, "Simon Says");
@@ -155,6 +163,8 @@ void ui_Setting_screen_init(void)
     lv_obj_remove_flag(ui_cbSettingModule4,
                        LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE |
                        LV_OBJ_FLAG_SNAPPABLE);     /// Flags
+    lv_obj_set_style_text_color(ui_cbSettingModule4, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_cbSettingModule4, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_cbSettingModule5 = lv_checkbox_create(ui_Container1);
     lv_checkbox_set_text(ui_cbSettingModule5, "Who's on First");
@@ -167,6 +177,8 @@ void ui_Setting_screen_init(void)
     lv_obj_remove_flag(ui_cbSettingModule5,
                        LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE |
                        LV_OBJ_FLAG_SNAPPABLE);     /// Flags
+    lv_obj_set_style_text_color(ui_cbSettingModule5, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_cbSettingModule5, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_cbSettingModule6 = lv_checkbox_create(ui_Container1);
     lv_checkbox_set_text(ui_cbSettingModule6, "Memory");
@@ -179,6 +191,8 @@ void ui_Setting_screen_init(void)
     lv_obj_remove_flag(ui_cbSettingModule6,
                        LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE |
                        LV_OBJ_FLAG_SNAPPABLE);     /// Flags
+    lv_obj_set_style_text_color(ui_cbSettingModule6, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_cbSettingModule6, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_Container2 = lv_obj_create(ui_Panel2);
     lv_obj_remove_style_all(ui_Container2);
@@ -206,6 +220,8 @@ void ui_Setting_screen_init(void)
     lv_obj_remove_flag(ui_cbSettingModule7,
                        LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE |
                        LV_OBJ_FLAG_SNAPPABLE);     /// Flags
+    lv_obj_set_style_text_color(ui_cbSettingModule7, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_cbSettingModule7, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_cbSettingModule8 = lv_checkbox_create(ui_Container2);
     lv_checkbox_set_text(ui_cbSettingModule8, "Complicated Wires");
@@ -218,7 +234,8 @@ void ui_Setting_screen_init(void)
     lv_obj_remove_flag(ui_cbSettingModule8,
                        LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE |
                        LV_OBJ_FLAG_SNAPPABLE);     /// Flags
-    lv_obj_set_style_text_align(ui_cbSettingModule8, LV_TEXT_ALIGN_AUTO, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_color(ui_cbSettingModule8, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_cbSettingModule8, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_cbSettingModule9 = lv_checkbox_create(ui_Container2);
     lv_checkbox_set_text(ui_cbSettingModule9, "Wire Sequences");
@@ -231,6 +248,8 @@ void ui_Setting_screen_init(void)
     lv_obj_remove_flag(ui_cbSettingModule9,
                        LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE |
                        LV_OBJ_FLAG_SNAPPABLE);     /// Flags
+    lv_obj_set_style_text_color(ui_cbSettingModule9, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_cbSettingModule9, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_cbSettingModule10 = lv_checkbox_create(ui_Container2);
     lv_checkbox_set_text(ui_cbSettingModule10, "Mazes");
@@ -243,6 +262,8 @@ void ui_Setting_screen_init(void)
     lv_obj_remove_flag(ui_cbSettingModule10,
                        LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE |
                        LV_OBJ_FLAG_SNAPPABLE);     /// Flags
+    lv_obj_set_style_text_color(ui_cbSettingModule10, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_cbSettingModule10, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_cbSettingModule11 = lv_checkbox_create(ui_Container2);
     lv_checkbox_set_text(ui_cbSettingModule11, "Passwords");
@@ -255,8 +276,10 @@ void ui_Setting_screen_init(void)
     lv_obj_remove_flag(ui_cbSettingModule11,
                        LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE |
                        LV_OBJ_FLAG_SNAPPABLE);     /// Flags
+    lv_obj_set_style_text_color(ui_cbSettingModule11, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_cbSettingModule11, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    ui_Panel1 = lv_obj_create(ui_Setting);
+    ui_Panel1 = lv_obj_create(ui_ModuleSelect);
     lv_obj_set_width(ui_Panel1, 315);
     lv_obj_set_height(ui_Panel1, LV_SIZE_CONTENT);    /// 1
     lv_obj_set_x(ui_Panel1, 10);
@@ -285,6 +308,8 @@ void ui_Setting_screen_init(void)
     lv_obj_remove_flag(ui_Label3, LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE |
                        LV_OBJ_FLAG_SNAPPABLE | LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_SCROLL_ELASTIC | LV_OBJ_FLAG_SCROLL_MOMENTUM |
                        LV_OBJ_FLAG_SCROLL_CHAIN);     /// Flags
+    lv_obj_set_style_text_color(ui_Label3, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_Label3, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_font(ui_Label3, &lv_font_montserrat_16, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_Container3 = lv_obj_create(ui_Panel1);
@@ -313,6 +338,8 @@ void ui_Setting_screen_init(void)
     lv_obj_remove_flag(ui_cbSettingNeedyModule1,
                        LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE |
                        LV_OBJ_FLAG_SNAPPABLE);     /// Flags
+    lv_obj_set_style_text_color(ui_cbSettingNeedyModule1, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_cbSettingNeedyModule1, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_cbSettingNeedyModule2 = lv_checkbox_create(ui_Container3);
     lv_checkbox_set_text(ui_cbSettingNeedyModule2, "Capacitor Discharge");
@@ -325,6 +352,8 @@ void ui_Setting_screen_init(void)
     lv_obj_remove_flag(ui_cbSettingNeedyModule2,
                        LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE |
                        LV_OBJ_FLAG_SNAPPABLE);     /// Flags
+    lv_obj_set_style_text_color(ui_cbSettingNeedyModule2, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_cbSettingNeedyModule2, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_Container4 = lv_obj_create(ui_Panel1);
     lv_obj_remove_style_all(ui_Container4);
@@ -352,8 +381,10 @@ void ui_Setting_screen_init(void)
     lv_obj_remove_flag(ui_cbSettingNeedyModule3,
                        LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE |
                        LV_OBJ_FLAG_SNAPPABLE);     /// Flags
+    lv_obj_set_style_text_color(ui_cbSettingNeedyModule3, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_opa(ui_cbSettingNeedyModule3, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
-    ui_btnSettingBack = lv_button_create(ui_Setting);
+    ui_btnSettingBack = lv_button_create(ui_ModuleSelect);
     lv_obj_set_width(ui_btnSettingBack, 45);
     lv_obj_set_height(ui_btnSettingBack, 45);
     lv_obj_set_x(ui_btnSettingBack, 134);
@@ -363,7 +394,7 @@ void ui_Setting_screen_init(void)
     lv_obj_remove_flag(ui_btnSettingBack, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
     lv_obj_set_style_bg_color(ui_btnSettingBack, lv_color_hex(0x303030), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_opa(ui_btnSettingBack, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_image_src(ui_btnSettingBack, &ui_img_back_png, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_image_src(ui_btnSettingBack, &ui_img_arrow_right_png, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_image_recolor(ui_btnSettingBack, lv_color_hex(0xFFFFFF), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_bg_image_recolor_opa(ui_btnSettingBack, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_border_color(ui_btnSettingBack, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -378,12 +409,12 @@ void ui_Setting_screen_init(void)
 
 }
 
-void ui_Setting_screen_destroy(void)
+void ui_ModuleSelect_screen_destroy(void)
 {
-    if(ui_Setting) lv_obj_del(ui_Setting);
+    if(ui_ModuleSelect) lv_obj_del(ui_ModuleSelect);
 
     // NULL screen variables
-    ui_Setting = NULL;
+    ui_ModuleSelect = NULL;
     ui_Panel2 = NULL;
     ui_Label6 = NULL;
     ui_Container1 = NULL;

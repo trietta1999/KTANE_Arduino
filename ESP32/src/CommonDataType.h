@@ -12,6 +12,10 @@
 #include <string>
 #include <unordered_map>
 
+#ifndef HOST_TIMER
+#define HOST_TIMER
+#endif
+
 #define STR(a) #a
 
 #ifdef _WIN64
@@ -57,7 +61,6 @@
 
 #define HTTP_OK 200
 #define HTTP_NOT_FOUND 404
-#define HTTP_RESPONSE "OK"
 
 struct data_pack_t {
     uint32_t base_msg;
@@ -98,7 +101,7 @@ enum
 
 #define BEEP_FRE 3000
 #define BEEP_INCREASE_DURATION 50
-#define BEEP_TIMEOUT 2000
+#define BEEP_TIMEOUT 3000
 
 #define STATE_CHECKED 3
 #define STATE_UNCHECK 2

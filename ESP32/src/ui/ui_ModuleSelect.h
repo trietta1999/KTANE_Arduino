@@ -3,17 +3,17 @@
 // LVGL version: 9.1.0
 // Project name: Host_Timer_Project
 
-#ifndef UI_SETTING_H
-#define UI_SETTING_H
+#ifndef UI_MODULESELECT_H
+#define UI_MODULESELECT_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-// SCREEN: ui_Setting
-extern void ui_Setting_screen_init(void);
-extern void ui_Setting_screen_destroy(void);
-extern lv_obj_t * ui_Setting;
+// SCREEN: ui_ModuleSelect
+extern void ui_ModuleSelect_screen_init(void);
+extern void ui_ModuleSelect_screen_destroy(void);
+extern lv_obj_t * ui_ModuleSelect;
 extern lv_obj_t * ui_Panel2;
 extern lv_obj_t * ui_Label6;
 extern lv_obj_t * ui_Container1;

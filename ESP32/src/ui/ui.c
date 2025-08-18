@@ -32,10 +32,10 @@ void ui_init(void)
     lv_disp_set_theme(dispp, theme);
     ui_Login_screen_init();
     ui_Main_screen_init();
-    ui_Setting_screen_init();
-    ui_TimerSetting_screen_init();
+    ui_ModuleSelect_screen_init();
+    ui_TimerSelect_screen_init();
     ui_Score_screen_init();
-    ui_OrderPlay_screen_init();
+    ui_Information_screen_init();
     ui____initial_actions0 = lv_obj_create(NULL);
     lv_disp_load_scr(ui_Login);
 }
@@ -44,8 +44,8 @@ void ui_destroy(void)
 {
     ui_Login_screen_destroy();
     ui_Main_screen_destroy();
-    ui_Setting_screen_destroy();
-    ui_TimerSetting_screen_destroy();
+    ui_ModuleSelect_screen_destroy();
+    ui_TimerSelect_screen_destroy();
     ui_Score_screen_destroy();
-    ui_OrderPlay_screen_destroy();
+    ui_Information_screen_destroy();
 }

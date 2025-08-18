@@ -30,3 +30,15 @@ def Score_OnRollerOrderChange(event_struct):
 def OrderPlay_OnLoaded(event_struct):
     return
 
+
+def On_TimerSelect_NextSave(event_struct):
+    return
+
+
+def ModuleSelect_OnButtonNextClick(event_struct):
+    return
+
+
+def TimerSelect_OnButtonNextClick(event_struct):
+    return
+

@@ -24,6 +24,8 @@ extern lv_obj_t * ui_rlScoreOrder;
 extern lv_obj_t * ui_rlScoreModuleNum;
 extern lv_obj_t * ui_rlScoreCompletionTime;
 extern lv_obj_t * ui_rlScoreResult;
+extern void ui_event_Button3(lv_event_t * e);
+extern lv_obj_t * ui_Button3;
 // CUSTOM VARIABLES
 
 #ifdef __cplusplus

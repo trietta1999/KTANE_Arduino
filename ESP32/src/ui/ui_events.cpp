@@ -6,10 +6,12 @@
 #include "ui.h"
 #include "../CommonData.h"
 #include "../CommonLibrary.h"
+#include "../CommonService.h"
 
 std::unordered_map<MODULE_NAME, lv_obj_t*> mapCbSettingModule = { };
-std::unordered_map<MODULE_NAME, lv_obj_t*> mapCbOPModule = { };
 std::string strikeValue = "";
+
+JsonDocument moduleStatusMapJson;
 
 struct e_timer_t
 {
@@ -42,15 +44,19 @@ void CreateTimer()
             || (sys_host::StrikeNum.GetValue() >= STRIKE_NUM_MAX)
             )
         {
-            sys_gui::SuccessState.SetValue(STATE_UNCHECK);
-            sys_gui::IsStarted.SetValue(false);
-
             lv_timer_del(timer);
             timer = nullptr;
             countdownTimer.timer = nullptr;
 
+            if (sys_gui::SuccessState.GetValue() != STATE_CHECKED)
+            {
+                CommonSendRequest(WM_STOP_ALL);
+            }
+
 #ifdef _WIN64
             ::Beep(BEEP_FRE, BEEP_TIMEOUT);
+#else
+            //Beep(BEEP_FRE, BEEP_TIMEOUT);
 #endif
 
             return;
@@ -75,6 +81,8 @@ void CreateTimer()
 
 #ifdef _WIN64
         ::Beep(BEEP_FRE, BEEP_INCREASE_DURATION);
+#else
+        //Beep(BEEP_FRE, BEEP_INCREASE_DURATION);
 #endif
         }, sys_host::TimeCycle.GetValue(), nullptr);
 }
@@ -103,27 +111,10 @@ void Init()
         { MODULE_NAME::Knobs             , ui_cbSettingNeedyModule3 },
     };
 
-    mapCbOPModule = {
-    { MODULE_NAME::Wires             , ui_cbOPModule1      },
-    { MODULE_NAME::TheButton         , ui_cbOPModule2      },
-    { MODULE_NAME::Keypads           , ui_cbOPModule3      },
-    { MODULE_NAME::SimonSays         , ui_cbOPModule4      },
-    { MODULE_NAME::WhosOnFirst       , ui_cbOPModule5      },
-    { MODULE_NAME::Memory            , ui_cbOPModule6      },
-    { MODULE_NAME::MorseCode         , ui_cbOPModule7      },
-    { MODULE_NAME::ComplicatedWires  , ui_cbOPModule8      },
-    { MODULE_NAME::WireSequences     , ui_cbOPModule9      },
-    { MODULE_NAME::Mazes             , ui_cbOPModule10     },
-    { MODULE_NAME::Passwords         , ui_cbOPModule11     },
-    { MODULE_NAME::VentingGas        , ui_cbOPNeedyModule1 },
-    { MODULE_NAME::CapacitorDischarge, ui_cbOPNeedyModule2 },
-    { MODULE_NAME::Knobs             , ui_cbOPNeedyModule3 },
-    };
-
-    // Update first timer time
-    TimerSetting_OnButtonSaveClick(nullptr);
-
-    sys_host::ModuleStatus.SetValue(true);
+#ifdef _WIN64
+    // Uncheck Wires module
+    lv_obj_remove_state(ui_cbSettingModule1, LV_STATE_CHECKED);
+#endif
 }
 
 void AutoUpdate()
@@ -135,7 +126,7 @@ void AutoUpdate()
         lv_label_set_text(ui_lblTimer, countdownTimer.str);
     }
 
-    if (sys_gui::IsStarted.GetValue())
+    if (sys_host::ModuleStatus.GetValue())
     {
         // Get running time
         auto currentTime = MILLISEC_GET - endlessTimer.startTime;
@@ -169,19 +160,23 @@ void AutoUpdate()
         }
     }
 
-    //if (sys_gui::SuccessState.GetValue() != INCORRECT)
-    //{
-    //    lv_obj_clear_flag(ui_imgResult, LV_OBJ_FLAG_HIDDEN);
+    if (sys_host::ModuleStatus.GetState())
+    {
+        if (!sys_host::ModuleStatus.GetValue()) {
+            lv_obj_clear_flag(ui_imgResult, LV_OBJ_FLAG_HIDDEN);
 
-    //    if (sys_gui::SuccessState.GetValue() == STATE_UNCHECK)
-    //    {
-    //        lv_obj_add_state(ui_imgResult, LV_STATE_DISABLED);
-    //    }
-    //    else if (sys_gui::SuccessState.GetValue() == STATE_CHECKED)
-    //    {
-    //        lv_obj_add_state(ui_imgResult, LV_STATE_CHECKED);
-    //    }
-    //}
+            if (sys_gui::SuccessState.GetValue() == STATE_UNCHECK)
+            {
+                lv_obj_add_state(ui_imgResult, LV_STATE_DISABLED);
+            }
+            else if (sys_gui::SuccessState.GetValue() == STATE_CHECKED)
+            {
+                lv_obj_add_state(ui_imgResult, LV_STATE_CHECKED);
+            }
+
+            sys_host::ModuleStatus.ResetState();
+        }
+    }
 }
 
 void OnBrightnessChange(lv_event_t* e)
@@ -206,7 +201,7 @@ void Login_OnTextAreaEdit(lv_event_t* e)
             if (lv_event_get_code(e) == LV_EVENT_READY)
             {
                 // Change to main screen
-                _ui_screen_change(&ui_Main, LV_SCR_LOAD_ANIM_FADE_ON, 100, 0, &ui_Main_screen_init);
+                _ui_screen_change(&ui_ModuleSelect, LV_SCR_LOAD_ANIM_MOVE_LEFT, 100, 0, &ui_ModuleSelect_screen_init);
             }
         }
         // Incorrect verify code
@@ -223,16 +218,36 @@ void Login_OnTextAreaEdit(lv_event_t* e)
     }
 }
 
-void Main_OnButtonPlayClick(lv_event_t* e)
+void ModuleSelect_OnButtonNextClick(lv_event_t* e)
 {
-    sys_gui::IsStarted.SetValue(true);
-    CreateTimer();
+    auto moduleStatusMap = sys_gui::ModuleStatusMap.GetValue();
 
-    // Set start time from system time
-    endlessTimer.startTime = MILLISEC_GET;
+    // Clear module status map
+    moduleStatusMap.clear();
+
+    for (const auto& cbSettingModule : mapCbSettingModule)
+    {
+        auto moduleEnum = cbSettingModule.first;
+        auto moduleName = map_MODULE_NAME[moduleEnum];
+
+        // Set module status map
+        if (lv_obj_get_state(cbSettingModule.second) == STATE_CHECKED)
+        {
+            moduleStatusMap.insert(std::make_pair(moduleName, MODULE_STATUS::ON));
+            moduleStatusMapJson[(uint8_t)moduleEnum] = (uint8_t)MODULE_STATUS::ON;
+        }
+        else if (lv_obj_get_state(cbSettingModule.second) == STATE_UNCHECK)
+        {
+            moduleStatusMap.insert(std::make_pair(moduleName, MODULE_STATUS::OFF));
+            moduleStatusMapJson[(uint8_t)moduleEnum] = (uint8_t)MODULE_STATUS::OFF;
+        }
+    }
+
+    // Update module status map
+    sys_gui::ModuleStatusMap.SetValue(moduleStatusMap);
 }
 
-void TimerSetting_OnButtonSaveClick(lv_event_t* e)
+void TimerSelect_OnButtonNextClick(lv_event_t* e)
 {
     char bufMinute[3] = { 0 }, bufSecond[3] = { 0 };
 
@@ -244,6 +259,19 @@ void TimerSetting_OnButtonSaveClick(lv_event_t* e)
     sys_host::TimeClock.SetValue(std::make_pair(std::stoi(bufMinute), std::stoi(bufSecond)));
 }
 
+void Main_OnButtonPlayClick(lv_event_t* e)
+{
+    // Start Host Timer
+    sys_host::ModuleStatus.SetValue(true);
+    CreateTimer();
+
+    // Set start time from system time
+    endlessTimer.startTime = MILLISEC_GET;
+
+    // Send module status to Transporter
+    CommonSendRequestWithData(WM_SET_CLIENTSTATE, moduleStatusMapJson);
+}
+
 void Score_OnRollerOrderChange(lv_event_t* e)
 {
     uint32_t index = lv_roller_get_selected(ui_rlScoreOrder);
@@ -251,30 +279,6 @@ void Score_OnRollerOrderChange(lv_event_t* e)
     lv_roller_set_selected(ui_rlScoreModuleNum, index, LV_ANIM_ON);
     lv_roller_set_selected(ui_rlScoreCompletionTime, index, LV_ANIM_ON);
     lv_roller_set_selected(ui_rlScoreResult, index, LV_ANIM_ON);
-}
-
-void Setting_OnButtonBackClick(lv_event_t* e)
-{
-    auto moduleStatusMap = sys_gui::ModuleStatusMap.GetValue();
-
-    // Clear module status map
-    moduleStatusMap.clear();
-
-    for (const auto& cbSettingModule : mapCbSettingModule)
-    {
-        // Set module status map
-        if (lv_obj_get_state(cbSettingModule.second) == STATE_CHECKED)
-        {
-            moduleStatusMap.insert(std::make_pair(map_MODULE_NAME[cbSettingModule.first], MODULE_STATUS::ON));
-        }
-        else if (lv_obj_get_state(cbSettingModule.second) == STATE_UNCHECK)
-        {
-            moduleStatusMap.insert(std::make_pair(map_MODULE_NAME[cbSettingModule.first], MODULE_STATUS::OFF));
-        }
-    }
-
-    // Update module status map
-    sys_gui::ModuleStatusMap.SetValue(moduleStatusMap);
 }
 
 void Score_OnLoaded(lv_event_t* e)

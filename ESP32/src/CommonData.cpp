@@ -36,7 +36,6 @@ namespace sys_gui
 
 // Allow modification
 #pragma region Custom_data
-
 #pragma endregion
 
 // Add auto reset state for custom data only

@@ -7,8 +7,12 @@
 
 #ifndef _WIN64
 #include <WiFi.h>
+#include <WebServer.h>
 #include <HTTPClient.h>
 #include "src/CommonData.h"
+#include "src/CommonService.h"
+
+WebServer server(IP_ADD_4);
 
 void WiFiReconnect() {
   if (WiFi.status() != WL_CONNECTED) {
@@ -22,6 +26,42 @@ void WiFiReconnect() {
 
 void Beep(uint16_t frequency, uint16_t duration) {
   tone(BUZZER_PIN, frequency, duration);
+}
+
+void OnMainServer() {
+  JsonDocument jsonMsg;
+  JsonDocument jsonData;
+  JsonDocument jsonResult;
+  String jsonResultStr = "";
+  data_pack_t messageStruct = { 0 };
+
+  // Get POST data
+  String postBody = server.arg("plain");
+
+  // Convert message string to json
+  deserializeJson(jsonMsg, postBody);
+
+  // Get message into struct
+  messageStruct.base_msg = jsonMsg[STR(base_msg)].as<uint32_t>();
+  messageStruct.msg = jsonMsg[STR(msg)].as<uint32_t>();
+  strcpy(messageStruct.data, jsonMsg[STR(data)].as<const char*>());
+
+  // Convert message data to json
+  deserializeJson(jsonData, messageStruct.data);
+
+  // Print message
+  Serial.println(messageStruct.base_msg);
+  Serial.println(messageStruct.msg);
+  Serial.println(messageStruct.data);
+
+  // Process message
+  jsonResult = ProcessRequest(0, messageStruct.msg, jsonData);
+
+  // Convert json to string
+  serializeJson(jsonResult, jsonResultStr);
+
+  // Response data
+  server.send(HTTP_OK, "application/json", jsonResultStr);
 }
 
 void HardwareSetup() {
@@ -43,8 +83,19 @@ void HardwareSetup() {
   Serial.print("IP Address: ");
   Serial.println(WiFi.localIP());
 
+  // Setup server
+  server.on("/", HTTP_POST, OnMainServer);
+
+  // Start server
+  server.begin();
+  Serial.printf("HTTP server started on port: %d\n", IP_ADD_4);
+
   // Setup I/O
   pinMode(BUZZER_PIN, OUTPUT);
+}
+
+void ServerHandleClient() {
+  server.handleClient();
 }
 
 void SendMessage(data_pack_t byteData) {

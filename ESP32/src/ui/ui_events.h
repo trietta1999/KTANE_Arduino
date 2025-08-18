@@ -13,11 +13,10 @@ extern "C" {
 void Login_OnTextAreaEdit(lv_event_t * e);
 void Main_OnButtonPlayClick(lv_event_t * e);
 void OnBrightnessChange(lv_event_t * e);
-void Setting_OnButtonBackClick(lv_event_t * e);
-void TimerSetting_OnButtonSaveClick(lv_event_t * e);
+void ModuleSelect_OnButtonNextClick(lv_event_t * e);
+void TimerSelect_OnButtonNextClick(lv_event_t * e);
 void Score_OnLoaded(lv_event_t * e);
 void Score_OnRollerOrderChange(lv_event_t * e);
-void OrderPlay_OnLoaded(lv_event_t * e);
 
 #ifdef __cplusplus
 } /*extern "C"*/

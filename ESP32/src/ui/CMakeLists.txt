@@ -1,21 +1,20 @@
 SET(SOURCES ui_Login.c
     ui_Main.c
-    ui_Setting.c
-    ui_TimerSetting.c
+    ui_ModuleSelect.c
+    ui_TimerSelect.c
     ui_Score.c
-    ui_OrderPlay.c
+    ui_Information.c
     ui.c
     ui_comp_hook.c
     ui_helpers.c
     ui_events.cpp
     ui_img_play_png.c
-    ui_img_setting_png.c
-    ui_img_timer_png.c
     ui_img_leaderboard_png.c
-    ui_img_order_play_png.c
+    ui_img_info_i_png.c
     ui_img_success_png.c
     ui_img_fail_png.c
-    ui_img_back_png.c
+    ui_img_arrow_right_png.c
+    ui_img_arrow_left_png.c
     ui_img_exit_png.c
     fonts/ui_font_Digit.c
     fonts/ui_font_Digit_45.c
