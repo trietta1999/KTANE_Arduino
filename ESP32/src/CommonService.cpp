@@ -222,6 +222,27 @@ JsonDocument ProcessRequest(HWND hwnd, uint32_t msg, JsonDocument jsonDocIn)
     }
     break;
 
+    case WM_STOP_COMPLETE:
+    {
+        auto mapModuleStatus = sys_gui::ModuleStatusMap.GetValue();
+
+        // Find if any module still ON
+        auto result = std::find_if(mapModuleStatus.begin(), mapModuleStatus.end(),
+            [](const std::pair<std::string, MODULE_STATUS>& item) {
+                return item.second == MODULE_STATUS::ON;
+            });
+
+        if (result != mapModuleStatus.end())
+        {
+            // Stop HostTimer
+            sys_host::ModuleStatus.SetValue(false);
+
+            // Set fail state
+            sys_gui::SuccessState.SetValue(STATE_UNCHECK);
+        }
+    }
+    break;
+
     default:
         break;
     }
