@@ -44,6 +44,7 @@ CData<WIRE_IN_ORDER> CorrectWireIndex;
 void UpdateAll()
 {
     sys_gui::Brightness.ResetState();
+    sys_gui::SuccessState.ResetState();
     WireColorList.ResetState();
     CorrectWireIndex.ResetState();
 }
