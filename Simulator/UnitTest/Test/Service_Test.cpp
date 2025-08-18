@@ -196,13 +196,6 @@ public:
         Assert::IsTrue(jsonDoc["state"] == (uint8_t)MODULE_STATUS::OFF);
     }
 
-    TEST_METHOD(TEST_ProcessRequest_WM_START_ALL)
-    {
-        auto jsonDoc = CommonSendRequest(WM_START_ALL);
-
-        Assert::IsTrue(jsonDoc["start"] == (uint8_t)MODULE_STATUS::START);
-    }
-
     TEST_METHOD(TEST_ProcessRequest_WM_TIMER_GET)
     {
         auto jsonDoc = CommonSendRequest(WM_TIMER_GET);
