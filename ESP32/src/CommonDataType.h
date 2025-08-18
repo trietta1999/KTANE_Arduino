@@ -12,6 +12,7 @@
 #include <cstdint>
 #include <tuple>
 #include <vector>
+#include <array>
 #include <string>
 #include <unordered_map>
 
@@ -19,11 +20,11 @@
 
 #ifdef _WIN64
 #define HOST_NAME mapWstr_MODULE_NAME[MODULE_NAME::HostTimer].c_str()
-#define CLIENT_NAME mapWstr_MODULE_NAME[MODULE_NAME::VentingGas].c_str()
-#define CLIENT_NAME_FOR_JSON map_MODULE_NAME[MODULE_NAME::VentingGas].c_str()
+#define CLIENT_NAME mapWstr_MODULE_NAME[MODULE_NAME::Transporter].c_str()
+#define CLIENT_NAME_FOR_JSON map_MODULE_NAME[MODULE_NAME::Transporter].c_str()
 #else
 #define HOST_NAME map_MODULE_NAME[MODULE_NAME::HostTimer].c_str()
-#define CLIENT_NAME map_MODULE_NAME[MODULE_NAME::VentingGas].c_str()
+#define CLIENT_NAME map_MODULE_NAME[MODULE_NAME::Transporter].c_str()
 #endif
 
 #define MAX_SIZE 1000
@@ -37,11 +38,34 @@
 #else
 #include <Arduino.h>
 #define WM_USER 0x0400
-#define HWND void*
-#define DATA_HEADER String("REQUEST|")
-#define DATA_TRAILER String("|ENDREQUEST")
-#define debug_println(a) SerialBT.println(std::string(a).c_str())
+#define HWND uint8_t
+
+#define debug_println(a) Serial.println(std::string(a).c_str())
 #define MILLISEC_GET millis()
+
+#define WIFI_SSID "KTANE_Arduino"
+#define WIFI_PASS "KTANE_Arduino"
+
+#define IP_ADD_1 192
+#define IP_ADD_2 168
+#define IP_ADD_3 0
+#define IP_ADD_4 (uint8_t)MODULE_NAME::Transporter
+
+#define NETMASK_1 255
+#define NETMASK_2 255
+#define NETMASK_3 255
+#define NETMASK_4 0
+
+#define HTTP_OK 200
+#define HTTP_NOT_FOUND 404
+#define HTTP_RESPONSE "OK"
+
+struct data_pack_t {
+    uint8_t target;
+    uint32_t base_msg;
+    uint32_t msg;
+    char data[MAX_SIZE];
+};
 #endif
 
 enum
@@ -51,15 +75,15 @@ enum
     WM_REQUEST,           // Request/get from other message
     WM_REQUEST_WITH_DATA, // Request/get from other message with data
     WM_RESPONSE,          // Response message from host to client
-    WM_SET_CLIENTSTATE,   // Notify to set ON/OFF status to all client
-    WM_START_ALL,         // Notify for starting all client
+    WM_CLIENT_RESPONSE,   // Response message from client to host
+    WM_SET_CLIENTSTATE,   // Notify to set ON/OFF status to selected clients
     WM_TIMER_GET,         // Client get timer from host
-    WM_TIMER_SET,         // Host set timer
     WM_STRIKENUM_GET,     // Client get strike count from host
     WM_STRIKESTATE_SET,   // Client notify host to set strike status
     WM_SUCCESSSTATE_SET,  // Client notify host to set client success status
     WM_SYSINIT_GET,       // Client get init system data from host
     WM_STOP_ALL,          // Notify for stoping all client
+    WM_STOP_COMPLETE,     // Notify for all client stopped to Host
 };
 
 #define STRIKE_NUM_MAX 3
@@ -76,7 +100,7 @@ enum
 
 #define BEEP_FRE 3000
 #define BEEP_INCREASE_DURATION 50
-#define BEEP_TIMEOUT 2000
+#define BEEP_TIMEOUT 3000
 
 #define STATE_CHECKED 3
 #define STATE_UNCHECK 2
@@ -160,6 +184,7 @@ enum class COMPORT_TYPE
 
 enum class MODULE_NAME
 {
+    MIN,
     DEF_MODULE_NAME(MODULE_NAME, TO_ENUM)
     MAX
 };
@@ -184,45 +209,7 @@ EXTERN_MAP_ENUM_WSTR(MODULE_NAME)
 #pragma endregion
 
 // Allow modification
-#pragma region Custom_datatype
-#define MAX_COUNTDOWN_SEC 40
-#define TIMER_PERIOD_100 100
-#define TIMER_PERIOD_200 200
-#define COUNTDOWN_PERIOD 1000
-#define TIMER_SLEEP 1000
 
-#define EMPTY_STR " "
-#define COMPLETE_MSG "VENTING COMPLETE"
-
-#define DEF_ANSWER_TYPE(e, CREATE) \
-        CREATE(e, YES) \
-        CREATE(e, NO) \
-
-enum class ANSWER_TYPE
-{
-    DEF_ANSWER_TYPE(ANSWER_TYPE, TO_ENUM)
-};
-
-EXTERN_MAP_ENUM_STR(ANSWER_TYPE)
-
-struct question_t {
-    std::string ask;
-    std::string comment;
-    ANSWER_TYPE answer;
-    bool canStrikeWhenFalse;
-
-    bool operator!=(const question_t& other)
-    {
-        if ((this->ask != other.ask) || (this->comment != other.comment) || (this->canStrikeWhenFalse != other.canStrikeWhenFalse))
-        {
-            return true;
-        }
-
-        return false;
-    }
-};
-
-extern std::vector<question_t> listQuestion;
 #pragma endregion
 
 #endif // !_COMMON_DATATYPE_H
