@@ -11,7 +11,7 @@
 
 void InitData();
 void ProcessData();
-void ProcessRequest(HWND, uint32_t, JsonDocument);
+JsonDocument ProcessRequest(HWND, uint32_t, JsonDocument);
 JsonDocument CommonSendRequest(uint32_t);
 JsonDocument CommonSendRequestWithData(uint32_t, JsonDocument);
 
