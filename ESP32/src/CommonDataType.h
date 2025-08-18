@@ -187,6 +187,7 @@ enum class COMPORT_TYPE
 
 enum class MODULE_NAME
 {
+    MIN,
     DEF_MODULE_NAME(MODULE_NAME, TO_ENUM)
     MAX
 };
