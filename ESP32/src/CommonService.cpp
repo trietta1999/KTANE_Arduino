@@ -152,7 +152,7 @@ void ProcessData()
 #endif
 }
 
-void ProcessRequest(HWND hwnd, uint32_t msg, JsonDocument jsonDocIn)
+JsonDocument ProcessRequest(HWND hwnd, uint32_t msg, JsonDocument jsonDocIn)
 {
 #ifdef HOST_TIMER
     JsonDocument jsonDoc;
@@ -232,12 +232,7 @@ void ProcessRequest(HWND hwnd, uint32_t msg, JsonDocument jsonDocIn)
 
     ::SendMessage(hwnd, WM_RESPONSE, NULL, NULL);
 #else
-    data_pack_t byteData = { 0 };
-    byteData.base_msg = WM_RESPONSE;
-    byteData.msg = 0;
-    strcpy(byteData.data, jsonDocStr);
-
-    SendMessage(byteData);
+    return jsonDoc;
 #endif
 #else
     // Client process
