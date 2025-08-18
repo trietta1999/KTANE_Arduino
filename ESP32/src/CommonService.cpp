@@ -158,12 +158,6 @@ void ProcessRequest(HWND hwnd, uint32_t msg, JsonDocument jsonDocIn)
 
     switch (msg)
     {
-    case WM_START_ALL:
-    {
-        jsonDoc["start"] = (uint8_t)MODULE_STATUS::START;
-    }
-    break;
-
     case WM_TIMER_GET:
     {
         auto time = sys_host::TimeClock.GetValue();
@@ -210,12 +204,6 @@ void ProcessRequest(HWND hwnd, uint32_t msg, JsonDocument jsonDocIn)
     }
     break;
 
-    case WM_STOP_ALL:
-    {
-        jsonDoc["stop"] = true;
-    }
-    break;
-
     default:
         break;
     }
@@ -244,7 +232,6 @@ void ProcessRequest(HWND hwnd, uint32_t msg, JsonDocument jsonDocIn)
     ::SendMessage(hwnd, WM_RESPONSE, NULL, NULL);
 #else
     data_pack_t byteData = { 0 };
-    byteData.target = hwnd;
     byteData.base_msg = WM_RESPONSE;
     byteData.msg = 0;
     strcpy(byteData.data, jsonDocStr);
@@ -289,7 +276,6 @@ JsonDocument CommonSendRequest(uint32_t msg)
     ::SendMessage(hwnd, WM_REQUEST, msg, NULL);
 #else
     data_pack_t byteData = { 0 };
-    byteData.target = (uint8_t)MODULE_NAME::HostTimer;
     byteData.base_msg = WM_REQUEST;
     byteData.msg = msg;
 
@@ -333,7 +319,6 @@ JsonDocument CommonSendRequestWithData(uint32_t msg, JsonDocument jsonValue)
     serializeJson(jsonValue, jsonDocStr);
 
     data_pack_t byteData = { 0 };
-    byteData.target = (uint8_t)MODULE_NAME::HostTimer;
     byteData.base_msg = WM_REQUEST_WITH_DATA;
     byteData.msg = msg;
     strcpy(byteData.data, jsonDocStr);
