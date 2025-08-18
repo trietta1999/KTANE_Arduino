@@ -158,9 +158,9 @@ void ProcessData()
 
 JsonDocument ProcessRequest(HWND hwnd, uint32_t msg, JsonDocument jsonDocIn)
 {
-#ifdef HOST_TIMER
     JsonDocument jsonDoc;
 
+#ifdef HOST_TIMER
     switch (msg)
     {
     case WM_TIMER_GET:
@@ -194,6 +194,21 @@ JsonDocument ProcessRequest(HWND hwnd, uint32_t msg, JsonDocument jsonDocIn)
 
             sys_gui::ModuleStatusMap.SetValue(mapModuleStatus);
         }
+
+        // Find if any module still ON
+        auto result = std::find_if(mapModuleStatus.begin(), mapModuleStatus.end(),
+            [](const std::pair<std::string, MODULE_STATUS>& item) {
+                return item.second == MODULE_STATUS::ON;
+            });
+
+        if (result == mapModuleStatus.end())
+        {
+            // Stop HostTimer
+            sys_host::ModuleStatus.SetValue(false);
+
+            // Set success state
+            sys_gui::SuccessState.SetValue(STATE_CHECKED);
+        }
     }
     break;
 
@@ -213,21 +228,21 @@ JsonDocument ProcessRequest(HWND hwnd, uint32_t msg, JsonDocument jsonDocIn)
         break;
     }
 
+#ifdef _WIN64
     char jsonDocStr[MAX_SIZE] = { 0 };
     serializeJson(jsonDoc, jsonDocStr);
 
-#ifdef _WIN64
     HANDLE hMapFile = CreateFileMapping(INVALID_HANDLE_VALUE, NULL, PAGE_READWRITE, 0, BUFFER_SIZE, SHARED_MEM);
     if (!hMapFile)
     {
-        return;
+        return jsonDoc;
     }
 
     LPVOID pBuffer = MapViewOfFile(hMapFile, FILE_MAP_ALL_ACCESS, 0, 0, BUFFER_SIZE);
     if (!pBuffer)
     {
         CloseHandle(hMapFile);
-        return;
+        return jsonDoc;
     }
 
     strcpy((char*)pBuffer, jsonDocStr);
@@ -239,7 +254,7 @@ JsonDocument ProcessRequest(HWND hwnd, uint32_t msg, JsonDocument jsonDocIn)
     return jsonDoc;
 #endif
 #else
-    // Client process
+    return jsonDoc;
 #endif
 }
 
