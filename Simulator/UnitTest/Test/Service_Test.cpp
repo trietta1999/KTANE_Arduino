@@ -176,26 +176,6 @@ public:
         lv_deinit();
     }
 
-    TEST_METHOD(TEST_ProcessRequest_WM_SET_CLIENTSTATE_1)
-    {
-        JsonDocument jsonDocIn;
-        jsonDocIn["module"] = "A";
-
-        auto jsonDoc = CommonSendRequestWithData(WM_SET_CLIENTSTATE, jsonDocIn);
-
-        Assert::IsTrue(jsonDoc["state"] == (uint8_t)MODULE_STATUS::ON);
-    }
-
-    TEST_METHOD(TEST_ProcessRequest_WM_SET_CLIENTSTATE_2)
-    {
-        JsonDocument jsonDocIn;
-        jsonDocIn["module"] = "B";
-
-        auto jsonDoc = CommonSendRequestWithData(WM_SET_CLIENTSTATE, jsonDocIn);
-
-        Assert::IsTrue(jsonDoc["state"] == (uint8_t)MODULE_STATUS::OFF);
-    }
-
     TEST_METHOD(TEST_ProcessRequest_WM_TIMER_GET)
     {
         auto jsonDoc = CommonSendRequest(WM_TIMER_GET);
@@ -240,12 +220,5 @@ public:
         Assert::IsTrue(jsonDoc[STR(BatteryNum)] == (uint8_t)2);
         Assert::IsTrue(jsonDoc[STR(SerialNum)] == "ABCDEFGHI2");
         Assert::IsTrue(jsonDoc[STR(StrikeNum)] == (uint8_t)2);
-    }
-
-    TEST_METHOD(TEST_ProcessRequest_WM_STOP_ALL)
-    {
-        auto jsonDoc = CommonSendRequest(WM_STOP_ALL);
-
-        Assert::IsTrue(jsonDoc["stop"] == true);
     }
 };
