@@ -28,15 +28,6 @@ void HardwareSetup() {
   // Setup serial
   Serial.begin(115200);
 
-  // Setup I/O
-  pinMode(BUZZER_PIN, OUTPUT);
-  pinMode(INPUT_PIN, INPUT_PULLUP);
-
-  // Wait for activate signal
-  while (digitalRead(INPUT_PIN)) {
-    delay(10);
-  }
-
   //Setup WiFi
   WiFi.mode(WIFI_STA);
   WiFi.begin(WIFI_SSID, WIFI_PASS);
@@ -51,6 +42,9 @@ void HardwareSetup() {
   Serial.println("WiFi connected");
   Serial.print("IP Address: ");
   Serial.println(WiFi.localIP());
+
+  // Setup I/O
+  pinMode(BUZZER_PIN, OUTPUT);
 }
 
 void SendMessage(data_pack_t byteData) {
