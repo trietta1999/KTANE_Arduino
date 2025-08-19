@@ -23,7 +23,7 @@ void ui_event_btnButton(lv_event_t * e)
     if(event_code == LV_EVENT_RELEASED) {
         OnButtonRelease(e);
     }
-    if(event_code == LV_EVENT_CLICKED) {
+    if(event_code == LV_EVENT_SHORT_CLICKED) {
         OnButtonClick(e);
     }
 }

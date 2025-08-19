@@ -512,7 +512,7 @@
                 "disabled": false,
                 "nid": 1000582,
                 "strtype": "_event/EventHandler",
-                "strval": "CLICKED",
+                "strval": "SHORT_CLICKED",
                 "childs": [
                   {
                     "nid": 1000583,
@@ -1766,10 +1766,10 @@
     "theme_dark": false,
     "theme_color1": 5,
     "theme_color2": 0,
-    "uiExportFolderPath": "D:\\Git\\KTANE_Arduino\\feature_Button\\ESP32\\src\\ui",
-    "projectExportFolderPath": "D:\\Git\\KTANE_Arduino\\feature_Button\\Project",
+    "uiExportFolderPath": "D:\\Git\\KTANE_Arduino\\feature_TheButton\\ESP32\\src\\ui",
+    "projectExportFolderPath": "D:\\Git\\KTANE_Arduino\\feature_TheButton\\Project",
     "custom_variable_prefix": "uic",
-    "backup_cnt": 44,
+    "backup_cnt": 46,
     "autosave_cnt": 0,
     "group_color_cnt": 0,
     "lvgl_version": "9.1.0",

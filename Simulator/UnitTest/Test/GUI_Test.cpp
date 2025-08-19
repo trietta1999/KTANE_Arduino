@@ -117,7 +117,7 @@ public:
 
         auto correctEvent = CorrectEvent.GetValue();
 
-        Assert::IsTrue(std::get<FIRST_EVENT>(correctEvent) == LV_EVENT_CLICKED);
+        Assert::IsTrue(std::get<FIRST_EVENT>(correctEvent) == LV_EVENT_SHORT_CLICKED);
         Assert::IsTrue(std::get<SECOND_EVENT>(correctEvent) == LV_EVENT_RELEASED);
         Assert::IsTrue(std::get<SPECIAL_NUM>(correctEvent) == 0);
     }
@@ -217,7 +217,7 @@ public:
 
         auto correctEvent = CorrectEvent.GetValue();
 
-        Assert::IsTrue(std::get<FIRST_EVENT>(correctEvent) == LV_EVENT_CLICKED);
+        Assert::IsTrue(std::get<FIRST_EVENT>(correctEvent) == LV_EVENT_SHORT_CLICKED);
         Assert::IsTrue(std::get<SECOND_EVENT>(correctEvent) == LV_EVENT_RELEASED);
         Assert::IsTrue(std::get<SPECIAL_NUM>(correctEvent) == 0);
     }
@@ -317,7 +317,7 @@ public:
 
         auto correctEvent = CorrectEvent.GetValue();
 
-        Assert::IsTrue(std::get<FIRST_EVENT>(correctEvent) == LV_EVENT_CLICKED);
+        Assert::IsTrue(std::get<FIRST_EVENT>(correctEvent) == LV_EVENT_SHORT_CLICKED);
         Assert::IsTrue(std::get<SECOND_EVENT>(correctEvent) == LV_EVENT_RELEASED);
         Assert::IsTrue(std::get<SPECIAL_NUM>(correctEvent) == 0);
     }

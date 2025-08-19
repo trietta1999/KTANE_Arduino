@@ -54,7 +54,7 @@ void ButtonModule()
     /* Case 2 */
     else if ((batteryNum > 1) && (buttonLabel == BTN_LABEL_TYPE::Detonate))
     {
-        SET_CORRECT_EVENT(LV_EVENT_CLICKED, LV_EVENT_RELEASED, 0);
+        SET_CORRECT_EVENT(LV_EVENT_SHORT_CLICKED, LV_EVENT_RELEASED, 0);
     }
     /* Case 3 */
     else if ((buttonColor == COLOR_TYPE::WHITE) && (labelIndicator == LABEL_INDICATOR::CAR))
@@ -64,12 +64,12 @@ void ButtonModule()
     /* Case 4 */
     else if ((batteryNum > 2) && (labelIndicator == LABEL_INDICATOR::FRK))
     {
-        SET_CORRECT_EVENT(LV_EVENT_CLICKED, LV_EVENT_RELEASED, 0);
+        SET_CORRECT_EVENT(LV_EVENT_SHORT_CLICKED, LV_EVENT_RELEASED, 0);
     }
     /* Case 6 */
     else if ((buttonColor == COLOR_TYPE::RED) && (buttonLabel == BTN_LABEL_TYPE::Hold))
     {
-        SET_CORRECT_EVENT(LV_EVENT_CLICKED, LV_EVENT_RELEASED, 0);
+        SET_CORRECT_EVENT(LV_EVENT_SHORT_CLICKED, LV_EVENT_RELEASED, 0);
     }
     /* Case 5, case 7 */
     else
@@ -167,6 +167,13 @@ void AutoUpdate()
 #endif
                 }
             }
+            else
+            {
+#ifndef UNIT_TEST
+                // Send error state to Host
+                CommonSendRequest(WM_STRIKESTATE_SET);
+#endif
+            }
 
             // Clear temp event data
             TempEvent.SetValue(std::make_tuple(0, 0, 0));
@@ -211,17 +218,9 @@ void OnButtonPress(lv_event_t* e)
 
 void OnButtonClick(lv_event_t* e)
 {
+    // Set first temp event is short click
     auto tempEvent = TempEvent.GetValue();
-
-    // Get first temp event
-    auto firstEvent = std::get<FIRST_EVENT>(tempEvent);
-
-    // First temp event is not long press
-    if (firstEvent != LV_EVENT_LONG_PRESSED)
-    {
-        // Set first temp event is click
-        std::get<FIRST_EVENT>(tempEvent) = LV_EVENT_CLICKED;
-    }
+    std::get<FIRST_EVENT>(tempEvent) = LV_EVENT_SHORT_CLICKED;
 
     TempEvent.SetValue(tempEvent);
 }
