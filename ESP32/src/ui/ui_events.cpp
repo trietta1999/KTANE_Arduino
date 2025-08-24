@@ -15,53 +15,62 @@ JsonDocument moduleStatusMapJson;
 
 struct e_timer_t
 {
-    lv_timer_t* timer;
     uint8_t minute;
     uint8_t second;
     uint64_t startTime;
     char str[10];
 } countdownTimer, endlessTimer;
 
-void CreateTimer()
+void CalculateEndlessTimer()
 {
-    auto time = sys_host::TimeClock.GetValue();
+    // Get running time
+    auto currentTime = MILLISEC_GET - endlessTimer.startTime;
 
-    // Get current timer time
-    countdownTimer.minute = std::get<MINUTE_POS>(time);
-    countdownTimer.second = std::get<SECOND_POS>(time);
+    // Calculate the number of minutes
+    // Divide the total milliseconds by 60,000 (since 1 minute = 60 seconds = 60 * 1000 milliseconds) to get the total number of full minutes
+    uint8_t minute = currentTime / 60000;
 
-    countdownTimer.timer = lv_timer_create([](lv_timer_t* timer) {
-        // Change sleep period
-        if (sys_host::TimeCycle.GetState())
+    // Calculate the remaining seconds after extracting minutes
+    // First, convert total_milliseconds to total seconds by dividing by 1000
+    // Then, use the modulo operator (%) with 60 to find the remainder when divided by 60
+    // This remainder the number of seconds that do not form a complete minute
+    uint8_t second = (currentTime / 1000) % 60;
+
+    // Calculate the remaining milliseconds after extracting seconds
+    // Use the modulo operator (%) with 1000 to find the remainder when total_milliseconds is divided by 1000.
+    // This remainder represents the milliseconds that do not form a complete second.
+    uint16_t milli = currentTime % 1000;
+
+    // Update endless time
+    sys_host::EndlessTimeClock.SetValue(std::make_tuple(minute, second, milli));
+}
+
+void CalculateCountdownTimer()
+{
+    // Stop timer checking
+    if ((countdownTimer.minute == 0 && countdownTimer.second == 0)
+        || (sys_gui::SuccessState.GetValue() == STATE_CHECKED)
+        || (sys_host::StrikeNum.GetValue() >= STRIKE_NUM_MAX)
+        )
+    {
+        if (sys_gui::SuccessState.GetValue() != STATE_CHECKED)
         {
-            lv_timer_set_period(timer, sys_host::TimeCycle.GetValue());
-            sys_host::TimeCycle.ResetState();
+            CommonSendRequest(WM_STOP_ALL);
+            sys_host::ModuleStatus.SetValue(false);
+#ifdef _WIN64
+            CommonSendRequest(WM_STOP_COMPLETE);
+#endif
         }
-
-        // Stop and delete timer
-        if ((countdownTimer.minute == 0 && countdownTimer.second == 0)
-            || (sys_gui::SuccessState.GetValue() == STATE_CHECKED)
-            || (sys_host::StrikeNum.GetValue() >= STRIKE_NUM_MAX)
-            )
-        {
-            lv_timer_del(timer);
-            timer = nullptr;
-            countdownTimer.timer = nullptr;
-
-            if (sys_gui::SuccessState.GetValue() != STATE_CHECKED)
-            {
-                CommonSendRequest(WM_STOP_ALL);
-            }
 
 #ifdef _WIN64
-            ::Beep(BEEP_FRE, BEEP_TIMEOUT);
+        ::Beep(BEEP_FRE, BEEP_TIMEOUT);
 #else
-            //Beep(BEEP_FRE, BEEP_TIMEOUT);
+        //Beep(BEEP_FRE, BEEP_TIMEOUT);
 #endif
-
-            return;
-        }
-
+    }
+    // Countdown timer
+    else if (MILLISEC_GET - countdownTimer.startTime >= sys_host::TimeCycle.GetValue())
+    {
         // Countdown
         if (countdownTimer.second > 0)
         {
@@ -84,7 +93,10 @@ void CreateTimer()
 #else
         //Beep(BEEP_FRE, BEEP_INCREASE_DURATION);
 #endif
-        }, sys_host::TimeCycle.GetValue(), nullptr);
+
+        // Update countdown timer
+        countdownTimer.startTime = MILLISEC_GET;
+    }
 }
 
 void Init()
@@ -119,35 +131,24 @@ void Init()
 
 void AutoUpdate()
 {
+    if (sys_host::ModuleStatus.GetValue())
+    {
+        CalculateEndlessTimer();
+        CalculateCountdownTimer();
+    }
+
+    if (sys_host::EndlessTimeClock.GetState())
+    {
+        auto time = sys_host::EndlessTimeClock.GetValue();
+        sprintf(endlessTimer.str, "%02d:%02d:%003d", std::get<MINUTE_POS>(time), std::get<SECOND_POS>(time), std::get<2>(time));
+        lv_label_set_text(ui_lblEndlessTimer, endlessTimer.str);
+    }
+
     if (sys_host::TimeClock.GetState())
     {
         auto time = sys_host::TimeClock.GetValue();
         sprintf(countdownTimer.str, "%02d:%02d", std::get<MINUTE_POS>(time), std::get<SECOND_POS>(time));
         lv_label_set_text(ui_lblTimer, countdownTimer.str);
-    }
-
-    if (sys_host::ModuleStatus.GetValue())
-    {
-        // Get running time
-        auto currentTime = MILLISEC_GET - endlessTimer.startTime;
-
-        // Calculate the number of minutes
-        // Divide the total milliseconds by 60,000 (since 1 minute = 60 seconds = 60 * 1000 milliseconds) to get the total number of full minutes
-        uint8_t l_minute = currentTime / 60000;
-
-        // Calculate the remaining seconds after extracting minutes
-        // First, convert total_milliseconds to total seconds by dividing by 1000
-        // Then, use the modulo operator (%) with 60 to find the remainder when divided by 60
-        // This remainder the number of seconds that do not form a complete minute
-        uint8_t l_second = (currentTime / 1000) % 60;
-
-        // Calculate the remaining milliseconds after extracting seconds
-        // Use the modulo operator (%) with 1000 to find the remainder when total_milliseconds is divided by 1000.
-        // This remainder represents the milliseconds that do not form a complete second.
-        uint16_t l_milli = currentTime % 1000;
-
-        sprintf(endlessTimer.str, "%02d:%02d:%003d", l_minute, l_second, l_milli);
-        lv_label_set_text(ui_lblEndlessTimer, endlessTimer.str);
     }
 
     if (sys_host::StrikeState.GetState())
@@ -160,9 +161,10 @@ void AutoUpdate()
         }
     }
 
-    if (sys_host::ModuleStatus.GetState())
+    if (sys_gui::SuccessState.GetState())
     {
-        if (!sys_host::ModuleStatus.GetValue()) {
+        if (sys_gui::SuccessState.GetValue() != INCORRECT)
+        {
             lv_obj_clear_flag(ui_imgResult, LV_OBJ_FLAG_HIDDEN);
 
             if (sys_gui::SuccessState.GetValue() == STATE_UNCHECK)
@@ -173,9 +175,11 @@ void AutoUpdate()
             {
                 lv_obj_add_state(ui_imgResult, LV_STATE_CHECKED);
             }
-
-            sys_host::ModuleStatus.ResetState();
         }
+
+#ifdef _WIN64
+        sys_gui::SuccessState.ResetState();
+#endif
     }
 }
 
@@ -257,16 +261,20 @@ void TimerSelect_OnButtonNextClick(lv_event_t* e)
 
     // Update timer time
     sys_host::TimeClock.SetValue(std::make_pair(std::stoi(bufMinute), std::stoi(bufSecond)));
+
+    // Update countdown timer
+    countdownTimer.minute = std::stoi(bufMinute);
+    countdownTimer.second = std::stoi(bufSecond);
 }
 
 void Main_OnButtonPlayClick(lv_event_t* e)
 {
     // Start Host Timer
     sys_host::ModuleStatus.SetValue(true);
-    CreateTimer();
 
     // Set start time from system time
     endlessTimer.startTime = MILLISEC_GET;
+    countdownTimer.startTime = MILLISEC_GET;
 
     // Send module status to Transporter
     CommonSendRequestWithData(WM_SET_CLIENTSTATE, moduleStatusMapJson);

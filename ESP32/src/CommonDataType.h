@@ -106,12 +106,6 @@ enum
 #define STATE_CHECKED 3
 #define STATE_UNCHECK 2
 
-#define COLOR_RED 0xFF0000
-#define COLOR_GREEN 0x35C61F
-#define COLOR_WHITE 0xFFFFFF
-
-#define VERIFY_CODE "241"
-
 #define TO_ENUM(enum_name, item) item,
 #define TO_STRING(enum_name, item) { enum_name::item, #item },
 
@@ -216,7 +210,11 @@ EXTERN_MAP_ENUM_WSTR(MODULE_NAME)
 
 // Allow modification
 #pragma region Custom_datatype
+#define COLOR_RED 0xFF0000
+#define COLOR_GREEN 0x35C61F
+#define COLOR_WHITE 0xFFFFFF
 
+#define VERIFY_CODE "241"
 #pragma endregion
 
 #endif // !_COMMON_DATATYPE_H

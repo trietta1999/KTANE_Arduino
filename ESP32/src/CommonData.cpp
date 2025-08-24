@@ -43,4 +43,10 @@ void UpdateAll()
 {
     sys_host::StrikeState.ResetState();
     sys_gui::Brightness.ResetState();
+    sys_host::TimeCycle.ResetState();
+    sys_host::EndlessTimeClock.ResetState();
+    sys_host::TimeClock.ResetState();
+#ifndef _WIN64
+    sys_gui::SuccessState.ResetState();
+#endif
 }
