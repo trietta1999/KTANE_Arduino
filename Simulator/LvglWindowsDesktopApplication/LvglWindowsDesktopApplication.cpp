@@ -60,6 +60,8 @@ LRESULT CALLBACK MyNewWinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam
         {
             return FALSE;
         }
+
+        sys_host::ClientName.SetValue(clientName);
     }
     break;
 
