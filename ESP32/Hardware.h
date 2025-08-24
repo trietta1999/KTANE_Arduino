@@ -62,6 +62,7 @@ void SendMessage(data_pack_t byteData) {
   http.addHeader("Content-Type", "application/json");
 
   // Convert struct to json
+  jsonDoc[STR(source)] = byteData.source;
   jsonDoc[STR(base_msg)] = byteData.base_msg;
   jsonDoc[STR(msg)] = byteData.msg;
   jsonDoc[STR(data)] = byteData.data;
