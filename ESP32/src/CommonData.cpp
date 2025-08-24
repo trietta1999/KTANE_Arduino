@@ -24,6 +24,7 @@ namespace sys_host {
     CData<bool> StrikeState;
     CData<JsonDocument> JsonResponse;
     CData<bool> ModuleStatus;
+    CData<std::string> ClientName;
 }
 
 namespace sys_gui

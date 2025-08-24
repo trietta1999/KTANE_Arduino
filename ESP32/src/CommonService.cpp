@@ -309,6 +309,7 @@ JsonDocument CommonSendRequest(uint32_t msg)
     ::SendMessage(hwnd, WM_REQUEST, msg, NULL);
 #else
     data_pack_t byteData = { 0 };
+    strcpy(byteData.source, CLIENT_NAME);
     byteData.base_msg = WM_REQUEST;
     byteData.msg = msg;
 
@@ -352,6 +353,7 @@ JsonDocument CommonSendRequestWithData(uint32_t msg, JsonDocument jsonValue)
     serializeJson(jsonValue, jsonDocStr);
 
     data_pack_t byteData = { 0 };
+    strcpy(byteData.source, CLIENT_NAME);
     byteData.base_msg = WM_REQUEST_WITH_DATA;
     byteData.msg = msg;
     strcpy(byteData.data, jsonDocStr);
