@@ -61,6 +61,7 @@
 #define HTTP_RESPONSE "OK"
 
 struct data_pack_t {
+    char source[20];
     uint32_t base_msg;
     uint32_t msg;
     char data[MAX_SIZE];
@@ -103,7 +104,6 @@ enum
 
 #define STATE_CHECKED 3
 #define STATE_UNCHECK 2
-
 
 #define TO_ENUM(enum_name, item) item,
 #define TO_STRING(enum_name, item) { enum_name::item, #item },
