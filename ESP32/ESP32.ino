@@ -70,6 +70,7 @@ String SendMessageToHostTimer(const data_pack_t& byteData) {
 
   // Convert struct to json
   JsonDocument jsonDoc;
+  jsonDoc[STR(source)] = byteData.source;
   jsonDoc[STR(base_msg)] = byteData.base_msg;
   jsonDoc[STR(msg)] = byteData.msg;
   jsonDoc[STR(data)] = byteData.data;
@@ -182,6 +183,7 @@ void OnMainServer() {
   deserializeJson(jsonMsg, postBody);
 
   // Get message into struct
+  strcpy(messageStruct.source, jsonMsg[STR(source)].as<const char*>());
   messageStruct.base_msg = jsonMsg[STR(base_msg)].as<uint32_t>();
   messageStruct.msg = jsonMsg[STR(msg)].as<uint32_t>();
   strcpy(messageStruct.data, jsonMsg[STR(data)].as<const char*>());
@@ -190,6 +192,7 @@ void OnMainServer() {
   deserializeJson(jsonData, messageStruct.data);
 
   // Print message
+  Serial.println(messageStruct.source);
   Serial.println(messageStruct.base_msg);
   Serial.println(messageStruct.msg);
   Serial.println(messageStruct.data);
