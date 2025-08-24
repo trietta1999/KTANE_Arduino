@@ -60,6 +60,7 @@
 #define HTTP_RESPONSE "OK"
 
 struct data_pack_t {
+    char source[20];
     uint32_t base_msg;
     uint32_t msg;
     char data[MAX_SIZE];
