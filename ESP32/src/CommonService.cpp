@@ -86,7 +86,7 @@ void InitData()
 #endif
 }
 
-void ProcessData()
+void CommonServiceProcess()
 {
 #ifndef _WIN64
     // Read data from serial bluetooth
@@ -113,42 +113,6 @@ void ProcessData()
 
     // Re-connect WiFi if disconnected
     WiFiReconnect();
-#endif
-
-#ifdef HOST_TIMER
-    // Update strike num
-    if (sys_host::StrikeState.GetValue())
-    {
-        auto strikeNum = sys_host::StrikeNum.GetValue() + 1;
-
-        // Update time cycle
-        switch (strikeNum)
-        {
-        case 0:
-            sys_host::TimeCycle.SetValue(TIMECYCLE_0);
-            break;
-        case 1:
-            sys_host::TimeCycle.SetValue(TIMECYCLE_1);
-            break;
-        case 2:
-            sys_host::TimeCycle.SetValue(TIMECYCLE_2);
-            break;
-        default:
-            break;
-        }
-
-        // Update strike num
-        sys_host::StrikeNum.SetValue(strikeNum);
-
-        // Reset strike state flag
-        sys_host::StrikeState.SetValue(false);
-
-#ifdef _WIN64
-        ::MessageBox(NULL, L"", L"", MB_ICONERROR);
-#endif
-    }
-#else
-    // Client process
 #endif
 }
 
