@@ -10,7 +10,7 @@
 #include "ArduinoJson-v7.4.1.h"
 
 void InitData();
-void ProcessData();
+void CommonServiceProcess();
 JsonDocument ProcessRequest(HWND, uint32_t, JsonDocument);
 JsonDocument CommonSendRequest(uint32_t);
 JsonDocument CommonSendRequestWithData(uint32_t, JsonDocument);
