@@ -14,16 +14,16 @@ extern "C" {
 extern void ui_Main_screen_init(void);
 extern void ui_Main_screen_destroy(void);
 extern lv_obj_t * ui_Main;
+extern void ui_event_lblStrike(lv_event_t * e);
 extern lv_obj_t * ui_lblStrike;
 extern void ui_event_btnPlay(lv_event_t * e);
 extern lv_obj_t * ui_btnPlay;
-extern void ui_event_btnScore(lv_event_t * e);
-extern lv_obj_t * ui_btnScore;
+extern void ui_event_btnMainToScore(lv_event_t * e);
+extern lv_obj_t * ui_btnMainToScore;
 extern void ui_event_btnScore1(lv_event_t * e);
 extern lv_obj_t * ui_btnScore1;
 extern lv_obj_t * ui_lblEndlessTimer;
 extern lv_obj_t * ui_lblTimer;
-extern lv_obj_t * ui_imgResult;
 extern void ui_event_sldBrightness(lv_event_t * e);
 extern lv_obj_t * ui_sldBrightness;
 // CUSTOM VARIABLES

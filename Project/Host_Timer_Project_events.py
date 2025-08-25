@@ -42,3 +42,15 @@ def ModuleSelect_OnButtonNextClick(event_struct):
 def TimerSelect_OnButtonNextClick(event_struct):
     return
 
+
+def Result_OnLoaded(event_struct):
+    return
+
+
+def Score_OnClickBack(event_struct):
+    return
+
+
+def Main_OnLabelStrikeClick(event_struct):
+    return
+

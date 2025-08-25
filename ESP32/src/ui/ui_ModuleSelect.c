@@ -30,15 +30,6 @@ lv_obj_t * ui_Container4 = NULL;
 lv_obj_t * ui_cbSettingNeedyModule3 = NULL;
 lv_obj_t * ui_btnSettingBack = NULL;
 // event funtions
-void ui_event_cbSettingModule1(lv_event_t * e)
-{
-    lv_event_code_t event_code = lv_event_get_code(e);
-
-    if(event_code == LV_EVENT_CLICKED) {
-        _ui_state_modify(ui_cbSettingModule1, LV_STATE_CHECKED, _UI_MODIFY_STATE_ADD);
-    }
-}
-
 void ui_event_btnSettingBack(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
@@ -119,7 +110,7 @@ void ui_ModuleSelect_screen_init(void)
     lv_obj_set_align(ui_cbSettingModule1, LV_ALIGN_CENTER);
     lv_obj_add_state(ui_cbSettingModule1, LV_STATE_CHECKED | LV_STATE_FOCUSED);       /// States
     lv_obj_remove_flag(ui_cbSettingModule1,
-                       LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE |
+                       LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE |
                        LV_OBJ_FLAG_SNAPPABLE);     /// Flags
     lv_obj_set_style_text_color(ui_cbSettingModule1, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_text_opa(ui_cbSettingModule1, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -404,7 +395,6 @@ void ui_ModuleSelect_screen_init(void)
     lv_obj_set_style_border_opa(ui_btnSettingBack, 255, LV_PART_MAIN | LV_STATE_DISABLED);
     lv_obj_set_style_border_width(ui_btnSettingBack, 1, LV_PART_MAIN | LV_STATE_DISABLED);
 
-    lv_obj_add_event_cb(ui_cbSettingModule1, ui_event_cbSettingModule1, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_btnSettingBack, ui_event_btnSettingBack, LV_EVENT_ALL, NULL);
 
 }

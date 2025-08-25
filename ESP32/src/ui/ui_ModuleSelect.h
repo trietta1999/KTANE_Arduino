@@ -17,7 +17,6 @@ extern lv_obj_t * ui_ModuleSelect;
 extern lv_obj_t * ui_Panel2;
 extern lv_obj_t * ui_Label6;
 extern lv_obj_t * ui_Container1;
-extern void ui_event_cbSettingModule1(lv_event_t * e);
 extern lv_obj_t * ui_cbSettingModule1;
 extern lv_obj_t * ui_cbSettingModule2;
 extern lv_obj_t * ui_cbSettingModule3;

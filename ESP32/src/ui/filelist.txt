@@ -4,6 +4,7 @@ ui_ModuleSelect.c
 ui_TimerSelect.c
 ui_Score.c
 ui_Information.c
+ui_Result.c
 ui.c
 ui_comp_hook.c
 ui_helpers.c
@@ -11,11 +12,14 @@ ui_events.cpp
 ui_img_play_png.c
 ui_img_leaderboard_png.c
 ui_img_info_i_png.c
-ui_img_success_png.c
-ui_img_fail_png.c
 ui_img_arrow_right_png.c
 ui_img_arrow_left_png.c
+ui_img_leaderboard_45_png.c
 ui_img_exit_png.c
+ui_img_fail_png.c
+ui_img_success_png.c
+ui_img_stamp_defused_png.c
+ui_img_stamp_exploded_png.c
 fonts/ui_font_Digit.c
 fonts/ui_font_Digit_45.c
 fonts/ui_font_XFail.c

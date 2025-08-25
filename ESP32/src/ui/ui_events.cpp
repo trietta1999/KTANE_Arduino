@@ -8,18 +8,20 @@
 #include "../CommonLibrary.h"
 #include "../CommonService.h"
 
-std::unordered_map<MODULE_NAME, lv_obj_t*> mapCbSettingModule = { };
-std::string strikeValue = "";
-
-JsonDocument moduleStatusMapJson;
-
 struct e_timer_t
 {
     uint8_t minute;
     uint8_t second;
     uint64_t startTime;
-    char str[10];
 } countdownTimer, endlessTimer;
+
+std::unordered_map<MODULE_NAME, lv_obj_t*> mapCbSettingModule = { };
+std::string strikeValue = "";
+JsonDocument moduleStatusMapJson;
+std::pair<uint8_t, uint8_t> timerSetting = { };
+uint8_t moduleCount = 0;
+std::unordered_map<lv_obj_t*, void(*)(void)> mapCurrentScreen = {};
+lv_obj_t* currentScreen = nullptr;
 
 void CalculateEndlessTimer()
 {
@@ -123,6 +125,15 @@ void Init()
         { MODULE_NAME::Knobs             , ui_cbSettingNeedyModule3 },
     };
 
+    // Set current screen
+    currentScreen = ui_Main;
+
+    // The map of current screen init function to be call after clicking Back in Score screen
+    mapCurrentScreen = {
+        { ui_Main, &ui_Main_screen_init },
+        { ui_Result, &ui_Result_screen_init },
+    };
+
 #ifdef _WIN64
     // Uncheck Wires module
     lv_obj_remove_state(ui_cbSettingModule1, LV_STATE_CHECKED);
@@ -140,15 +151,13 @@ void AutoUpdate()
     if (sys_host::EndlessTimeClock.GetState())
     {
         auto time = sys_host::EndlessTimeClock.GetValue();
-        sprintf(endlessTimer.str, "%02d:%02d:%003d", std::get<MINUTE_POS>(time), std::get<SECOND_POS>(time), std::get<2>(time));
-        lv_label_set_text(ui_lblEndlessTimer, endlessTimer.str);
+        lv_label_set_text_fmt(ui_lblEndlessTimer, "%02d:%02d:%003d", std::get<MINUTE_POS>(time), std::get<SECOND_POS>(time), std::get<MILLIS_POS>(time));
     }
 
     if (sys_host::TimeClock.GetState())
     {
         auto time = sys_host::TimeClock.GetValue();
-        sprintf(countdownTimer.str, "%02d:%02d", std::get<MINUTE_POS>(time), std::get<SECOND_POS>(time));
-        lv_label_set_text(ui_lblTimer, countdownTimer.str);
+        lv_label_set_text_fmt(ui_lblTimer, "%02d:%02d", std::get<MINUTE_POS>(time), std::get<SECOND_POS>(time));
     }
 
     if (sys_host::StrikeState.GetState())
@@ -158,6 +167,10 @@ void AutoUpdate()
         {
             strikeValue += 'x';
             lv_label_set_text(ui_lblStrike, strikeValue.c_str());
+
+#ifdef _WIN64
+            sys_host::StrikeState.ResetState();
+#endif
         }
     }
 
@@ -175,6 +188,10 @@ void AutoUpdate()
             {
                 lv_obj_add_state(ui_imgResult, LV_STATE_CHECKED);
             }
+
+            // Change to result screen
+            _ui_screen_change(&ui_Result, LV_SCR_LOAD_ANIM_OVER_BOTTOM, 500, 0, &ui_Result_screen_init);
+            currentScreen = ui_Result;
         }
 
 #ifdef _WIN64
@@ -239,6 +256,9 @@ void ModuleSelect_OnButtonNextClick(lv_event_t* e)
         {
             moduleStatusMap.insert(std::make_pair(moduleName, MODULE_STATUS::ON));
             moduleStatusMapJson[(uint8_t)moduleEnum] = (uint8_t)MODULE_STATUS::ON;
+
+            // Update module count
+            moduleCount++;
         }
         else if (lv_obj_get_state(cbSettingModule.second) == STATE_UNCHECK)
         {
@@ -261,6 +281,9 @@ void TimerSelect_OnButtonNextClick(lv_event_t* e)
 
     // Update timer time
     sys_host::TimeClock.SetValue(std::make_pair(std::stoi(bufMinute), std::stoi(bufSecond)));
+
+    // Update timer setting
+    timerSetting = std::make_pair(std::stoi(bufMinute), std::stoi(bufSecond));
 
     // Update countdown timer
     countdownTimer.minute = std::stoi(bufMinute);
@@ -289,6 +312,27 @@ void Score_OnRollerOrderChange(lv_event_t* e)
     lv_roller_set_selected(ui_rlScoreResult, index, LV_ANIM_ON);
 }
 
+void Score_OnClickBack(lv_event_t* e)
+{
+    // Change to current screen
+    _ui_screen_change(&currentScreen, LV_SCR_LOAD_ANIM_MOVE_RIGHT, 100, 0, mapCurrentScreen[currentScreen]);
+}
+
+void Main_OnLabelStrikeClick(lv_event_t* e)
+{
+#ifdef _WIN64
+    if (e->current_target == ui_lblStrike)
+    {
+        // Change to result screen
+        _ui_screen_change(&ui_Result, LV_SCR_LOAD_ANIM_OVER_BOTTOM, 500, 0, &ui_Result_screen_init);
+        currentScreen = ui_Main;
+
+        // Random result
+        sys_gui::SuccessState.SetValue(RandomRange(STATE_UNCHECK, STATE_CHECKED + 1));
+    }
+#endif
+}
+
 void Score_OnLoaded(lv_event_t* e)
 {
 #ifdef _WIN64
@@ -301,4 +345,36 @@ void Score_OnLoaded(lv_event_t* e)
 void OrderPlay_OnLoaded(lv_event_t* e)
 {
     // Your code here
+}
+
+void Result_OnLoaded(lv_event_t* e)
+{
+    auto endlessTimer = sys_host::EndlessTimeClock.GetValue();
+    auto coundownTimer = sys_host::TimeClock.GetValue();
+
+    /* 1. Bomb configuration */
+    lv_label_set_text_fmt(ui_lblTimerSetting, "%02d:%02d", timerSetting.first, timerSetting.second);
+    lv_label_set_text_fmt(ui_lblModuleCount, "%d Modules", moduleCount);
+    lv_label_set_text_fmt(ui_lblStrikeCount, "%d Strikes", sys_host::StrikeNum.GetValue());
+
+    /* 2. Result */
+    if (sys_gui::SuccessState.GetValue() == STATE_CHECKED)
+    {
+        lv_image_set_src(ui_imgResult, &ui_img_stamp_defused_png);
+
+    }
+    else if (sys_gui::SuccessState.GetValue() == STATE_UNCHECK)
+    {
+        lv_image_set_src(ui_imgResult, &ui_img_stamp_exploded_png);
+    }
+
+    lv_label_set_text_fmt(ui_lblTimeRemain, "%02d:%02d", coundownTimer.first, coundownTimer.second);
+    lv_label_set_text_fmt(ui_lblTimeElapse, "%02d:%02d:%003d", std::get<MINUTE_POS>(endlessTimer), std::get<SECOND_POS>(endlessTimer), std::get<MILLIS_POS>(endlessTimer));
+
+    if (sys_gui::SuccessState.GetValue() == STATE_UNCHECK)
+    {
+        lv_obj_remove_flag(ui_lblExpCauseTitle, LV_OBJ_FLAG_HIDDEN);
+        lv_obj_remove_flag(ui_lblExpCause, LV_OBJ_FLAG_HIDDEN);
+        lv_label_set_text_fmt(ui_lblExpCause, "%s", sys_host::ClientName.GetValue().c_str());
+    }
 }

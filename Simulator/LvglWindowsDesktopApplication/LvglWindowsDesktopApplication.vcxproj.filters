@@ -836,6 +836,9 @@
     <ClInclude Include="..\..\ESP32\src\ui\ui_Information.h">
       <Filter>UI</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\ESP32\src\ui\ui_Result.h">
+      <Filter>UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)..\LvglPlatform\lvgl\.typos.toml">
@@ -1534,6 +1537,18 @@
     </ClCompile>
     <ClCompile Include="..\..\ESP32\src\CommonService.cpp">
       <Filter>Library\CommonService</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\ui\ui_Result.c">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_leaderboard_45_png.c">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_stamp_defused_png.c">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_stamp_exploded_png.c">
+      <Filter>UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

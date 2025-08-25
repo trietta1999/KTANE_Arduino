@@ -39,7 +39,7 @@ void ui_event_Button3(lv_event_t * e)
     lv_event_code_t event_code = lv_event_get_code(e);
 
     if(event_code == LV_EVENT_CLICKED) {
-        _ui_screen_change(&ui_Main, LV_SCR_LOAD_ANIM_MOVE_RIGHT, 100, 0, &ui_Main_screen_init);
+        Score_OnClickBack(e);
     }
 }
 

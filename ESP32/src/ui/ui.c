@@ -36,6 +36,7 @@ void ui_init(void)
     ui_TimerSelect_screen_init();
     ui_Score_screen_init();
     ui_Information_screen_init();
+    ui_Result_screen_init();
     ui____initial_actions0 = lv_obj_create(NULL);
     lv_disp_load_scr(ui_Login);
 }
@@ -48,4 +49,5 @@ void ui_destroy(void)
     ui_TimerSelect_screen_destroy();
     ui_Score_screen_destroy();
     ui_Information_screen_destroy();
+    ui_Result_screen_destroy();
 }
