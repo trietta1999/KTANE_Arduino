@@ -88,7 +88,7 @@ void IOProcessData() {
 void loop() {
   lv_timer_handler();
   lv_task_handler();
-  ProcessData();
+  CommonServiceProcess();
   IOProcessData();
   AutoUpdate();
   UpdateAll();

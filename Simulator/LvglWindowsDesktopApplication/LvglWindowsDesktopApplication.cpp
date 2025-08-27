@@ -240,7 +240,7 @@ int WINAPI wWinMain(
     while (true)
     {
         ::lv_timer_handler();
-        ProcessData();
+        CommonServiceProcess();
         AutoUpdate();
         UpdateAll();
         ::Sleep(10);

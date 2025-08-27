@@ -51,9 +51,9 @@ LV_IMG_DECLARE(ui_img_arrow_left_png);    // assets/arrow_left.png
 LV_IMG_DECLARE(ui_img_leaderboard_45_png);    // assets/leaderboard_45.png
 LV_IMG_DECLARE(ui_img_exit_png);    // assets/exit.png
 LV_IMG_DECLARE(ui_img_fail_png);    // assets/fail.png
-LV_IMG_DECLARE(ui_img_success_png);    // assets/success.png
 LV_IMG_DECLARE(ui_img_stamp_defused_png);    // assets/stamp_defused.png
 LV_IMG_DECLARE(ui_img_stamp_exploded_png);    // assets/stamp_exploded.png
+LV_IMG_DECLARE(ui_img_success_png);    // assets/success.png
 
 // FONTS
 LV_FONT_DECLARE(ui_font_Digit);

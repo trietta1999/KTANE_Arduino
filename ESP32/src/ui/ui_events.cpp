@@ -162,36 +162,72 @@ void AutoUpdate()
 
     if (sys_host::StrikeState.GetState())
     {
-        auto strikeNum = sys_host::StrikeNum.GetValue();
+        auto strikeNum = sys_host::StrikeNum.GetValue() + 1;
+
+        // Update time cycle
+        switch (strikeNum)
+        {
+        case 0:
+            sys_host::TimeCycle.SetValue(TIMECYCLE_0);
+            break;
+        case 1:
+            sys_host::TimeCycle.SetValue(TIMECYCLE_1);
+            break;
+        case 2:
+            sys_host::TimeCycle.SetValue(TIMECYCLE_2);
+            break;
+        default:
+            break;
+        }
+
+        // Update strike num
+        sys_host::StrikeNum.SetValue(strikeNum);
+
+        // Reset strike state flag
+        sys_host::StrikeState.SetValue(false);
+
+        // Update label
         if ((strikeNum > 0) && (strikeNum < STRIKE_NUM_MAX))
         {
             strikeValue += 'x';
             lv_label_set_text(ui_lblStrike, strikeValue.c_str());
+        }
 
 #ifdef _WIN64
-            sys_host::StrikeState.ResetState();
+        sys_host::StrikeState.ResetState();
+        ::MessageBox(NULL, L"", L"", MB_ICONERROR);
 #endif
-        }
     }
 
     if (sys_gui::SuccessState.GetState())
     {
         if (sys_gui::SuccessState.GetValue() != INCORRECT)
         {
-            lv_obj_clear_flag(ui_imgResult, LV_OBJ_FLAG_HIDDEN);
-
             if (sys_gui::SuccessState.GetValue() == STATE_UNCHECK)
             {
-                lv_obj_add_state(ui_imgResult, LV_STATE_DISABLED);
+                // Enable black screen
+                lv_obj_remove_flag(ui_lblBlack, LV_OBJ_FLAG_HIDDEN);
             }
             else if (sys_gui::SuccessState.GetValue() == STATE_CHECKED)
             {
-                lv_obj_add_state(ui_imgResult, LV_STATE_CHECKED);
+                // Blink timer time 4 times
+                lv_timer_create([](lv_timer_t*) {
+                    if (lv_obj_get_style_text_opa(ui_lblTimer, LV_PART_MAIN) == LV_OPA_TRANSP) {
+                        // Show text if hiding
+                        lv_obj_set_style_text_opa(ui_lblTimer, LV_OPA_COVER, LV_PART_MAIN);
+                    }
+                    else {
+                        // Hide text if showing
+                        lv_obj_set_style_text_opa(ui_lblTimer, LV_OPA_TRANSP, LV_PART_MAIN);
+                    }
+                    }, TIMECYCLE_1, nullptr)->repeat_count = 8;
             }
 
-            // Change to result screen
-            _ui_screen_change(&ui_Result, LV_SCR_LOAD_ANIM_OVER_BOTTOM, 500, 0, &ui_Result_screen_init);
-            currentScreen = ui_Result;
+            // Wait for changing to result screen
+            lv_timer_create([](lv_timer_t*) {
+                _ui_screen_change(&ui_Result, LV_SCR_LOAD_ANIM_OVER_BOTTOM, 500, 0, &ui_Result_screen_init);
+                currentScreen = ui_Result;
+                }, BEEP_TIMEOUT * 2, nullptr)->repeat_count = 1;
         }
 
 #ifdef _WIN64
@@ -321,15 +357,9 @@ void Score_OnClickBack(lv_event_t* e)
 void Main_OnLabelStrikeClick(lv_event_t* e)
 {
 #ifdef _WIN64
-    if (e->current_target == ui_lblStrike)
-    {
-        // Change to result screen
-        _ui_screen_change(&ui_Result, LV_SCR_LOAD_ANIM_OVER_BOTTOM, 500, 0, &ui_Result_screen_init);
-        currentScreen = ui_Main;
-
-        // Random result
-        sys_gui::SuccessState.SetValue(RandomRange(STATE_UNCHECK, STATE_CHECKED + 1));
-    }
+    ::Beep(BEEP_FRE, BEEP_TIMEOUT);
+    // Random result
+    sys_gui::SuccessState.SetValue(RandomRange(STATE_UNCHECK, STATE_CHECKED + 1));
 #endif
 }
 

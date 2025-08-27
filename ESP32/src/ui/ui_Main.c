@@ -13,6 +13,7 @@ lv_obj_t * ui_btnScore1 = NULL;
 lv_obj_t * ui_lblEndlessTimer = NULL;
 lv_obj_t * ui_lblTimer = NULL;
 lv_obj_t * ui_sldBrightness = NULL;
+lv_obj_t * ui_lblBlack = NULL;
 // event funtions
 void ui_event_lblStrike(lv_event_t * e)
 {
@@ -218,6 +219,18 @@ void ui_Main_screen_init(void)
     //Compensating for LVGL9.1 draw crash with bar/slider max value when top-padding is nonzero and right-padding is 0
     if(lv_obj_get_style_pad_top(ui_sldBrightness, LV_PART_MAIN) > 0) lv_obj_set_style_pad_right(ui_sldBrightness,
                                                                                                     lv_obj_get_style_pad_right(ui_sldBrightness, LV_PART_MAIN) + 1, LV_PART_MAIN);
+    ui_lblBlack = lv_label_create(ui_Main);
+    lv_obj_set_width(ui_lblBlack, 320);
+    lv_obj_set_height(ui_lblBlack, 240);
+    lv_obj_set_align(ui_lblBlack, LV_ALIGN_CENTER);
+    lv_label_set_text(ui_lblBlack, "");
+    lv_obj_add_flag(ui_lblBlack, LV_OBJ_FLAG_HIDDEN | LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_FLOATING);     /// Flags
+    lv_obj_remove_flag(ui_lblBlack, LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE |
+                       LV_OBJ_FLAG_SNAPPABLE | LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_SCROLL_ELASTIC | LV_OBJ_FLAG_SCROLL_MOMENTUM |
+                       LV_OBJ_FLAG_SCROLL_CHAIN);     /// Flags
+    lv_obj_set_style_bg_color(ui_lblBlack, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui_lblBlack, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+
     lv_obj_add_event_cb(ui_lblStrike, ui_event_lblStrike, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_btnPlay, ui_event_btnPlay, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_btnMainToScore, ui_event_btnMainToScore, LV_EVENT_ALL, NULL);
@@ -239,5 +252,6 @@ void ui_Main_screen_destroy(void)
     ui_lblEndlessTimer = NULL;
     ui_lblTimer = NULL;
     ui_sldBrightness = NULL;
+    ui_lblBlack = NULL;
 
 }

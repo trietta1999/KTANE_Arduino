@@ -17,9 +17,9 @@ SET(SOURCES ui_Login.c
     ui_img_leaderboard_45_png.c
     ui_img_exit_png.c
     ui_img_fail_png.c
-    ui_img_success_png.c
     ui_img_stamp_defused_png.c
     ui_img_stamp_exploded_png.c
+    ui_img_success_png.c
     fonts/ui_font_Digit.c
     fonts/ui_font_Digit_45.c
     fonts/ui_font_XFail.c)
