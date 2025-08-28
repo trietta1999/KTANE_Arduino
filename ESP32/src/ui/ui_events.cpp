@@ -121,10 +121,8 @@ struct countdown_timer_t
 
                 if (data->second <= 5)
                 {
-#ifdef _WIN64
-                    ::Beep(BEEP_FRE, BEEP_INCREASE_DURATION);
-#else
-                    // Arduino process
+#ifndef UNIT_TEST
+                    CommonBeep(BEEP_FRE, BEEP_INCREASE_DURATION);
 #endif
                 }
             }
@@ -186,11 +184,7 @@ void InitQuestion(bool renew = true)
 #endif
 
 #ifndef UNIT_TEST
-#ifdef _WIN64
-    ::Beep(BEEP_FRE, 1000);
-#else
-    // Arduino process
-#endif
+    CommonBeep(BEEP_FRE, 1000);
 #endif
 }
 

@@ -20,7 +20,7 @@ void WiFiReconnect() {
   }
 }
 
-void Beep(uint16_t frequency, uint16_t duration) {
+void HardwareBeep(uint16_t frequency, uint16_t duration) {
   tone(BUZZER_PIN, frequency, duration);
 }
 
