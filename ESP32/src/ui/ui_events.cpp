@@ -80,9 +80,9 @@ void CreateTimer()
             if (blinkState)
             {
                 lv_obj_add_state(button, LV_STATE_EDITED);
-#ifdef _WIN64
-                ::Beep(beepFre, BEEP_INCREASE_DURATION);
-                ::Sleep(BEEP_INCREASE_DURATION);
+
+#ifndef UNIT_TEST
+                CommonBeep(beepFre, BEEP_INCREASE_DURATION);
 #endif
             }
             // Turn off
@@ -225,9 +225,8 @@ void OnButtonKeypadClick(lv_event_t* e)
     auto result = find->second;
     auto beepFre = std::get<1>(result);
 
-#if defined(_WIN64) && !defined(UNIT_TEST)
-    ::Beep(beepFre, BEEP_INCREASE_DURATION);
-    ::Sleep(BEEP_INCREASE_DURATION);
+#ifndef UNIT_TEST
+    CommonBeep(beepFre, BEEP_INCREASE_DURATION);
 #endif
 
     // Current button is mapped with current order
