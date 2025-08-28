@@ -48,10 +48,8 @@ struct countdown_timer_t
 
             if (data->second <= 5)
             {
-#ifdef _WIN64
-                ::Beep(BEEP_FRE, BEEP_INCREASE_DURATION);
-#else
-                // Arduino process
+#ifndef UNIT_TEST
+                CommonBeep(BEEP_FRE, BEEP_INCREASE_DURATION);
 #endif
             }
 
@@ -129,15 +127,12 @@ void InitModule()
     // Activate module
     moduleActivateState = true;
 
-#ifndef UNIT_TEST
 #ifdef _WIN64
     debug_println("Correct direction type: " + map_KNOB_DIRECTION_TYPE[directionType]);
     debug_println("Correct pattern index: " + std::to_string(CurrentPatternIndex.GetValue() + 1));
-
-    ::Beep(BEEP_FRE, 1000);
-#else
-    // Arduino process
 #endif
+#ifndef UNIT_TEST
+    CommonBeep(BEEP_FRE, 1000);
 #endif
 }
 
