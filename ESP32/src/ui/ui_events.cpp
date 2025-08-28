@@ -90,10 +90,8 @@ void InitModule(bool renew = true)
     // Enable handle
     lv_obj_add_flag(ui_conHandleHolder, LV_OBJ_FLAG_CLICKABLE);
 
-#ifdef _WIN64
-    ::Beep(BEEP_FRE, 1000);
-#else
-    // Arduino process
+#ifndef UNIT_TEST
+    CommonBeep(BEEP_FRE, 1000);
 #endif
 }
 
