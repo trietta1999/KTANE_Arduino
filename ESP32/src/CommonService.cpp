@@ -8,6 +8,7 @@
 #ifdef _WIN64
 #include <iostream>
 #include <iomanip>
+#include <thread>
 #else
 #include <esp_random.h>
 #include "../Hardware.h"
@@ -22,6 +23,15 @@ void AttachConsoleWindow()
     freopen_s(&fp, "CONOUT$", "w", stderr);
 }
 #endif
+
+void CommonBeep(uint16_t frequency, uint16_t duration)
+{
+#ifdef _WIN64
+    std::thread([=]() { ::Beep(frequency, duration); }).detach();
+#else
+    HardwareBeep(frequency, duration);
+#endif
+}
 
 void InitData()
 {
