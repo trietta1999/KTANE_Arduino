@@ -64,10 +64,8 @@ void CalculateCountdownTimer()
 #endif
         }
 
-#ifdef _WIN64
-        ::Beep(BEEP_FRE, BEEP_TIMEOUT);
-#else
-        //Beep(BEEP_FRE, BEEP_TIMEOUT);
+#ifndef UNIT_TEST
+        CommonBeep(BEEP_FRE, BEEP_TIMEOUT);
 #endif
     }
     // Countdown timer
@@ -90,10 +88,8 @@ void CalculateCountdownTimer()
         // Update timer time
         sys_host::TimeClock.SetValue(std::make_pair(countdownTimer.minute, countdownTimer.second));
 
-#ifdef _WIN64
-        ::Beep(BEEP_FRE, BEEP_INCREASE_DURATION);
-#else
-        //Beep(BEEP_FRE, BEEP_INCREASE_DURATION);
+#ifndef UNIT_TEST
+        CommonBeep(BEEP_FRE, BEEP_INCREASE_DURATION);
 #endif
 
         // Update countdown timer
@@ -357,7 +353,9 @@ void Score_OnClickBack(lv_event_t* e)
 void Main_OnLabelStrikeClick(lv_event_t* e)
 {
 #ifdef _WIN64
-    ::Beep(BEEP_FRE, BEEP_TIMEOUT);
+#ifndef UNIT_TEST
+    CommonBeep(BEEP_FRE, BEEP_TIMEOUT);
+#endif
     // Random result
     sys_gui::SuccessState.SetValue(RandomRange(STATE_UNCHECK, STATE_CHECKED + 1));
 #endif
