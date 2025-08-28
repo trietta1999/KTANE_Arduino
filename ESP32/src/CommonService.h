@@ -14,5 +14,6 @@ void CommonServiceProcess();
 JsonDocument ProcessRequest(HWND, uint32_t, JsonDocument);
 JsonDocument CommonSendRequest(uint32_t);
 JsonDocument CommonSendRequestWithData(uint32_t, JsonDocument);
+void CommonBeep(uint16_t, uint16_t);
 
 #endif
