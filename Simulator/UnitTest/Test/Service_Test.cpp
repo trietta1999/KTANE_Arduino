@@ -7,6 +7,8 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
+#ifdef HOST_TIMER
+
 WNDPROC OriginalWndProc = NULL;
 HWND ClientHandle = NULL;
 
@@ -14,6 +16,7 @@ LRESULT CALLBACK MyNewWinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 {
     switch (uMsg)
     {
+#ifdef HOST_TIMER
     case WM_SET_CLIENT_HANDLE:
     {
         HANDLE hMapFile = OpenFileMapping(FILE_MAP_ALL_ACCESS, FALSE, SHARED_MEM);
@@ -54,13 +57,19 @@ LRESULT CALLBACK MyNewWinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam
         {
             return FALSE;
         }
+
+        // If client name is not HostTimer
+        if (clientName && strcmp(clientName, CLIENT_NAME_FOR_JSON))
+        {
+            sys_host::ClientName.SetValue(clientName);
+        }
     }
     break;
 
     case WM_REQUEST:
     {
         JsonDocument jsonDoc;
-        ProcessRequest(hwnd, wParam, jsonDoc);
+        ProcessRequest(ClientHandle, wParam, jsonDoc);
     }
     break;
 
@@ -93,10 +102,10 @@ LRESULT CALLBACK MyNewWinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam
         UnmapViewOfFile(pBuffer);
         CloseHandle(hMapFile);
 
-        ProcessRequest(hwnd, wParam, jsonDoc);
+        ProcessRequest(ClientHandle, wParam, jsonDoc);
     }
     break;
-
+#endif
     case WM_RESPONSE:
     {
         HANDLE hMapFile = OpenFileMapping(FILE_MAP_ALL_ACCESS, FALSE, SHARED_MEM);
@@ -156,18 +165,14 @@ public:
         sys_host::SerialNum.SetValue("ABCDEFGHI2");
         sys_host::StrikeNum.SetValue(2);
         sys_host::StrikeState.SetValue(false);
-        sys_gui::ModuleStatusMap.SetValue({
-            { "A", MODULE_STATUS::ON },
-            { "B", MODULE_STATUS::OFF },
-            { "C", MODULE_STATUS::START },
-            { "D", MODULE_STATUS::SUCCESS },
-            { "E", MODULE_STATUS::OFF },
-            });
 
         lv_init();
+
         lv_display_t* display = ::lv_windows_create_display(mapWstr_MODULE_NAME[MODULE_NAME::HostTimer].c_str(), 320, 240, 100, false, false);
         HWND window_handle = ::lv_windows_get_display_window_handle(display);
+
         ui_init();
+
         OriginalWndProc = (WNDPROC)::SetWindowLongPtr(window_handle, GWLP_WNDPROC, (LONG_PTR)MyNewWinProc);
     }
 
@@ -198,15 +203,51 @@ public:
         Assert::IsTrue(sys_host::StrikeState.GetValue() == true);
     }
 
-    TEST_METHOD(TEST_ProcessRequest_WM_SUCCESSSTATE_SET)
+    TEST_METHOD(TEST_ProcessRequest_WM_SUCCESSSTATE_SET_1)
     {
-        JsonDocument jsonDocIn;
-        jsonDocIn["module"] = "A";
+        sys_gui::ModuleStatusMap.SetValue({
+            { "A", MODULE_STATUS::ON },
+            { "B", MODULE_STATUS::OFF },
+            });
 
-        auto jsonDoc = CommonSendRequestWithData(WM_SUCCESSSTATE_SET, jsonDocIn);
+        JsonDocument jsonDocIn;
+
+        jsonDocIn["module"] = "A";
+        CommonSendRequestWithData(WM_SUCCESSSTATE_SET, jsonDocIn);
+
+        jsonDocIn["module"] = "B";
+        CommonSendRequestWithData(WM_SUCCESSSTATE_SET, jsonDocIn);
+
         auto mapModuleStatus = sys_gui::ModuleStatusMap.GetValue();
 
         Assert::IsTrue(mapModuleStatus["A"] == MODULE_STATUS::SUCCESS);
+        Assert::IsTrue(mapModuleStatus["B"] == MODULE_STATUS::OFF);
+    }
+
+    TEST_METHOD(TEST_ProcessRequest_WM_SUCCESSSTATE_SET_2)
+    {
+        sys_gui::ModuleStatusMap.SetValue({
+            { "A", MODULE_STATUS::ON },
+            { "B", MODULE_STATUS::ON },
+            });
+
+        sys_host::ModuleStatus.SetValue(true);
+        sys_gui::SuccessState.SetValue(INCORRECT);
+
+        JsonDocument jsonDocIn;
+
+        jsonDocIn["module"] = "A";
+        CommonSendRequestWithData(WM_SUCCESSSTATE_SET, jsonDocIn);
+
+        jsonDocIn["module"] = "B";
+        CommonSendRequestWithData(WM_SUCCESSSTATE_SET, jsonDocIn);
+
+        auto mapModuleStatus = sys_gui::ModuleStatusMap.GetValue();
+
+        Assert::IsTrue(mapModuleStatus["A"] == MODULE_STATUS::SUCCESS);
+        Assert::IsTrue(mapModuleStatus["B"] == MODULE_STATUS::SUCCESS);
+        Assert::IsTrue(sys_host::ModuleStatus.GetValue() == false);
+        Assert::IsTrue(sys_gui::SuccessState.GetValue() == STATE_CHECKED);
     }
 
     TEST_METHOD(TEST_ProcessRequest_WM_SYSINIT_GET)
@@ -221,4 +262,54 @@ public:
         Assert::IsTrue(jsonDoc[STR(SerialNum)] == "ABCDEFGHI2");
         Assert::IsTrue(jsonDoc[STR(StrikeNum)] == (uint8_t)2);
     }
+
+    TEST_METHOD(TEST_ProcessRequest_WM_STOP_COMPLETE_1)
+    {
+        sys_gui::ModuleStatusMap.SetValue({
+            { "A", MODULE_STATUS::ON },
+            { "B", MODULE_STATUS::ON },
+            });
+
+        sys_host::ModuleStatus.SetValue(true);
+        sys_gui::SuccessState.SetValue(INCORRECT);
+
+        CommonSendRequest(WM_STOP_COMPLETE);
+
+        Assert::IsTrue(sys_host::ModuleStatus.GetValue() == false);
+        Assert::IsTrue(sys_gui::SuccessState.GetValue() == STATE_UNCHECK);
+    }
+
+    TEST_METHOD(TEST_ProcessRequest_WM_STOP_COMPLETE_2)
+    {
+        sys_gui::ModuleStatusMap.SetValue({
+            { "A", MODULE_STATUS::SUCCESS },
+            { "B", MODULE_STATUS::ON },
+            });
+
+        sys_host::ModuleStatus.SetValue(true);
+        sys_gui::SuccessState.SetValue(INCORRECT);
+
+        CommonSendRequest(WM_STOP_COMPLETE);
+
+        Assert::IsTrue(sys_host::ModuleStatus.GetValue() == false);
+        Assert::IsTrue(sys_gui::SuccessState.GetValue() == STATE_UNCHECK);
+    }
+
+    TEST_METHOD(TEST_ProcessRequest_WM_STOP_COMPLETE_3)
+    {
+        sys_gui::ModuleStatusMap.SetValue({
+            { "A", MODULE_STATUS::SUCCESS },
+            { "B", MODULE_STATUS::SUCCESS },
+            });
+
+        sys_host::ModuleStatus.SetValue(true);
+        sys_gui::SuccessState.SetValue(STATE_CHECKED);
+
+        CommonSendRequest(WM_STOP_COMPLETE);
+
+        Assert::IsTrue(sys_host::ModuleStatus.GetValue() == true);
+        Assert::IsTrue(sys_gui::SuccessState.GetValue() == STATE_CHECKED);
+    }
 };
+
+#endif
