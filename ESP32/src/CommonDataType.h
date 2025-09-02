@@ -5,10 +5,6 @@
 #ifndef _COMMON_DATATYPE_H
 #define _COMMON_DATATYPE_H
 
-#ifdef ARDUINO // Temporary Service for Arduino
-#define HOST_TIMER
-#endif
-
 #include <cstdint>
 #include <tuple>
 #include <vector>
@@ -42,9 +38,6 @@
 
 #define debug_println(a) Serial.println(std::string(a).c_str())
 #define MILLISEC_GET millis()
-
-#define WIFI_SSID "KTANE_Arduino"
-#define WIFI_PASS "KTANE_Arduino"
 
 #define IP_ADD_1 192
 #define IP_ADD_2 168

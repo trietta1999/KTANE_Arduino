@@ -6,6 +6,7 @@
 #include "src/StringSplitter.h"
 #include "src/ArduinoJson-v7.4.1.h"
 #include "src/CommonDataType.h"
+#include "ssid_conf.h"
 
 #define MODULE_SEL_MUX_ADD_0 13
 #define MODULE_SEL_MUX_ADD_1 12
