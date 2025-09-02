@@ -9,6 +9,7 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 #include "src/CommonData.h"
+#include "ssid_conf.h"
 
 void WiFiReconnect() {
   if (WiFi.status() != WL_CONNECTED) {
