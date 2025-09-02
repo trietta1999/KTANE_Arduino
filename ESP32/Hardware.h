@@ -11,6 +11,7 @@
 #include <HTTPClient.h>
 #include "src/CommonData.h"
 #include "src/CommonService.h"
+#include "ssid_conf.h"
 
 WebServer server(IP_ADD_4);
 

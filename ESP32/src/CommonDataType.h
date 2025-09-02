@@ -46,9 +46,6 @@
 #define INPUT_PIN 22
 #define BUZZER_PIN 26
 
-#define WIFI_SSID "KTANE_Arduino"
-#define WIFI_PASS "KTANE_Arduino"
-
 #define IP_ADD_1 192
 #define IP_ADD_2 168
 #define IP_ADD_3 0
