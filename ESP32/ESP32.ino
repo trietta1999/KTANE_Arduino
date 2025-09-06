@@ -15,7 +15,7 @@
 #define MODULE_SEL_MUX_SIG 26
 #define MAX_CHANNEL 16
 
-#define BUZZER_PIN 22
+#define BUZZER_PIN 25
 
 #define FIRST_MODULE_OFFSET (uint8_t) MODULE_NAME::Wires
 
@@ -35,7 +35,6 @@ void SelectModule(uint8_t channel) {
   digitalWrite(MODULE_SEL_MUX_SIG, HIGH);
 
   Serial.printf("Selected module #%d: %s\n", channel + 1, map_MODULE_NAME[(MODULE_NAME)(channel + FIRST_MODULE_OFFSET)].c_str());
-  tone(BUZZER_PIN, BEEP_FRE, BEEP_INCREASE_DURATION);
 }
 
 void SendMessageToClient(uint8_t moduleNum, uint32_t msg) {
@@ -136,7 +135,6 @@ String ProcessRequest(JsonDocument& jsonDocIn, data_pack_t& messageStruct) {
 
           // Push signal to HIGH
           digitalWrite(MODULE_SEL_MUX_SIG, HIGH);
-          tone(BUZZER_PIN, BEEP_FRE, BEEP_INCREASE_DURATION);
 
           /* Continue to next module index... */
 
@@ -203,8 +201,6 @@ void OnMainServer() {
 
   // Response data
   server.send(HTTP_OK, "application/json", response);
-
-  tone(BUZZER_PIN, BEEP_FRE, BEEP_INCREASE_DURATION);
 }
 
 void setup() {
@@ -261,7 +257,6 @@ void loop() {
 
       // Send and get message response
       Serial.println(SendMessageToHostTimer(byteData));
-      tone(BUZZER_PIN, BEEP_FRE, BEEP_INCREASE_DURATION);
     }
     // Stop all module: stop_all <0 or 1>
     else if (splitter->getItemAtIndex(0) == "stop_all") {
