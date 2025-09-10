@@ -38,7 +38,7 @@ void Init()
 
 void AutoUpdate()
 {
-    if (CurrentStage.GetState() || isIncorrectButton || regenerate)
+    if ((CurrentStage.GetState() || isIncorrectButton || regenerate) && (sys_gui::SuccessState.GetValue() == INCORRECT))
     {
         // Generate number
         auto displayNum = RandomRange(1, 5);
