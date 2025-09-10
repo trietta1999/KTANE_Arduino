@@ -148,7 +148,7 @@ void Init()
 void AutoUpdate()
 {
 #ifndef UNIT_TEST
-    if (CurrentStage.GetState() || isIncorrectButton)
+    if ((CurrentStage.GetState() || isIncorrectButton) && (sys_gui::SuccessState.GetValue() == INCORRECT))
     {
 #endif
         // Reset button order list
@@ -157,34 +157,37 @@ void AutoUpdate()
         // Create correct stage sequence
         auto sequence = SequenceGenerator();
 
-        // Set sequence order to button list
-        for (uint8_t i = 0; i < CurrentStage.GetValue(); i++)
+        if (sequence.size())
         {
-            auto targetButton = std::get<0>(mapButton[sequence[i]]);
-            listButtonOrder.push_back(std::make_tuple(sequence[i], targetButton, false));
-        }
+            // Set sequence order to button list
+            for (uint8_t i = 0; i < CurrentStage.GetValue(); i++)
+            {
+                auto targetButton = std::get<0>(mapButton[sequence[i]]);
+                listButtonOrder.push_back(std::make_tuple(sequence[i], targetButton, false));
+            }
 
 #ifndef UNIT_TEST
-        // Re-create timer
-        if (sequentialBlinkTimer != NULL) {
-            DeleteTimer();
-            CreateTimer();
-        }
+            // Re-create timer
+            if (sequentialBlinkTimer != NULL) {
+                DeleteTimer();
+                CreateTimer();
+            }
 #endif
 
-        // Reset error flag
-        if (isIncorrectButton)
-        {
-            isIncorrectButton = false;
-        }
+            // Reset error flag
+            if (isIncorrectButton)
+            {
+                isIncorrectButton = false;
+            }
 
 #ifdef _WIN64
-        debug_println("Stage: " + std::to_string(CurrentStage.GetValue()));
-        for (uint8_t i = 0; i < sequence.size(); i++)
-        {
-            debug_println(map_COLOR_TYPE[sequence[i]]);
-        }
+            debug_println("Stage: " + std::to_string(CurrentStage.GetValue()));
+            for (uint8_t i = 0; i < sequence.size(); i++)
+            {
+                debug_println(map_COLOR_TYPE[sequence[i]]);
+            }
 #endif
+        }
 #ifndef UNIT_TEST
     }
 #endif

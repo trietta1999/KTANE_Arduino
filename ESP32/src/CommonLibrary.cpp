@@ -93,22 +93,27 @@ std::vector<COLOR_TYPE> SequenceGenerator()
 {
     std::vector<COLOR_TYPE> sequence = { };
     auto stageNum = CurrentStage.GetValue();
+
 #ifndef UNIT_TEST
     auto strikeNum = CommonSendRequest(WM_STRIKENUM_GET)[STR(StrikeNum)].as<uint8_t>();
 #else
     auto strikeNum = sys_host::StrikeNum.GetValue();
 #endif
-    auto colorList = ColorList.GetValue();
 
-    for (uint8_t i = 0; i < stageNum; i++)
+    if (strikeNum < STRIKE_NUM_MAX)
     {
-        auto currentColorMap = mapColorSequence.begin()->second;
-        auto resultColor = currentColorMap[colorList[i]][strikeNum];
+        auto colorList = ColorList.GetValue();
 
-        sequence.push_back(resultColor);
+        for (uint8_t i = 0; i < stageNum; i++)
+        {
+            auto currentColorMap = mapColorSequence.begin()->second;
+            auto resultColor = currentColorMap[colorList[i]][strikeNum];
+
+            sequence.push_back(resultColor);
+        }
+
+        CorrectSequence.SetValue(sequence);
     }
-
-    CorrectSequence.SetValue(sequence);
 
     return sequence;
 }
