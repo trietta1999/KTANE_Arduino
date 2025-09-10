@@ -42,7 +42,7 @@ void Init()
 void AutoUpdate()
 {
 #ifndef UNIT_TEST
-    if (CurrentStage.GetState() || isIncorrectButton || regenerate)
+    if ((CurrentStage.GetState() || isIncorrectButton || regenerate)  && (sys_gui::SuccessState.GetValue() == INCORRECT))
     {
 #endif
 #ifndef UNIT_TEST
