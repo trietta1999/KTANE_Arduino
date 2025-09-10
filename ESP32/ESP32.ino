@@ -225,6 +225,7 @@ void setup() {
   pinMode(MODULE_SEL_MUX_SIG, OUTPUT);
 
   // Lock activate module
+  moduleSelectMux.channel(0);
   digitalWrite(MODULE_SEL_MUX_SIG, HIGH);
 }
 
