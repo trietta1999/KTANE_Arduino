@@ -1550,6 +1550,9 @@
     <ClCompile Include="..\..\ESP32\src\ui\ui_img_stamp_exploded_png.c">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_prohibit_png.c">
+      <Filter>UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="LvglWindowsDesktopApplication.manifest" />

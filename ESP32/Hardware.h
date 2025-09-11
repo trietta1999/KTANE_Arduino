@@ -43,14 +43,21 @@ void OnMainServer() {
   deserializeJson(jsonMsg, postBody);
 
   // Get message into struct
+  strcpy(messageStruct.source, jsonMsg[STR(source)].as<const char*>());
   messageStruct.base_msg = jsonMsg[STR(base_msg)].as<uint32_t>();
   messageStruct.msg = jsonMsg[STR(msg)].as<uint32_t>();
   strcpy(messageStruct.data, jsonMsg[STR(data)].as<const char*>());
+
+  if (messageStruct.msg == WM_STRIKESTATE_SET) {
+    // Set current client name
+    sys_host::ClientName.SetValue(messageStruct.source);
+  }
 
   // Convert message data to json
   deserializeJson(jsonData, messageStruct.data);
 
   // Print message
+  Serial.println(messageStruct.source);
   Serial.println(messageStruct.base_msg);
   Serial.println(messageStruct.msg);
   Serial.println(messageStruct.data);

@@ -148,7 +148,10 @@ JsonDocument ProcessRequest(HWND hwnd, uint32_t msg, JsonDocument jsonDocIn)
 
     case WM_STRIKESTATE_SET:
     {
-        sys_host::StrikeState.SetValue(true);
+        if (!StrikeEnable.GetValue())
+        {
+            sys_host::StrikeState.SetValue(true);
+        }
     }
     break;
 

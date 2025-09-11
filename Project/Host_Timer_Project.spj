@@ -1048,6 +1048,7 @@
               },
               {
                 "nid": 90,
+                "flags": 1048576,
                 "strtype": "OBJECT/Flags",
                 "InheritedType": 1
               },
@@ -1077,6 +1078,7 @@
               },
               {
                 "nid": 225,
+                "flags": 1048576,
                 "strtype": "OBJECT/Scrolling",
                 "InheritedType": 1
               },
@@ -1212,6 +1214,20 @@
                       }
                     ],
                     "InheritedType": 1
+                  },
+                  {
+                    "nid": 40000,
+                    "strtype": "_style/StyleState",
+                    "strval": "DISABLED",
+                    "childs": [
+                      {
+                        "nid": 40610,
+                        "strtype": "_style/Bg_Image",
+                        "strval": "assets/prohibit.png",
+                        "InheritedType": 5
+                      }
+                    ],
+                    "InheritedType": 1
                   }
                 ],
                 "nid": 1040,
@@ -1223,7 +1239,7 @@
                 "disabled": false,
                 "nid": 1001419,
                 "strtype": "_event/EventHandler",
-                "strval": "CLICKED",
+                "strval": "SHORT_CLICKED",
                 "childs": [
                   {
                     "nid": 1001420,
@@ -1269,11 +1285,141 @@
                       {
                         "nid": 1001427,
                         "strtype": "CALL FUNCTION/Function_name",
-                        "strval": "Main_OnLabelStrikeClick",
+                        "strval": "Main_OnLabelStrike",
                         "InheritedType": 10
                       },
                       {
                         "nid": 1001428,
+                        "strtype": "CALL FUNCTION/Dont_export_function",
+                        "strval": "False",
+                        "InheritedType": 2
+                      }
+                    ],
+                    "InheritedType": 10
+                  }
+                ],
+                "InheritedType": 4
+              },
+              {
+                "disabled": false,
+                "nid": 1001429,
+                "strtype": "_event/EventHandler",
+                "strval": "LONG_PRESSED_REPEAT",
+                "childs": [
+                  {
+                    "nid": 1001430,
+                    "strtype": "_event/name",
+                    "strval": "Event9",
+                    "InheritedType": 10
+                  },
+                  {
+                    "nid": 1001431,
+                    "strtype": "_event/condition_C",
+                    "strval": "",
+                    "InheritedType": 10
+                  },
+                  {
+                    "nid": 1001432,
+                    "strtype": "_event/condition_P",
+                    "strval": "",
+                    "InheritedType": 10
+                  },
+                  {
+                    "nid": 1001433,
+                    "strtype": "_event/action",
+                    "strval": "CALL FUNCTION",
+                    "childs": [
+                      {
+                        "nid": 1001434,
+                        "strtype": "CALL FUNCTION/Name",
+                        "strval": "CALL FUNCTION",
+                        "InheritedType": 10
+                      },
+                      {
+                        "nid": 1001435,
+                        "strtype": "CALL FUNCTION/Call",
+                        "strval": "<{Function_name}>( event_struct )",
+                        "InheritedType": 10
+                      },
+                      {
+                        "nid": 1001436,
+                        "strtype": "CALL FUNCTION/CallC",
+                        "strval": "<{Function_name}>( e );",
+                        "InheritedType": 10
+                      },
+                      {
+                        "nid": 1001437,
+                        "strtype": "CALL FUNCTION/Function_name",
+                        "strval": "Main_OnLabelStrike",
+                        "InheritedType": 10
+                      },
+                      {
+                        "nid": 1001438,
+                        "strtype": "CALL FUNCTION/Dont_export_function",
+                        "strval": "False",
+                        "InheritedType": 2
+                      }
+                    ],
+                    "InheritedType": 10
+                  }
+                ],
+                "InheritedType": 4
+              },
+              {
+                "disabled": false,
+                "nid": 1001439,
+                "strtype": "_event/EventHandler",
+                "strval": "RELEASED",
+                "childs": [
+                  {
+                    "nid": 1001440,
+                    "strtype": "_event/name",
+                    "strval": "Event10",
+                    "InheritedType": 10
+                  },
+                  {
+                    "nid": 1001441,
+                    "strtype": "_event/condition_C",
+                    "strval": "",
+                    "InheritedType": 10
+                  },
+                  {
+                    "nid": 1001442,
+                    "strtype": "_event/condition_P",
+                    "strval": "",
+                    "InheritedType": 10
+                  },
+                  {
+                    "nid": 1001443,
+                    "strtype": "_event/action",
+                    "strval": "CALL FUNCTION",
+                    "childs": [
+                      {
+                        "nid": 1001444,
+                        "strtype": "CALL FUNCTION/Name",
+                        "strval": "CALL FUNCTION",
+                        "InheritedType": 10
+                      },
+                      {
+                        "nid": 1001445,
+                        "strtype": "CALL FUNCTION/Call",
+                        "strval": "<{Function_name}>( event_struct )",
+                        "InheritedType": 10
+                      },
+                      {
+                        "nid": 1001446,
+                        "strtype": "CALL FUNCTION/CallC",
+                        "strval": "<{Function_name}>( e );",
+                        "InheritedType": 10
+                      },
+                      {
+                        "nid": 1001447,
+                        "strtype": "CALL FUNCTION/Function_name",
+                        "strval": "Main_OnLabelStrike",
+                        "InheritedType": 10
+                      },
+                      {
+                        "nid": 1001448,
                         "strtype": "CALL FUNCTION/Dont_export_function",
                         "strval": "False",
                         "InheritedType": 2
@@ -16046,7 +16192,7 @@
     "uiExportFolderPath": "D:\\Git\\KTANE_Arduino\\feature_Host_Timer\\ESP32\\src\\ui",
     "projectExportFolderPath": "D:\\Git\\KTANE_Arduino\\feature_Host_Timer\\Project",
     "custom_variable_prefix": "uic",
-    "backup_cnt": 147,
+    "backup_cnt": 151,
     "autosave_cnt": 0,
     "group_color_cnt": 0,
     "lvgl_version": "9.1.0",
@@ -16064,7 +16210,7 @@
     "naming": "Name",
     "naming_force_lowercase": false,
     "naming_add_subcomponent": false,
-    "nidcnt": 1001429,
+    "nidcnt": 1001449,
     "BitDepth": 16,
     "Name": "SquareLine_Project"
   }

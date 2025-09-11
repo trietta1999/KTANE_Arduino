@@ -22,6 +22,7 @@ std::pair<uint8_t, uint8_t> timerSetting = { };
 uint8_t moduleCount = 0;
 std::unordered_map<lv_obj_t*, void(*)(void)> mapCurrentScreen = {};
 lv_obj_t* currentScreen = nullptr;
+uint8_t longPressedCount = 0;
 
 void CalculateEndlessTimer()
 {
@@ -51,7 +52,7 @@ void CalculateCountdownTimer()
 {
     // Stop timer checking
     if ((countdownTimer.minute == 0 && countdownTimer.second == 0)
-        || (sys_gui::SuccessState.GetValue() == STATE_CHECKED)
+        || (sys_gui::SuccessState.GetValue() != INCORRECT)
         || (sys_host::StrikeNum.GetValue() >= STRIKE_NUM_MAX)
         )
     {
@@ -193,6 +194,8 @@ void AutoUpdate()
         sys_host::StrikeState.ResetState();
         ::MessageBox(NULL, L"", L"", MB_ICONERROR);
 #endif
+
+        CommonBeep(BEEP_FRE, 1000);
     }
 
     if (sys_gui::SuccessState.GetState())
@@ -211,6 +214,7 @@ void AutoUpdate()
                     if (lv_obj_get_style_text_opa(ui_lblTimer, LV_PART_MAIN) == LV_OPA_TRANSP) {
                         // Show text if hiding
                         lv_obj_set_style_text_opa(ui_lblTimer, LV_OPA_COVER, LV_PART_MAIN);
+                        CommonBeep(BEEP_FRE, BEEP_INCREASE_DURATION);
                     }
                     else {
                         // Hide text if showing
@@ -299,6 +303,10 @@ void ModuleSelect_OnButtonNextClick(lv_event_t* e)
         }
     }
 
+    // Set ON SystemInfo module
+    moduleStatusMap.insert(std::make_pair(map_MODULE_NAME[MODULE_NAME::SystemInfo], MODULE_STATUS::ON));
+    moduleStatusMapJson[(uint8_t)MODULE_NAME::SystemInfo] = (uint8_t)MODULE_STATUS::ON;
+
     // Update module status map
     sys_gui::ModuleStatusMap.SetValue(moduleStatusMap);
 }
@@ -333,6 +341,11 @@ void Main_OnButtonPlayClick(lv_event_t* e)
 
     // Send module status to Transporter
     CommonSendRequestWithData(WM_SET_CLIENTSTATE, moduleStatusMapJson);
+
+    // Set SystemInfo module to success state
+    auto moduleStatusMap = sys_gui::ModuleStatusMap.GetValue();
+    moduleStatusMap[map_MODULE_NAME[MODULE_NAME::SystemInfo]] = MODULE_STATUS::SUCCESS;
+    sys_gui::ModuleStatusMap.SetValue(moduleStatusMap);
 }
 
 void Score_OnRollerOrderChange(lv_event_t* e)
@@ -350,15 +363,33 @@ void Score_OnClickBack(lv_event_t* e)
     _ui_screen_change(&currentScreen, LV_SCR_LOAD_ANIM_MOVE_RIGHT, 100, 0, mapCurrentScreen[currentScreen]);
 }
 
-void Main_OnLabelStrikeClick(lv_event_t* e)
+void Main_OnLabelStrike(lv_event_t * e)
 {
+    if (e->code == LV_EVENT_SHORT_CLICKED)
+    {
 #ifdef _WIN64
 #ifndef UNIT_TEST
-    CommonBeep(BEEP_FRE, BEEP_TIMEOUT);
+        CommonBeep(BEEP_FRE, BEEP_TIMEOUT);
 #endif
-    // Random result
-    sys_gui::SuccessState.SetValue(RandomRange(STATE_UNCHECK, STATE_CHECKED + 1));
+        // Random result
+        sys_gui::SuccessState.SetValue(RandomRange(STATE_CHECKED, STATE_CHECKED + 1));
 #endif
+    }
+    else if (e->code == LV_EVENT_LONG_PRESSED_REPEAT)
+    {
+        longPressedCount++;
+
+        if (longPressedCount == 255)
+        {
+            lv_obj_remove_flag(ui_lblStrike, LV_OBJ_FLAG_CLICKABLE);
+            lv_obj_add_state(ui_lblStrike, LV_STATE_DISABLED);
+            StrikeEnable.SetValue(true);
+        }
+    }
+    else if (e->code == LV_EVENT_RELEASED)
+    {
+        longPressedCount = 0;
+    }
 }
 
 void Score_OnLoaded(lv_event_t* e)

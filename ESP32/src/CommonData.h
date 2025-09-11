@@ -43,6 +43,7 @@ namespace sys_gui // GUI read/write -> Send data to HOST
 
 // Allow modification
 #pragma region Custom_data
+extern CData<bool> StrikeEnable;
 #pragma endregion
 
 void UpdateAll();

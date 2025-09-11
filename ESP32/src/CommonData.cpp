@@ -37,6 +37,7 @@ namespace sys_gui
 
 // Allow modification
 #pragma region Custom_data
+CData<bool> StrikeEnable;
 #pragma endregion
 
 // Add auto reset state for custom data only

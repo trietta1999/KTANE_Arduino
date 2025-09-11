@@ -19,8 +19,14 @@ void ui_event_lblStrike(lv_event_t * e)
 {
     lv_event_code_t event_code = lv_event_get_code(e);
 
-    if(event_code == LV_EVENT_CLICKED) {
-        Main_OnLabelStrikeClick(e);
+    if(event_code == LV_EVENT_SHORT_CLICKED) {
+        Main_OnLabelStrike(e);
+    }
+    if(event_code == LV_EVENT_LONG_PRESSED_REPEAT) {
+        Main_OnLabelStrike(e);
+    }
+    if(event_code == LV_EVENT_RELEASED) {
+        Main_OnLabelStrike(e);
     }
 }
 
@@ -92,6 +98,7 @@ void ui_Main_screen_init(void)
     lv_obj_set_style_border_color(ui_lblStrike, lv_color_hex(0x000000), LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_border_opa(ui_lblStrike, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
     lv_obj_set_style_border_width(ui_lblStrike, 1, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_image_src(ui_lblStrike, &ui_img_prohibit_png, LV_PART_MAIN | LV_STATE_DISABLED);
 
     ui_btnPlay = lv_button_create(ui_Main);
     lv_obj_set_width(ui_btnPlay, 70);

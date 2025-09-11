@@ -9,6 +9,7 @@ SET(SOURCES ui_Login.c
     ui_comp_hook.c
     ui_helpers.c
     ui_events.cpp
+    ui_img_prohibit_png.c
     ui_img_play_png.c
     ui_img_leaderboard_png.c
     ui_img_info_i_png.c

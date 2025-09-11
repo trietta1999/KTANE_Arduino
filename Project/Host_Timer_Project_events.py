@@ -54,3 +54,7 @@ def Score_OnClickBack(event_struct):
 def Main_OnLabelStrikeClick(event_struct):
     return
 
+
+def Main_OnLabelStrike(event_struct):
+    return
+
