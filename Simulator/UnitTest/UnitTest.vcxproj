@@ -1,0 +1,861 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <ProjectGuid>{1723FD3C-92BD-E27E-67A3-92BABFB90E1A}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>UnitTest</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectSubType>NativeUnitTestProject</ProjectSubType>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(MSBuildThisFileDirectory);$(MSBuildThisFileDirectory)..\LvglPlatform\lvgl\;$(MSBuildThisFileDirectory)..\LvglPlatform\;..\..\ESP32\src;..\LvglWindowsDesktopApplication;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(MSBuildThisFileDirectory);$(MSBuildThisFileDirectory)..\LvglPlatform\lvgl\;$(MSBuildThisFileDirectory)..\LvglPlatform\;..\..\ESP32\src;..\LvglWindowsDesktopApplication;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(VCInstallDir)UnitTest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_DEBUG;LV_CONF_INCLUDE_SIMPLE;LV_LVGL_H_INCLUDE_SIMPLE;LV_USE_DEV_VERSION;_CRT_SECURE_NO_WARNINGS;HOST_TIMER;UNIT_TEST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <UseFullPaths>true</UseFullPaths>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <CompileAs>Default</CompileAs>
+      <ConformanceMode>true</ConformanceMode>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <GuardEHContMetadata>true</GuardEHContMetadata>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(VCInstallDir)UnitTest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <UseFullPaths>true</UseFullPaths>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(VCInstallDir)UnitTest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <UseFullPaths>true</UseFullPaths>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(VCInstallDir)UnitTest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;LV_CONF_INCLUDE_SIMPLE;LV_LVGL_H_INCLUDE_SIMPLE;LV_USE_DEV_VERSION;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <UseFullPaths>true</UseFullPaths>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(VCInstallDir)UnitTest\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\ESP32\src\CommonData.cpp" />
+    <ClCompile Include="..\..\ESP32\src\CommonDataType.cpp" />
+    <ClCompile Include="..\..\ESP32\src\CommonLibrary.cpp" />
+    <ClCompile Include="..\..\ESP32\src\CommonService.cpp" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_comp_hook.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_events.cpp" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_font_Digit.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_font_Digit_45.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_font_XFail.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_helpers.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_back_png.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_exit_png.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_fail_png.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_leaderboard_png.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_order_play_png.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_play_png.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_setting_png.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_success_png.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_timer_png.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_Login.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_Main.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_OrderPlay.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_Score.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_Setting.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_TimerSetting.c" />
+    <ClCompile Include="Test\GUI_Test.cpp" />
+    <ClCompile Include="Test\Library_Test.cpp" />
+    <ClCompile Include="Test\Service_Test.cpp" />
+    <None Include="..\LvglPlatform\lvgl\env_support\pikascript\pika_lvgl.c" />
+    <None Include="..\LvglPlatform\lvgl\env_support\pikascript\pika_lvgl_indev_t.c" />
+    <None Include="..\LvglPlatform\lvgl\env_support\pikascript\pika_lvgl_lv_event.c" />
+    <None Include="..\LvglPlatform\lvgl\env_support\pikascript\pika_lvgl_lv_obj.c" />
+    <None Include="..\LvglPlatform\lvgl\env_support\pikascript\pika_lvgl_lv_style_t.c" />
+    <None Include="..\LvglPlatform\lvgl\env_support\pikascript\pika_lv_point_t.c" />
+    <None Include="..\LvglPlatform\lvgl\env_support\pikascript\pika_lv_timer_t.c" />
+    <None Include="..\LvglPlatform\lvgl\env_support\pikascript\pika_lv_wegit.c" />
+    <None Include="..\LvglPlatform\lvgl\env_support\rt-thread\lv_rt_thread_port.c" />
+    <None Include="..\LvglPlatform\lvgl\env_support\rt-thread\squareline\lv_ui_entry.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\core\lv_group.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\core\lv_obj.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\core\lv_obj_class.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\core\lv_obj_draw.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\core\lv_obj_event.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\core\lv_obj_id_builtin.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\core\lv_obj_pos.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\core\lv_obj_property.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\core\lv_obj_scroll.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\core\lv_obj_style.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\core\lv_obj_style_gen.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\core\lv_obj_tree.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\core\lv_refr.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\display\lv_display.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\lv_draw.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\lv_draw_arc.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\lv_draw_buf.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\lv_draw_image.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\lv_draw_label.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\lv_draw_line.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\lv_draw_mask.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\lv_draw_rect.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\lv_draw_triangle.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\lv_draw_vector.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\lv_image_decoder.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\nxp\pxp\lv_draw_buf_pxp.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\nxp\pxp\lv_draw_pxp.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\nxp\pxp\lv_draw_pxp_fill.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\nxp\pxp\lv_draw_pxp_img.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\nxp\pxp\lv_draw_pxp_layer.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\nxp\pxp\lv_pxp_cfg.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\nxp\pxp\lv_pxp_osa.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\nxp\pxp\lv_pxp_utils.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\nxp\vglite\lv_draw_buf_vglite.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\nxp\vglite\lv_draw_vglite.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\nxp\vglite\lv_draw_vglite_arc.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\nxp\vglite\lv_draw_vglite_border.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\nxp\vglite\lv_draw_vglite_fill.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\nxp\vglite\lv_draw_vglite_img.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\nxp\vglite\lv_draw_vglite_label.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\nxp\vglite\lv_draw_vglite_layer.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\nxp\vglite\lv_draw_vglite_line.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\nxp\vglite\lv_draw_vglite_triangle.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\nxp\vglite\lv_vglite_buf.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\nxp\vglite\lv_vglite_matrix.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\nxp\vglite\lv_vglite_path.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\nxp\vglite\lv_vglite_utils.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\renesas\dave2d\lv_draw_dave2d.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\renesas\dave2d\lv_draw_dave2d_arc.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\renesas\dave2d\lv_draw_dave2d_border.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\renesas\dave2d\lv_draw_dave2d_fill.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\renesas\dave2d\lv_draw_dave2d_image.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\renesas\dave2d\lv_draw_dave2d_label.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\renesas\dave2d\lv_draw_dave2d_line.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\renesas\dave2d\lv_draw_dave2d_mask_rectangle.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\renesas\dave2d\lv_draw_dave2d_triangle.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\renesas\dave2d\lv_draw_dave2d_utils.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\sdl\lv_draw_sdl.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\sw\blend\lv_draw_sw_blend.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\sw\blend\lv_draw_sw_blend_to_argb8888.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\sw\blend\lv_draw_sw_blend_to_rgb565.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\sw\blend\lv_draw_sw_blend_to_rgb888.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\sw\lv_draw_sw.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\sw\lv_draw_sw_arc.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\sw\lv_draw_sw_border.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\sw\lv_draw_sw_box_shadow.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\sw\lv_draw_sw_fill.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\sw\lv_draw_sw_gradient.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\sw\lv_draw_sw_img.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\sw\lv_draw_sw_letter.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\sw\lv_draw_sw_line.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\sw\lv_draw_sw_mask.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\sw\lv_draw_sw_mask_rect.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\sw\lv_draw_sw_transform.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\sw\lv_draw_sw_triangle.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\sw\lv_draw_sw_vector.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\vg_lite\lv_draw_buf_vg_lite.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\vg_lite\lv_draw_vg_lite.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\vg_lite\lv_draw_vg_lite_arc.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\vg_lite\lv_draw_vg_lite_border.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\vg_lite\lv_draw_vg_lite_box_shadow.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\vg_lite\lv_draw_vg_lite_fill.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\vg_lite\lv_draw_vg_lite_img.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\vg_lite\lv_draw_vg_lite_label.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\vg_lite\lv_draw_vg_lite_layer.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\vg_lite\lv_draw_vg_lite_line.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\vg_lite\lv_draw_vg_lite_mask_rect.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\vg_lite\lv_draw_vg_lite_triangle.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\vg_lite\lv_draw_vg_lite_vector.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\vg_lite\lv_vg_lite_decoder.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\vg_lite\lv_vg_lite_grad.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\vg_lite\lv_vg_lite_math.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\vg_lite\lv_vg_lite_path.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\draw\vg_lite\lv_vg_lite_utils.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\drivers\display\drm\lv_linux_drm.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\drivers\display\fb\lv_linux_fbdev.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\drivers\display\ili9341\lv_ili9341.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\drivers\display\lcd\lv_lcd_generic_mipi.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\drivers\display\st7735\lv_st7735.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\drivers\display\st7789\lv_st7789.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\drivers\display\st7796\lv_st7796.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\drivers\display\tft_espi\lv_tft_espi.cpp" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\drivers\evdev\lv_evdev.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\drivers\libinput\lv_libinput.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\drivers\libinput\lv_xkb.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\drivers\nuttx\lv_nuttx_cache.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\drivers\nuttx\lv_nuttx_entry.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\drivers\nuttx\lv_nuttx_fbdev.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\drivers\nuttx\lv_nuttx_image_cache.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\drivers\nuttx\lv_nuttx_lcd.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\drivers\nuttx\lv_nuttx_libuv.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\drivers\nuttx\lv_nuttx_profiler.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\drivers\nuttx\lv_nuttx_touchscreen.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\drivers\sdl\lv_sdl_keyboard.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\drivers\sdl\lv_sdl_mouse.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\drivers\sdl\lv_sdl_mousewheel.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\drivers\sdl\lv_sdl_window.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\drivers\windows\lv_windows_context.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\drivers\windows\lv_windows_display.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\drivers\windows\lv_windows_input.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\drivers\x11\lv_x11_display.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\drivers\x11\lv_x11_input.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\font\lv_binfont_loader.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\font\lv_font.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\font\lv_font_dejavu_16_persian_hebrew.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\font\lv_font_fmt_txt.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\font\lv_font_montserrat_10.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\font\lv_font_montserrat_12.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\font\lv_font_montserrat_14.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\font\lv_font_montserrat_16.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\font\lv_font_montserrat_18.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\font\lv_font_montserrat_20.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\font\lv_font_montserrat_22.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\font\lv_font_montserrat_24.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\font\lv_font_montserrat_26.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\font\lv_font_montserrat_28.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\font\lv_font_montserrat_28_compressed.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\font\lv_font_montserrat_30.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\font\lv_font_montserrat_32.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\font\lv_font_montserrat_34.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\font\lv_font_montserrat_36.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\font\lv_font_montserrat_38.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\font\lv_font_montserrat_40.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\font\lv_font_montserrat_42.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\font\lv_font_montserrat_44.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\font\lv_font_montserrat_46.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\font\lv_font_montserrat_48.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\font\lv_font_montserrat_8.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\font\lv_font_simsun_16_cjk.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\font\lv_font_unscii_16.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\font\lv_font_unscii_8.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\indev\lv_indev.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\indev\lv_indev_scroll.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\layouts\flex\lv_flex.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\layouts\grid\lv_grid.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\layouts\lv_layout.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\barcode\code128.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\barcode\lv_barcode.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\bin_decoder\lv_bin_decoder.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\bmp\lv_bmp.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\ffmpeg\lv_ffmpeg.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\freetype\lv_freetype.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\freetype\lv_freetype_glyph.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\freetype\lv_freetype_image.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\freetype\lv_freetype_outline.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\freetype\lv_ftsystem.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\fsdrv\lv_fs_cbfs.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\fsdrv\lv_fs_fatfs.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\fsdrv\lv_fs_memfs.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\fsdrv\lv_fs_posix.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\fsdrv\lv_fs_stdio.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\fsdrv\lv_fs_win32.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\gif\gifdec.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\gif\lv_gif.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\libjpeg_turbo\lv_libjpeg_turbo.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\libpng\lv_libpng.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\lodepng\lodepng.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\lodepng\lv_lodepng.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\lz4\lz4.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\qrcode\lv_qrcode.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\qrcode\qrcodegen.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\rle\lv_rle.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\rlottie\lv_rlottie.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgAnimation.cpp" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgBezier.cpp" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgCanvas.cpp" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgCapi.cpp" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgCompressor.cpp" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgFill.cpp" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgInitializer.cpp" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgLoader.cpp" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgMath.cpp" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgPaint.cpp" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgPicture.cpp" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgRawLoader.cpp" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgRender.cpp" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgSaver.cpp" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgScene.cpp" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgShape.cpp" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgStr.cpp" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgSvgCssStyle.cpp" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgSvgLoader.cpp" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgSvgPath.cpp" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgSvgSceneBuilder.cpp" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgSvgUtil.cpp" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgSwCanvas.cpp" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgSwFill.cpp" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgSwImage.cpp" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgSwMath.cpp" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgSwMemPool.cpp" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgSwRaster.cpp" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgSwRenderer.cpp" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgSwRle.cpp" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgSwShape.cpp" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgSwStroke.cpp" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgTaskScheduler.cpp" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgXmlParser.cpp" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\tiny_ttf\lv_tiny_ttf.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\tjpgd\lv_tjpgd.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\libs\tjpgd\tjpgd.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\lv_init.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\misc\cache\lv_cache.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\misc\cache\lv_cache_entry.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\misc\cache\lv_image_cache.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\misc\cache\_lv_cache_lru_rb.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\misc\lv_anim.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\misc\lv_anim_timeline.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\misc\lv_area.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\misc\lv_array.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\misc\lv_async.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\misc\lv_bidi.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\misc\lv_color.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\misc\lv_color_op.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\misc\lv_event.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\misc\lv_fs.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\misc\lv_ll.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\misc\lv_log.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\misc\lv_lru.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\misc\lv_math.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\misc\lv_palette.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\misc\lv_profiler_builtin.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\misc\lv_rb.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\misc\lv_style.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\misc\lv_style_gen.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\misc\lv_templ.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\misc\lv_text.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\misc\lv_text_ap.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\misc\lv_timer.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\misc\lv_utils.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\osal\lv_cmsis_rtos2.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\osal\lv_freertos.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\osal\lv_os_none.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\osal\lv_pthread.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\osal\lv_rtthread.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\osal\lv_windows.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\others\file_explorer\lv_file_explorer.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\others\fragment\lv_fragment.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\others\fragment\lv_fragment_manager.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\others\gridnav\lv_gridnav.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\others\ime\lv_ime_pinyin.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\others\imgfont\lv_imgfont.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\others\monkey\lv_monkey.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\others\observer\lv_observer.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\others\snapshot\lv_snapshot.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\others\sysmon\lv_sysmon.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\others\vg_lite_tvg\vg_lite_matrix.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\others\vg_lite_tvg\vg_lite_tvg.cpp" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\stdlib\builtin\lv_mem_core_builtin.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\stdlib\builtin\lv_sprintf_builtin.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\stdlib\builtin\lv_string_builtin.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\stdlib\builtin\lv_tlsf.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\stdlib\clib\lv_mem_core_clib.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\stdlib\clib\lv_sprintf_clib.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\stdlib\clib\lv_string_clib.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\stdlib\lv_mem.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\stdlib\micropython\lv_mem_core_micropython.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\stdlib\rtthread\lv_mem_core_rtthread.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\stdlib\rtthread\lv_sprintf_rtthread.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\stdlib\rtthread\lv_string_rtthread.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\themes\default\lv_theme_default.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\themes\lv_theme.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\themes\mono\lv_theme_mono.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\themes\simple\lv_theme_simple.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\tick\lv_tick.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\widgets\animimage\lv_animimage.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\widgets\arc\lv_arc.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\widgets\bar\lv_bar.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\widgets\buttonmatrix\lv_buttonmatrix.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\widgets\button\lv_button.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\widgets\calendar\lv_calendar.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\widgets\calendar\lv_calendar_header_arrow.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\widgets\calendar\lv_calendar_header_dropdown.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\widgets\canvas\lv_canvas.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\widgets\chart\lv_chart.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\widgets\checkbox\lv_checkbox.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\widgets\dropdown\lv_dropdown.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\widgets\imagebutton\lv_imagebutton.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\widgets\image\lv_image.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\widgets\keyboard\lv_keyboard.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\widgets\label\lv_label.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\widgets\led\lv_led.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\widgets\line\lv_line.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\widgets\list\lv_list.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\widgets\menu\lv_menu.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\widgets\msgbox\lv_msgbox.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\widgets\objx_templ\lv_objx_templ.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\widgets\roller\lv_roller.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\widgets\scale\lv_scale.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\widgets\slider\lv_slider.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\widgets\span\lv_span.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\widgets\spinbox\lv_spinbox.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\widgets\spinner\lv_spinner.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\widgets\switch\lv_switch.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\widgets\table\lv_table.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\widgets\tabview\lv_tabview.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\widgets\textarea\lv_textarea.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\widgets\tileview\lv_tileview.c" />
+    <ClCompile Include="..\LvglPlatform\lvgl\src\widgets\win\lv_win.c" />
+    <None Include="..\LvglPlatform\lvgl\env_support\pikascript\pika_lvgl.pyi" />
+    <None Include="..\LvglPlatform\lvgl\env_support\pikascript\README.md" />
+    <None Include="..\LvglPlatform\lvgl\env_support\rt-thread\SConscript" />
+    <None Include="..\LvglPlatform\lvgl\env_support\rt-thread\squareline\README.md" />
+    <None Include="..\LvglPlatform\lvgl\env_support\rt-thread\squareline\SConscript" />
+    <None Include="..\LvglPlatform\lvgl\env_support\zephyr\module.yml" />
+    <None Include="..\LvglPlatform\lvgl\src\draw\sw\blend\helium\lv_blend_helium.S" />
+    <None Include="..\LvglPlatform\lvgl\src\draw\sw\blend\neon\lv_blend_neon.S" />
+    <None Include="..\LvglPlatform\lvgl\src\drivers\README.md" />
+    <None Include="..\LvglPlatform\lvgl\src\libs\lz4\LICENSE" />
+    <None Include="..\LvglPlatform\lvgl\src\libs\thorvg\add_lvgl_if.sh" />
+    <None Include="..\LvglPlatform\lvgl\src\others\fragment\README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\ESP32\src\ArduinoJson-v7.4.1.h" />
+    <ClInclude Include="..\..\ESP32\src\CData.h" />
+    <ClInclude Include="..\..\ESP32\src\CommonData.h" />
+    <ClInclude Include="..\..\ESP32\src\CommonDataType.h" />
+    <ClInclude Include="..\..\ESP32\src\CommonLibrary.h" />
+    <ClInclude Include="..\..\ESP32\src\CommonService.h" />
+    <ClInclude Include="..\..\ESP32\src\ui\ui.h" />
+    <ClInclude Include="..\..\ESP32\src\ui\ui_events.h" />
+    <ClInclude Include="..\..\ESP32\src\ui\ui_helpers.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\core\lv_global.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\core\lv_group.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\core\lv_obj.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\core\lv_obj_class.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\core\lv_obj_draw.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\core\lv_obj_event.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\core\lv_obj_pos.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\core\lv_obj_property.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\core\lv_obj_scroll.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\core\lv_obj_style.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\core\lv_obj_style_gen.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\core\lv_obj_tree.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\core\lv_refr.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\display\lv_display.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\display\lv_display_private.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\lv_draw.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\lv_draw_arc.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\lv_draw_buf.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\lv_draw_image.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\lv_draw_label.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\lv_draw_line.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\lv_draw_mask.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\lv_draw_rect.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\lv_draw_triangle.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\lv_draw_vector.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\lv_image_decoder.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\lv_image_dsc.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\nxp\pxp\lv_draw_pxp.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\nxp\pxp\lv_pxp_cfg.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\nxp\pxp\lv_pxp_osa.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\nxp\pxp\lv_pxp_utils.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\nxp\vglite\lv_draw_vglite.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\nxp\vglite\lv_vglite_buf.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\nxp\vglite\lv_vglite_matrix.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\nxp\vglite\lv_vglite_path.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\nxp\vglite\lv_vglite_utils.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\renesas\dave2d\lv_draw_dave2d.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\renesas\dave2d\lv_draw_dave2d_utils.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\sdl\lv_draw_sdl.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\sw\arm2d\lv_draw_sw_arm2d.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\sw\arm2d\lv_draw_sw_helium.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\sw\blend\arm2d\lv_blend_arm2d.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\sw\blend\helium\lv_blend_helium.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\sw\blend\lv_draw_sw_blend.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\sw\blend\lv_draw_sw_blend_to_argb8888.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\sw\blend\lv_draw_sw_blend_to_rgb565.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\sw\blend\lv_draw_sw_blend_to_rgb888.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\sw\blend\neon\lv_blend_neon.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\sw\lv_draw_sw.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\sw\lv_draw_sw_gradient.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\sw\lv_draw_sw_mask.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\vg_lite\lv_draw_vg_lite.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\vg_lite\lv_draw_vg_lite_type.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\vg_lite\lv_vg_lite_decoder.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\vg_lite\lv_vg_lite_grad.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\vg_lite\lv_vg_lite_math.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\vg_lite\lv_vg_lite_path.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\draw\vg_lite\lv_vg_lite_utils.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\drivers\display\drm\lv_linux_drm.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\drivers\display\fb\lv_linux_fbdev.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\drivers\display\ili9341\lv_ili9341.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\drivers\display\lcd\lv_lcd_generic_mipi.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\drivers\display\st7735\lv_st7735.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\drivers\display\st7789\lv_st7789.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\drivers\display\st7796\lv_st7796.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\drivers\display\tft_espi\lv_tft_espi.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\drivers\evdev\lv_evdev.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\drivers\libinput\lv_libinput.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\drivers\libinput\lv_xkb.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\drivers\lv_drivers.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\drivers\nuttx\lv_nuttx_cache.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\drivers\nuttx\lv_nuttx_entry.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\drivers\nuttx\lv_nuttx_fbdev.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\drivers\nuttx\lv_nuttx_image_cache.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\drivers\nuttx\lv_nuttx_lcd.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\drivers\nuttx\lv_nuttx_libuv.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\drivers\nuttx\lv_nuttx_profiler.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\drivers\nuttx\lv_nuttx_touchscreen.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\drivers\sdl\lv_sdl_keyboard.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\drivers\sdl\lv_sdl_mouse.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\drivers\sdl\lv_sdl_mousewheel.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\drivers\sdl\lv_sdl_window.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\drivers\windows\lv_windows_context.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\drivers\windows\lv_windows_display.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\drivers\windows\lv_windows_input.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\drivers\x11\lv_x11.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\font\lv_binfont_loader.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\font\lv_font.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\font\lv_font_fmt_txt.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\font\lv_symbol_def.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\indev\lv_indev.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\indev\lv_indev_private.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\indev\lv_indev_scroll.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\layouts\flex\lv_flex.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\layouts\grid\lv_grid.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\layouts\lv_layout.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\barcode\code128.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\barcode\lv_barcode.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\bin_decoder\lv_bin_decoder.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\bmp\lv_bmp.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\ffmpeg\lv_ffmpeg.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\freetype\ftmodule.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\freetype\ftoption.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\freetype\lv_freetype.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\freetype\lv_freetype_private.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\fsdrv\lv_fsdrv.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\gif\gifdec.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\gif\gifdec_mve.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\gif\lv_gif.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\libjpeg_turbo\lv_libjpeg_turbo.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\libpng\lv_libpng.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\lodepng\lodepng.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\lodepng\lv_lodepng.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\lz4\lz4.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\qrcode\lv_qrcode.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\qrcode\qrcodegen.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\rle\lv_rle.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\rlottie\lv_rlottie.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\thorvg\config.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\thorvg\thorvg.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\thorvg\thorvg_capi.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgArray.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgBezier.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgCanvas.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgCommon.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgCompressor.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgFill.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgFrameModule.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgIteratorAccessor.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgLoader.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgLoadModule.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgMath.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgPaint.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgPicture.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgRawLoader.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgRender.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgSaveModule.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgScene.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgShape.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgStr.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgSvgCssStyle.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgSvgLoader.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgSvgLoaderCommon.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgSvgPath.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgSvgSceneBuilder.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgSvgUtil.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgSwCommon.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgSwRasterAvx.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgSwRasterC.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgSwRasterNeon.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgSwRasterTexmap.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgSwRenderer.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgTaskScheduler.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\thorvg\tvgXmlParser.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\tiny_ttf\lv_tiny_ttf.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\tiny_ttf\stb_rect_pack.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\tiny_ttf\stb_truetype_htcw.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\tjpgd\lv_tjpgd.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\tjpgd\tjpgd.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\libs\tjpgd\tjpgdcnf.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\lvgl.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\lvgl_private.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\lv_api_map_v8.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\lv_api_map_v9_0.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\lv_conf_internal.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\lv_conf_kconfig.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\lv_init.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\misc\cache\lv_cache.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\misc\cache\lv_cache_entry.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\misc\cache\lv_cache_entry_private.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\misc\cache\lv_cache_private.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\misc\cache\lv_image_cache.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\misc\cache\_lv_cache_lru_rb.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\misc\lv_anim.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\misc\lv_anim_timeline.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\misc\lv_area.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\misc\lv_array.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\misc\lv_assert.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\misc\lv_async.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\misc\lv_bidi.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\misc\lv_color.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\misc\lv_color_op.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\misc\lv_event.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\misc\lv_fs.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\misc\lv_ll.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\misc\lv_log.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\misc\lv_lru.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\misc\lv_math.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\misc\lv_palette.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\misc\lv_profiler.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\misc\lv_profiler_builtin.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\misc\lv_rb.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\misc\lv_style.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\misc\lv_style_gen.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\misc\lv_templ.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\misc\lv_text.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\misc\lv_text_ap.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\misc\lv_timer.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\misc\lv_types.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\misc\lv_utils.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\osal\lv_cmsis_rtos2.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\osal\lv_freertos.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\osal\lv_os.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\osal\lv_os_none.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\osal\lv_pthread.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\osal\lv_rtthread.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\osal\lv_windows.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\others\file_explorer\lv_file_explorer.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\others\fragment\lv_fragment.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\others\gridnav\lv_gridnav.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\others\ime\lv_ime_pinyin.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\others\imgfont\lv_imgfont.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\others\monkey\lv_monkey.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\others\observer\lv_observer.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\others\snapshot\lv_snapshot.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\others\sysmon\lv_sysmon.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\others\vg_lite_tvg\vg_lite.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\stdlib\builtin\lv_tlsf.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\stdlib\lv_mem.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\stdlib\lv_sprintf.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\stdlib\lv_string.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\themes\default\lv_theme_default.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\themes\lv_theme.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\themes\mono\lv_theme_mono.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\themes\simple\lv_theme_simple.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\tick\lv_tick.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\widgets\animimage\lv_animimage.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\widgets\arc\lv_arc.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\widgets\bar\lv_bar.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\widgets\buttonmatrix\lv_buttonmatrix.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\widgets\button\lv_button.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\widgets\calendar\lv_calendar.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\widgets\calendar\lv_calendar_header_arrow.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\widgets\calendar\lv_calendar_header_dropdown.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\widgets\canvas\lv_canvas.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\widgets\chart\lv_chart.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\widgets\checkbox\lv_checkbox.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\widgets\dropdown\lv_dropdown.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\widgets\imagebutton\lv_imagebutton.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\widgets\image\lv_image.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\widgets\keyboard\lv_keyboard.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\widgets\label\lv_label.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\widgets\led\lv_led.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\widgets\line\lv_line.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\widgets\list\lv_list.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\widgets\menu\lv_menu.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\widgets\msgbox\lv_msgbox.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\widgets\objx_templ\lv_objx_templ.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\widgets\roller\lv_roller.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\widgets\scale\lv_scale.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\widgets\slider\lv_slider.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\widgets\span\lv_span.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\widgets\spinbox\lv_spinbox.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\widgets\spinner\lv_spinner.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\widgets\switch\lv_switch.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\widgets\table\lv_table.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\widgets\tabview\lv_tabview.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\widgets\textarea\lv_textarea.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\widgets\tileview\lv_tileview.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\src\widgets\win\lv_win.h" />
+    <ClInclude Include="..\LvglWindowsDesktopApplication\lv_conf.h" />
+    <None Include="..\LvglPlatform\lvgl\env_support\cmsis-pack\lv_conf_cmsis.h" />
+    <None Include="..\LvglPlatform\lvgl\env_support\rt-thread\lv_rt_thread_conf.h" />
+    <None Include="..\LvglPlatform\lvgl\env_support\rt-thread\squareline\ui\lvgl\lvgl.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\lvgl.h" />
+    <ClInclude Include="..\LvglPlatform\lvgl\lv_conf_template.h" />
+    <None Include="..\LvglPlatform\lvgl\env_support\cmsis-pack\README.md" />
+    <None Include="..\LvglPlatform\lvgl\env_support\esp\rlottie\0001-changes-to-compile-with-esp-idf.patch" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\LvglPlatform\lvgl\.typos.toml" />
+    <None Include="..\LvglPlatform\lvgl\CMakePresets.json" />
+    <None Include="..\LvglPlatform\lvgl\component.mk" />
+    <None Include="..\LvglPlatform\lvgl\env_support\cmake\custom.cmake" />
+    <None Include="..\LvglPlatform\lvgl\env_support\cmake\esp.cmake" />
+    <None Include="..\LvglPlatform\lvgl\env_support\cmake\micropython.cmake" />
+    <None Include="..\LvglPlatform\lvgl\env_support\cmake\zephyr.cmake" />
+    <None Include="..\LvglPlatform\lvgl\env_support\cmsis-pack\gen_pack.sh" />
+    <None Include="..\LvglPlatform\lvgl\env_support\cmsis-pack\LVGL.lvgl.9.0.1-dev2.pack" />
+    <None Include="..\LvglPlatform\lvgl\env_support\cmsis-pack\LVGL.lvgl.pdsc" />
+    <None Include="..\LvglPlatform\lvgl\env_support\cmsis-pack\LVGL.pidx" />
+    <None Include="..\LvglPlatform\lvgl\idf_component.yml" />
+    <None Include="..\LvglPlatform\lvgl\Kconfig" />
+    <None Include="..\LvglPlatform\lvgl\library.json" />
+    <None Include="..\LvglPlatform\lvgl\library.properties" />
+    <None Include="..\LvglPlatform\lvgl\lvgl.mk" />
+    <None Include="..\LvglPlatform\lvgl\lvgl.pc.in" />
+    <None Include="..\LvglPlatform\lvgl\README.md" />
+    <None Include="..\LvglPlatform\lvgl\SConscript" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\LvglPlatform\lvgl\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\LvglPlatform\lvgl\LICENCE.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\LvglPlatform\lvgl\env_support\cmsis-pack\lv_cmsis_pack.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\LvglPlatform\lvgl\env_support\cmsis-pack\lv_os_custom_c.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\LvglPlatform\lvgl\env_support\cmsis-pack\lv_os_custom_h.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\LvglPlatform\lvgl\env_support\esp\rlottie\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\LvglPlatform\lvgl\src\libs\freetype\arial.ttf" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
