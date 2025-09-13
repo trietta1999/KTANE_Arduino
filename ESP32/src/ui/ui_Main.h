@@ -34,7 +34,6 @@ extern lv_obj_t * ui_sldHandle;
 extern lv_obj_t * ui_imgResult;
 extern void ui_event_sldBrightness(lv_event_t * e);
 extern lv_obj_t * ui_sldBrightness;
-extern lv_obj_t * ui_wndTransparent;
 // CUSTOM VARIABLES
 
 #ifdef __cplusplus
