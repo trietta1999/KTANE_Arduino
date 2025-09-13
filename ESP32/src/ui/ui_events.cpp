@@ -13,7 +13,7 @@ struct countdown_timer_t
     int8_t second;
     int8_t maxSecond;
     bool timeOut;
-    lv_timer_t* countdownTimer;
+    lv_timer_t* lvTimer;
 
     void StartTimer(int8_t second)
     {
@@ -25,19 +25,22 @@ struct countdown_timer_t
         // Set current second
         CurrentSecond.SetValue(second);
 
-        this->countdownTimer = lv_timer_create([](lv_timer_t* timer) {
+        this->lvTimer = lv_timer_create([](lv_timer_t* timer) {
             auto data = reinterpret_cast<countdown_timer_t*>(lv_timer_get_user_data(timer));
 
             // Check timeout
-            if ((data->second <= 0))
+            if ((data->second <= 0) || (sys_gui::SuccessState.GetValue() != INCORRECT))
             {
                 // Delete timer
                 lv_timer_del(timer);
                 timer = nullptr;
-                data->countdownTimer = nullptr;
+                data->lvTimer = nullptr;
 
-                // Set timeout flag
-                data->timeOut = true;
+                if (sys_gui::SuccessState.GetValue() == INCORRECT)
+                {
+                    // Set timeout flag
+                    data->timeOut = true;
+                }
 
                 return;
             }
@@ -74,10 +77,10 @@ void InitModule(bool renew = true)
     CounterType.SetValue(COUNTER_TYPE::DOWN);
 
     // Delete countdown timer
-    if (countdownTimer->countdownTimer)
+    if (countdownTimer->lvTimer)
     {
-        lv_timer_del(countdownTimer->countdownTimer);
-        countdownTimer->countdownTimer = nullptr;
+        lv_timer_del(countdownTimer->lvTimer);
+        countdownTimer->lvTimer = nullptr;
     }
 
     // Create countdown timer
@@ -91,7 +94,7 @@ void InitModule(bool renew = true)
     lv_obj_add_flag(ui_conHandleHolder, LV_OBJ_FLAG_CLICKABLE);
 
 #ifndef UNIT_TEST
-    CommonBeep(BEEP_FRE, 1000);
+    CommonBeep(BEEP_FRE, TIMER_PERIOD_1000);
 #endif
 }
 
@@ -109,24 +112,33 @@ void Init()
 
     // Create random module activate timer
     lv_timer_create([](lv_timer_t* timer) {
-#ifdef _WIN64
-        if (countdownTimer->countdownTimer)
+        if (sys_gui::SuccessState.GetValue() == INCORRECT)
         {
-            // Delete timer
-            lv_timer_del(timer);
-            timer = nullptr;
+#ifdef _WIN64
+            if (countdownTimer->lvTimer)
+            {
+                // Delete timer
+                lv_timer_del(timer);
+                timer = nullptr;
 
-            return;
-        }
+                return;
+            }
 #endif
 
-        auto num = RandomRange(0, 100);
+            auto num = RandomRange(0, 100);
 
-        // Check any value, if true, then 10% probability module will be activated
-        if (num < 10)
+            // Check any value, if true, then 10% probability module will be activated
+            if (num < 10)
+            {
+                InitModule();
+
+                // Delete timer
+                lv_timer_del(timer);
+                timer = nullptr;
+            }
+        }
+        else
         {
-            InitModule();
-
             // Delete timer
             lv_timer_del(timer);
             timer = nullptr;
@@ -142,13 +154,13 @@ void AutoUpdate()
         if (CounterType.GetValue() == COUNTER_TYPE::DOWN)
         {
             // Reset to default period
-            lv_timer_set_period(countdownTimer->countdownTimer, TIMER_PERIOD_1000);
+            lv_timer_set_period(countdownTimer->lvTimer, TIMER_PERIOD_1000);
         }
         // Count up mode
         else
         {
             // Speed up period
-            lv_timer_set_period(countdownTimer->countdownTimer, TIMER_PERIOD_100);
+            lv_timer_set_period(countdownTimer->lvTimer, TIMER_PERIOD_100);
         }
     }
 
@@ -218,10 +230,10 @@ void OnDebugClick(lv_event_t* e)
 {
 #ifdef _WIN64
     // Delete countdown timer
-    if (countdownTimer->countdownTimer)
+    if (countdownTimer->lvTimer)
     {
-        lv_timer_del(countdownTimer->countdownTimer);
-        countdownTimer->countdownTimer = nullptr;
+        lv_timer_del(countdownTimer->lvTimer);
+        countdownTimer->lvTimer = nullptr;
     }
 
     InitModule();
