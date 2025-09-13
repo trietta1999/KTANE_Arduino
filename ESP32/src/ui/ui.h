@@ -41,9 +41,9 @@ extern lv_obj_t * ui____initial_actions0;
 LV_IMG_DECLARE(ui_img_arrow_down_png);    // assets/arrow_down.png
 LV_IMG_DECLARE(ui_img_speedometer_png);    // assets/speedometer.png
 LV_IMG_DECLARE(ui_img_arrow_up_png);    // assets/arrow_up.png
+LV_IMG_DECLARE(ui_img_help_center_png);    // assets/help_center.png
 LV_IMG_DECLARE(ui_img_success_png);    // assets/success.png
 LV_IMG_DECLARE(ui_img_fail_png);    // assets/fail.png
-LV_IMG_DECLARE(ui_img_help_center_png);    // assets/help_center.png
 LV_IMG_DECLARE(ui_img_back_png);    // assets/back.png
 LV_IMG_DECLARE(ui_img_rotate_left_png);    // assets/rotate_left.png
 LV_IMG_DECLARE(ui_img_rotate_right_png);    // assets/rotate_right.png

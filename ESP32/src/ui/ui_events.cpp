@@ -30,15 +30,18 @@ struct countdown_timer_t
             auto data = reinterpret_cast<countdown_timer_t*>(lv_timer_get_user_data(timer));
 
             // Check timeout
-            if ((data->second <= 0))
+            if ((data->second <= 0) || (sys_gui::SuccessState.GetValue() != INCORRECT))
             {
                 // Delete timer
                 lv_timer_del(timer);
                 timer = nullptr;
                 data->countdownTimer = nullptr;
 
-                // Set timeout flag
-                data->timeOut = true;
+                if (sys_gui::SuccessState.GetValue() == INCORRECT)
+                {
+                    // Set timeout flag
+                    data->timeOut = true;
+                }
 
                 return;
             }
@@ -132,7 +135,7 @@ void InitModule()
     debug_println("Correct pattern index: " + std::to_string(CurrentPatternIndex.GetValue() + 1));
 #endif
 #ifndef UNIT_TEST
-    CommonBeep(BEEP_FRE, 1000);
+    CommonBeep(BEEP_FRE, TIMER_PERIOD_1000);
 #endif
 }
 
@@ -164,15 +167,24 @@ void Init()
 #ifndef UNIT_TEST
     // Create random module activate timer
     lv_timer_create([](lv_timer_t* timer) {
-        auto num = RandomRange(0, 100);
-
-        // Check any value, if true, then 10% probability module will be activated
-        if (num < 10)
+        if (sys_gui::SuccessState.GetValue() == INCORRECT)
         {
-            if (!moduleActivateState)
+            auto num = RandomRange(0, 100);
+
+            // Check any value, if true, then 10% probability module will be activated
+            if (num < 10)
             {
-                InitModule();
+                if (!moduleActivateState)
+                {
+                    InitModule();
+                }
             }
+        }
+        else
+        {
+            // Delete timer
+            lv_timer_del(timer);
+            timer = nullptr;
         }
         }, TIMER_PERIOD_1000 * 5, nullptr); // 5s
 #endif

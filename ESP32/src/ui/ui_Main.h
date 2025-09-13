@@ -40,12 +40,11 @@ extern lv_obj_t * ui_lblLed7;
 extern lv_obj_t * ui_lblLed10;
 extern lv_obj_t * ui_Label4;
 extern lv_obj_t * ui_Label3;
+extern void ui_event_btnHelp(lv_event_t * e);
+extern lv_obj_t * ui_btnHelp;
 extern lv_obj_t * ui_imgResult;
 extern void ui_event_sldBrightness(lv_event_t * e);
 extern lv_obj_t * ui_sldBrightness;
-extern lv_obj_t * ui_wndTransparent;
-extern void ui_event_btnHelp(lv_event_t * e);
-extern lv_obj_t * ui_btnHelp;
 // CUSTOM VARIABLES
 
 #ifdef __cplusplus

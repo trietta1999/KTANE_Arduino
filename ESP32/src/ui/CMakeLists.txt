@@ -7,9 +7,9 @@ SET(SOURCES ui_Main.c
     ui_img_arrow_down_png.c
     ui_img_speedometer_png.c
     ui_img_arrow_up_png.c
+    ui_img_help_center_png.c
     ui_img_success_png.c
     ui_img_fail_png.c
-    ui_img_help_center_png.c
     ui_img_back_png.c
     ui_img_rotate_left_png.c
     ui_img_rotate_right_png.c
