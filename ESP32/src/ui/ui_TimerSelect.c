@@ -35,7 +35,8 @@ void ui_TimerSelect_screen_init(void)
     lv_obj_set_style_bg_opa(ui_TimerSelect, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
 
     ui_rlSettingMinute = lv_roller_create(ui_TimerSelect);
-    lv_roller_set_options(ui_rlSettingMinute, "05\n10\n15\n20\n25\n30\n35\n40\n45\n50\n55\n60", LV_ROLLER_MODE_INFINITE);
+    lv_roller_set_options(ui_rlSettingMinute, "01\n05\n10\n15\n20\n25\n30\n35\n40\n45\n50\n55\n60",
+                          LV_ROLLER_MODE_INFINITE);
     lv_obj_set_height(ui_rlSettingMinute, 230);
     lv_obj_set_width(ui_rlSettingMinute, LV_SIZE_CONTENT);   /// 1
     lv_obj_set_x(ui_rlSettingMinute, -14);

@@ -108,7 +108,7 @@ void ui_ModuleSelect_screen_init(void)
     lv_obj_set_x(ui_cbSettingModule1, -28);
     lv_obj_set_y(ui_cbSettingModule1, -7);
     lv_obj_set_align(ui_cbSettingModule1, LV_ALIGN_CENTER);
-    lv_obj_add_state(ui_cbSettingModule1, LV_STATE_CHECKED | LV_STATE_FOCUSED);       /// States
+    lv_obj_add_state(ui_cbSettingModule1, LV_STATE_FOCUSED);       /// States
     lv_obj_remove_flag(ui_cbSettingModule1,
                        LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE |
                        LV_OBJ_FLAG_SNAPPABLE);     /// Flags

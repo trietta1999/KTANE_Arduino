@@ -56,6 +56,20 @@ void CalculateCountdownTimer()
         || (sys_host::StrikeNum.GetValue() >= STRIKE_NUM_MAX)
         )
     {
+        // Check timeout
+        if (countdownTimer.minute == 0 && countdownTimer.second == 0)
+        {
+            sys_host::ClientName.SetValue("Timeout");
+            sys_gui::SuccessState.SetValue(STATE_UNCHECK);
+        }
+
+        // Check strike
+        if (sys_host::StrikeNum.GetValue() >= STRIKE_NUM_MAX)
+        {
+            sys_gui::SuccessState.SetValue(STATE_UNCHECK);
+        }
+
+        // Check success state
         if (sys_gui::SuccessState.GetValue() != STATE_CHECKED)
         {
             CommonSendRequest(WM_STOP_ALL);
@@ -195,7 +209,7 @@ void AutoUpdate()
         ::MessageBox(NULL, L"", L"", MB_ICONERROR);
 #endif
 
-        CommonBeep(BEEP_FRE, 1000);
+        CommonBeep(BEEP_FRE, TIMECYCLE_0);
     }
 
     if (sys_gui::SuccessState.GetState())
