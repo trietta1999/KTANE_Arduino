@@ -90,7 +90,7 @@ struct countdown_timer_t
             auto data = reinterpret_cast<countdown_timer_t*>(lv_timer_get_user_data(timer));
 
             // Check stop from external OR timeout
-            if (data->stop || (data->second < 0))
+            if (data->stop || (data->second < 0) || (sys_gui::SuccessState.GetValue() != INCORRECT))
             {
                 // Delete timer
                 lv_timer_del(timer);
@@ -179,12 +179,8 @@ void InitQuestion(bool renew = true)
         countdownTimer->StartTimer(ui_lblTimer, MAX_COUNTDOWN_SEC);
     }
 
-#ifdef ARDUINO
-    lv_obj_add_flag(ui_btnDebug, LV_OBJ_FLAG_HIDDEN);
-#endif
-
 #ifndef UNIT_TEST
-    CommonBeep(BEEP_FRE, 1000);
+    CommonBeep(BEEP_FRE, TIMECYCLE_0);
 #endif
 }
 
@@ -215,17 +211,30 @@ void Init()
 #ifndef UNIT_TEST
     // Create random module activate timer
     lv_timer_create([](lv_timer_t* timer) {
-        auto num = RandomRange(0, 100);
-
-        // Check any value, if true, then 10% probability module will be activated
-        if (num < 10)
+        if (sys_gui::SuccessState.GetValue() == INCORRECT)
         {
-            if (!moduleActivateState)
+            auto num = RandomRange(0, 100);
+
+            // Check any value, if true, then 10% probability module will be activated
+            if (num < 10)
             {
-                InitQuestion();
+                if (!moduleActivateState)
+                {
+                    InitQuestion();
+                }
             }
         }
+        else
+        {
+            // Delete timer
+            lv_timer_del(timer);
+            timer = nullptr;
+        }
         }, TIMER_SLEEP * 5, nullptr); // 5s
+#endif
+
+#ifdef ARDUINO
+    lv_obj_add_flag(ui_btnDebug, LV_OBJ_FLAG_HIDDEN);
 #endif
 }
 

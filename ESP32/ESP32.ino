@@ -86,9 +86,7 @@ void IOProcessData() {
 
   // Deactivate module
   if (!digitalRead(INPUT_PIN)) {
-    if (sys_gui::SuccessState.GetValue() != STATE_CHECKED) {
-      sys_gui::SuccessState.SetValue(STATE_UNCHECK);
-    }
+    sys_gui::SuccessState.SetValue(STATE_CHECKED);
 
     // Send response to Transporter
     CommonSendRequest(WM_CLIENT_RESPONSE);
