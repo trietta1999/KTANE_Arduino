@@ -19,7 +19,6 @@ lv_obj_t * ui_Label4 = NULL;
 lv_obj_t * ui_btnDebug = NULL;
 lv_obj_t * ui_imgResult = NULL;
 lv_obj_t * ui_sldBrightness = NULL;
-lv_obj_t * ui_wndTransparent = NULL;
 // event funtions
 void ui_event_btnYes(lv_event_t * e)
 {
@@ -283,18 +282,6 @@ void ui_Main_screen_init(void)
     //Compensating for LVGL9.1 draw crash with bar/slider max value when top-padding is nonzero and right-padding is 0
     if(lv_obj_get_style_pad_top(ui_sldBrightness, LV_PART_MAIN) > 0) lv_obj_set_style_pad_right(ui_sldBrightness,
                                                                                                     lv_obj_get_style_pad_right(ui_sldBrightness, LV_PART_MAIN) + 1, LV_PART_MAIN);
-    ui_wndTransparent = lv_label_create(ui_Main);
-    lv_obj_set_width(ui_wndTransparent, 320);
-    lv_obj_set_height(ui_wndTransparent, 240);
-    lv_obj_set_align(ui_wndTransparent, LV_ALIGN_CENTER);
-    lv_label_set_text(ui_wndTransparent, "");
-    lv_obj_add_flag(ui_wndTransparent, LV_OBJ_FLAG_HIDDEN | LV_OBJ_FLAG_CLICKABLE |
-                    LV_OBJ_FLAG_IGNORE_LAYOUT);     /// Flags
-    lv_obj_remove_flag(ui_wndTransparent,
-                       LV_OBJ_FLAG_PRESS_LOCK | LV_OBJ_FLAG_CLICK_FOCUSABLE | LV_OBJ_FLAG_GESTURE_BUBBLE | LV_OBJ_FLAG_SNAPPABLE |
-                       LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_SCROLL_ELASTIC | LV_OBJ_FLAG_SCROLL_MOMENTUM |
-                       LV_OBJ_FLAG_SCROLL_CHAIN);     /// Flags
-
     lv_obj_add_event_cb(ui_btnYes, ui_event_btnYes, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_btnNo, ui_event_btnNo, LV_EVENT_ALL, NULL);
     lv_obj_add_event_cb(ui_btnDebug, ui_event_btnDebug, LV_EVENT_ALL, NULL);
@@ -321,6 +308,5 @@ void ui_Main_screen_destroy(void)
     ui_btnDebug = NULL;
     ui_imgResult = NULL;
     ui_sldBrightness = NULL;
-    ui_wndTransparent = NULL;
 
 }
