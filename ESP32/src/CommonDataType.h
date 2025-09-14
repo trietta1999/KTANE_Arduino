@@ -16,11 +16,11 @@
 
 #ifdef _WIN64
 #define HOST_NAME mapWstr_MODULE_NAME[MODULE_NAME::HostTimer].c_str()
-#define CLIENT_NAME mapWstr_MODULE_NAME[MODULE_NAME::Wires].c_str()
-#define CLIENT_NAME_FOR_JSON map_MODULE_NAME[MODULE_NAME::Wires].c_str()
+#define CLIENT_NAME mapWstr_MODULE_NAME[MODULE_NAME::ComplicatedWires].c_str()
+#define CLIENT_NAME_FOR_JSON map_MODULE_NAME[MODULE_NAME::ComplicatedWires].c_str()
 #else
 #define HOST_NAME map_MODULE_NAME[MODULE_NAME::HostTimer].c_str()
-#define CLIENT_NAME map_MODULE_NAME[MODULE_NAME::Wires].c_str()
+#define CLIENT_NAME map_MODULE_NAME[MODULE_NAME::ComplicatedWires].c_str()
 #endif
 
 #define MAX_SIZE 1000
@@ -241,8 +241,6 @@ enum class WIRE_IN_ORDER
     MAX
 };
 EXTERN_MAP_ENUM_STR(WIRE_IN_ORDER)
-
-extern std::unordered_map<COLOR_TYPE, uint32_t> mapColor;
 
 #define KEYPAD_MAX_NUM 4
 #define MAX_COL 6

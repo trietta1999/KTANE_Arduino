@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Label="Globals">
-    <ProjectName>Wires</ProjectName>
+    <ProjectName>ComplicatedWires</ProjectName>
     <ProjectGuid>{7148D2C8-4594-4054-95F2-6211DA069D8F}</ProjectGuid>
     <RootNamespace>LVGL</RootNamespace>
     <MileProjectType>WindowsApplication</MileProjectType>
@@ -308,6 +308,7 @@
     <ClInclude Include="..\..\ESP32\src\ui\ui.h" />
     <ClInclude Include="..\..\ESP32\src\ui\ui_events.h" />
     <ClInclude Include="..\..\ESP32\src\ui\ui_helpers.h" />
+    <ClInclude Include="..\..\ESP32\src\ui\ui_Main.h" />
     <ClInclude Include="lv_conf.h" />
   </ItemGroup>
   <ItemGroup>
@@ -695,7 +696,10 @@
     <ClCompile Include="..\..\ESP32\src\ui\ui_comp_hook.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_events.cpp" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_helpers.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_cut_png.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_img_fail_png.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_star_png.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_stripe_png.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_img_success_png.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_Main.c" />
     <ClCompile Include="ui/**/*.cpp" />
