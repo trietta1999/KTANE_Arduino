@@ -3867,12 +3867,6 @@
                         "InheritedType": 1
                       },
                       {
-                        "nid": 110,
-                        "strtype": "OBJECT/Clickable",
-                        "strval": "False",
-                        "InheritedType": 2
-                      },
-                      {
                         "nid": 130,
                         "strtype": "OBJECT/Press_lock",
                         "strval": "False",
