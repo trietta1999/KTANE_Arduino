@@ -58,3 +58,7 @@ def Main_OnLabelStrikeClick(event_struct):
 def Main_OnLabelStrike(event_struct):
     return
 
+
+def ModuleSelect_OnCheckboxClick(event_struct):
+    return
+

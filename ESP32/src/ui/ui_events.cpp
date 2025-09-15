@@ -289,6 +289,30 @@ void Login_OnTextAreaEdit(lv_event_t* e)
     }
 }
 
+void ModuleSelect_OnCheckboxClick(lv_event_t* e)
+{
+    uint8_t selectedCount = 0;
+
+    for (const auto& cbSettingModule : mapCbSettingModule)
+    {
+        if (lv_obj_get_state(cbSettingModule.second) == STATE_CHECKED)
+        {
+            selectedCount++;
+        }
+    }
+
+    if (selectedCount == MAX_MODULE_SELECT)
+    {
+        lv_obj_remove_state(ui_btnModuleSelectNext, LV_STATE_DISABLED);
+    }
+    else
+    {
+        lv_obj_add_state(ui_btnModuleSelectNext, LV_STATE_DISABLED);
+    }
+
+    lv_label_set_text_fmt(ui_lblModuleSelectCount, "%d/%d", selectedCount, MAX_MODULE_SELECT);
+}
+
 void ModuleSelect_OnButtonNextClick(lv_event_t* e)
 {
     auto moduleStatusMap = sys_gui::ModuleStatusMap.GetValue();

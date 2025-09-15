@@ -13,6 +13,7 @@ extern "C" {
 // SCREEN: ui_ModuleSelect
 extern void ui_ModuleSelect_screen_init(void);
 extern void ui_ModuleSelect_screen_destroy(void);
+extern void ui_event_ModuleSelect(lv_event_t * e);
 extern lv_obj_t * ui_ModuleSelect;
 extern lv_obj_t * ui_Panel2;
 extern lv_obj_t * ui_Label6;
@@ -36,8 +37,10 @@ extern lv_obj_t * ui_cbSettingNeedyModule1;
 extern lv_obj_t * ui_cbSettingNeedyModule2;
 extern lv_obj_t * ui_Container4;
 extern lv_obj_t * ui_cbSettingNeedyModule3;
-extern void ui_event_btnSettingBack(lv_event_t * e);
-extern lv_obj_t * ui_btnSettingBack;
+extern lv_obj_t * ui_Container6;
+extern lv_obj_t * ui_lblModuleSelectCount;
+extern void ui_event_btnModuleSelectNext(lv_event_t * e);
+extern lv_obj_t * ui_btnModuleSelectNext;
 // CUSTOM VARIABLES
 
 #ifdef __cplusplus

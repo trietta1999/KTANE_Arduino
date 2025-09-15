@@ -213,6 +213,8 @@ EXTERN_MAP_ENUM_WSTR(MODULE_NAME)
 #define COLOR_WHITE 0xFFFFFF
 
 #define VERIFY_CODE "241"
+
+#define MAX_MODULE_SELECT 6
 #pragma endregion
 
 #endif // !_COMMON_DATATYPE_H
