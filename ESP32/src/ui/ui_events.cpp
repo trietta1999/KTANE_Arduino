@@ -204,12 +204,15 @@ void AutoUpdate()
             lv_label_set_text(ui_lblStrike, strikeValue.c_str());
         }
 
+#ifndef UNIT_TEST
+        CommonBeep(ERROR_FRE, TIMECYCLE_0);
 #ifdef _WIN64
         sys_host::StrikeState.ResetState();
         ::MessageBox(NULL, L"", L"", MB_ICONERROR);
+#else
+        delay(TIMECYCLE_0);
 #endif
-
-        CommonBeep(BEEP_FRE, TIMECYCLE_0);
+#endif
     }
 
     if (sys_gui::SuccessState.GetState())
@@ -223,12 +226,19 @@ void AutoUpdate()
             }
             else if (sys_gui::SuccessState.GetValue() == STATE_CHECKED)
             {
+
+#ifndef UNIT_TEST
+                CommonBeep(SUCCESS_FRE, TIMECYCLE_0);
+#ifndef _WIN64
+                delay(TIMECYCLE_0);
+#endif
+#endif
                 // Blink timer time 4 times
                 lv_timer_create([](lv_timer_t*) {
                     if (lv_obj_get_style_text_opa(ui_lblTimer, LV_PART_MAIN) == LV_OPA_TRANSP) {
                         // Show text if hiding
                         lv_obj_set_style_text_opa(ui_lblTimer, LV_OPA_COVER, LV_PART_MAIN);
-                        CommonBeep(BEEP_FRE, BEEP_INCREASE_DURATION);
+                        CommonBeep(SUCCESS_FRE, BEEP_INCREASE_DURATION);
                     }
                     else {
                         // Hide text if showing
@@ -301,7 +311,7 @@ void ModuleSelect_OnCheckboxClick(lv_event_t* e)
         }
     }
 
-    if (selectedCount == MAX_MODULE_SELECT)
+    if ((selectedCount >= 1) && (selectedCount <= MAX_MODULE_SELECT))
     {
         lv_obj_remove_state(ui_btnModuleSelectNext, LV_STATE_DISABLED);
     }
@@ -401,7 +411,7 @@ void Score_OnClickBack(lv_event_t* e)
     _ui_screen_change(&currentScreen, LV_SCR_LOAD_ANIM_MOVE_RIGHT, 100, 0, mapCurrentScreen[currentScreen]);
 }
 
-void Main_OnLabelStrike(lv_event_t * e)
+void Main_OnLabelStrike(lv_event_t* e)
 {
     if (e->code == LV_EVENT_SHORT_CLICKED)
     {
