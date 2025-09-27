@@ -1365,9 +1365,6 @@
     <ClCompile Include="..\..\ESP32\src\ui\ui_comp_hook.c">
       <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ESP32\src\ui\ui_events.cpp">
-      <Filter>UI</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ESP32\src\ui\ui_helpers.c">
       <Filter>UI</Filter>
     </ClCompile>
@@ -1385,6 +1382,12 @@
     </ClCompile>
     <ClCompile Include="Test\Service_Test.cpp">
       <Filter>Test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_replay_png.c">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_shield_lock_png.c">
+      <Filter>UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -2201,6 +2204,9 @@
     </ClInclude>
     <ClInclude Include="..\..\ESP32\src\ArduinoJson-v7.4.1.h">
       <Filter>Library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ESP32\src\ui\ui_Main.h">
+      <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

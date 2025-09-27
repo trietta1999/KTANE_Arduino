@@ -30,7 +30,6 @@ public:
 
     TEST_METHOD_CLEANUP(TESTMETHOD_Cleanup)
     {
-        isIncorrectButton = false;
         currentSelectButtonIndex = 0;
 
         ResetTable();
@@ -67,7 +66,7 @@ public:
         ChooseTable();
 
         Init();
-        AutoUpdate();
+        OnButtonReplayClick(nullptr);
     }
 
     TEST_METHOD(TEST_Vowel_0_Strike_OnButtonKeypadClick_1)
@@ -79,26 +78,18 @@ public:
         e.current_target = ui_btnBlue;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 1);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnRed;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 2);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnYellow;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 3);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnGreen;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 4);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
     }
 
     TEST_METHOD(TEST_Vowel_0_Strike_OnButtonKeypadClick_2)
@@ -110,38 +101,26 @@ public:
         e.current_target = ui_btnBlue;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 1);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnYellow;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 0);
-        Assert::IsTrue(isIncorrectButton == true);
-        AutoUpdate();
 
         e.current_target = ui_btnBlue;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 1);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnRed;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 2);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnYellow;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 3);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnGreen;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 4);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
     }
 #pragma endregion
 
@@ -154,7 +133,7 @@ public:
         ChooseTable();
 
         Init();
-        AutoUpdate();
+        OnButtonReplayClick(nullptr);
     }
 
     TEST_METHOD(TEST_Vowel_1_Strike_OnButtonKeypadClick_1)
@@ -166,26 +145,18 @@ public:
         e.current_target = ui_btnYellow;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 1);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnGreen;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 2);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnBlue;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 3);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnRed;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 4);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
     }
 
     TEST_METHOD(TEST_Vowel_1_Strike_OnButtonKeypadClick_2)
@@ -197,38 +168,26 @@ public:
         e.current_target = ui_btnYellow;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 1);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnBlue;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 0);
-        Assert::IsTrue(isIncorrectButton == true);
-        AutoUpdate();
 
         e.current_target = ui_btnYellow;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 1);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnGreen;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 2);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnBlue;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 3);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnRed;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 4);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
     }
 #pragma endregion
 
@@ -241,7 +200,7 @@ public:
         ChooseTable();
 
         Init();
-        AutoUpdate();
+        OnButtonReplayClick(nullptr);
     }
 
     TEST_METHOD(TEST_Vowel_2_Strike_OnButtonKeypadClick_1)
@@ -253,26 +212,18 @@ public:
         e.current_target = ui_btnGreen;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 1);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnRed;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 2);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnYellow;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 3);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnBlue;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 4);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
     }
 
     TEST_METHOD(TEST_Vowel_2_Strike_OnButtonKeypadClick_2)
@@ -284,38 +235,26 @@ public:
         e.current_target = ui_btnGreen;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 1);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnBlue;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 0);
-        Assert::IsTrue(isIncorrectButton == true);
-        AutoUpdate();
 
         e.current_target = ui_btnGreen;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 1);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnRed;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 2);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnYellow;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 3);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnBlue;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 4);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
     }
 #pragma endregion
 
@@ -328,7 +267,7 @@ public:
         ChooseTable();
 
         Init();
-        AutoUpdate();
+        OnButtonReplayClick(nullptr);
     }
 
     TEST_METHOD(TEST_WithoutVowel_0_Strike_OnButtonKeypadClick_1)
@@ -340,26 +279,18 @@ public:
         e.current_target = ui_btnBlue;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 1);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnYellow;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 2);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnGreen;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 3);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnRed;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 4);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
     }
 
     TEST_METHOD(TEST_WithoutVowel_0_Strike_OnButtonKeypadClick_2)
@@ -371,38 +302,26 @@ public:
         e.current_target = ui_btnBlue;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 1);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnRed;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 0);
-        Assert::IsTrue(isIncorrectButton == true);
-        AutoUpdate();
 
         e.current_target = ui_btnBlue;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 1);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnYellow;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 2);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnGreen;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 3);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnRed;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 4);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
     }
 #pragma endregion
 
@@ -415,7 +334,7 @@ public:
         ChooseTable();
 
         Init();
-        AutoUpdate();
+        OnButtonReplayClick(nullptr);
     }
 
     TEST_METHOD(TEST_WithoutVowel_1_Strike_OnButtonKeypadClick_1)
@@ -427,26 +346,18 @@ public:
         e.current_target = ui_btnRed;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 1);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnBlue;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 2);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnYellow;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 3);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnGreen;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 4);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
     }
 
     TEST_METHOD(TEST_WithoutVowel_1_Strike_OnButtonKeypadClick_2)
@@ -458,38 +369,26 @@ public:
         e.current_target = ui_btnRed;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 1);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnYellow;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 0);
-        Assert::IsTrue(isIncorrectButton == true);
-        AutoUpdate();
 
         e.current_target = ui_btnRed;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 1);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnBlue;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 2);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnYellow;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 3);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnGreen;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 4);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
     }
 #pragma endregion
 
@@ -502,7 +401,7 @@ public:
         ChooseTable();
 
         Init();
-        AutoUpdate();
+        OnButtonReplayClick(nullptr);
     }
 
     TEST_METHOD(TEST_WithoutVowel_2_Strike_OnButtonKeypadClick_1)
@@ -514,26 +413,18 @@ public:
         e.current_target = ui_btnYellow;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 1);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnGreen;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 2);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnBlue;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 3);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnRed;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 4);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
     }
 
     TEST_METHOD(TEST_WithoutVowel_2_Strike_OnButtonKeypadClick_2)
@@ -545,38 +436,26 @@ public:
         e.current_target = ui_btnYellow;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 1);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnRed;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 0);
-        Assert::IsTrue(isIncorrectButton == true);
-        AutoUpdate();
 
         e.current_target = ui_btnYellow;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 1);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnGreen;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 2);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnBlue;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 3);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
 
         e.current_target = ui_btnRed;
         OnButtonKeypadClick(&e);
         Assert::IsTrue(currentSelectButtonIndex == 4);
-        Assert::IsTrue(isIncorrectButton == false);
-        AutoUpdate();
     }
 #pragma endregion
 };
