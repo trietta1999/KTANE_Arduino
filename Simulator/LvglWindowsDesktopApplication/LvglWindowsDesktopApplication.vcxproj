@@ -308,6 +308,7 @@
     <ClInclude Include="..\..\ESP32\src\ui\ui.h" />
     <ClInclude Include="..\..\ESP32\src\ui\ui_events.h" />
     <ClInclude Include="..\..\ESP32\src\ui\ui_helpers.h" />
+    <ClInclude Include="..\..\ESP32\src\ui\ui_Main.h" />
     <ClInclude Include="lv_conf.h" />
   </ItemGroup>
   <ItemGroup>
@@ -696,6 +697,8 @@
     <ClCompile Include="..\..\ESP32\src\ui\ui_events.cpp" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_helpers.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_img_fail_png.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_replay_png.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_shield_lock_png.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_img_success_png.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_Main.c" />
     <ClCompile Include="ui/**/*.cpp" />

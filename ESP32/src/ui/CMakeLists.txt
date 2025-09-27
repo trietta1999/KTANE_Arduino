@@ -3,6 +3,8 @@ SET(SOURCES ui_Main.c
     ui_comp_hook.c
     ui_helpers.c
     ui_events.cpp
+    ui_img_shield_lock_png.c
+    ui_img_replay_png.c
     ui_img_success_png.c
     ui_img_fail_png.c)
 

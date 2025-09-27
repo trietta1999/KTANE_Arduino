@@ -118,6 +118,9 @@ void CommonServiceProcess()
         {
             auto sequence = CorrectSequence.GetValue();
 
+            debug_println("Stage: " + std::to_string(CurrentStage.GetValue()));
+            debug_println("Strike num: " + std::to_string(sys_host::StrikeNum.GetValue()));
+
             for (uint8_t i = 0; i < sequence.size(); i++)
             {
                 debug_println(map_COLOR_TYPE[sequence[i]]);

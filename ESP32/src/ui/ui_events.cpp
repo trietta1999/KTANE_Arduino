@@ -14,13 +14,11 @@
 #include "../CommonService.h"
 
 // For blinking
-uint8_t currentButonIndex = 0;
+uint8_t currentButtonIndex = 0;
 bool blinkState = false;
-bool isResting = false;
 lv_timer_t* sequentialBlinkTimer = nullptr;
 
 // For checking
-bool isIncorrectButton = false;
 uint8_t currentSelectButtonIndex = 0;
 
 // For mapping
@@ -36,42 +34,27 @@ void DeleteTimer()
     }
 
     // Delete old timer
-    lv_timer_del(sequentialBlinkTimer);
-    sequentialBlinkTimer = NULL;
-    isResting = true;
+    if (sequentialBlinkTimer)
+    {
+        lv_timer_del(sequentialBlinkTimer);
+        sequentialBlinkTimer = nullptr;
+    }
 }
 
 void CreateTimer()
 {
+    // Show transparent window
+    lv_obj_remove_flag(ui_wndTransparent, LV_OBJ_FLAG_HIDDEN);
+
     // Create new timer
     sequentialBlinkTimer = lv_timer_create([](lv_timer_t* timer) {
         auto colorList = ColorList.GetValue();
 
-        // Check resting
-        if (isResting) {
-            // Reset button index
-            currentButonIndex = 0;
-            isResting = false;
-            blinkState = false;
-
-            // Reset select button index
-            // Start re-checking when resting
-            currentSelectButtonIndex = 0;
-
-            // Reset period
-            lv_timer_set_period(timer, BLINK_PERIOD);
-
-            // Show transparent window
-            lv_obj_remove_flag(ui_wndTransparent, LV_OBJ_FLAG_HIDDEN);
-
-            return;
-        }
-
         // Blink current button
-        if (currentButonIndex < listButtonOrder.size())
+        if (currentButtonIndex < listButtonOrder.size())
         {
-            auto button = std::get<0>(mapButton[colorList[currentButonIndex]]);
-            auto beepFre = std::get<1>(mapButton[colorList[currentButonIndex]]);
+            auto button = std::get<0>(mapButton[colorList[currentButtonIndex]]);
+            auto beepFre = std::get<1>(mapButton[colorList[currentButtonIndex]]);
 
             // Change blink state
             blinkState = !blinkState;
@@ -89,17 +72,23 @@ void CreateTimer()
             else
             {
                 lv_obj_remove_state(button, LV_STATE_EDITED);
-                currentButonIndex++;
+                currentButtonIndex++;
             }
         }
         // Rest
         else
         {
-            isResting = true;
-            lv_timer_set_period(timer, BLINK_REST);
+            // Reset state
+            blinkState = false;
+            currentButtonIndex = 0;
 
             // Hide transparent window
             lv_obj_add_flag(ui_wndTransparent, LV_OBJ_FLAG_HIDDEN);
+
+            // Enable relay button
+            lv_obj_remove_state(ui_btnReplay, LV_STATE_DISABLED);
+
+            DeleteTimer();
         }
         }, BLINK_PERIOD, nullptr);
 }
@@ -139,60 +128,11 @@ void Init()
 
     // Set stage #1
     CurrentStage.SetValue(1);
-
-    // Init empty timer
-    sequentialBlinkTimer = lv_timer_create([](lv_timer_t* timer) { return; }, 0, nullptr);
 #endif
 }
 
 void AutoUpdate()
 {
-#ifndef UNIT_TEST
-    if ((CurrentStage.GetState() || isIncorrectButton) && (sys_gui::SuccessState.GetValue() == INCORRECT))
-    {
-#endif
-        // Reset button order list
-        listButtonOrder.clear();
-
-        // Create correct stage sequence
-        auto sequence = SequenceGenerator();
-
-        if (sequence.size())
-        {
-            // Set sequence order to button list
-            for (uint8_t i = 0; i < CurrentStage.GetValue(); i++)
-            {
-                auto targetButton = std::get<0>(mapButton[sequence[i]]);
-                listButtonOrder.push_back(std::make_tuple(sequence[i], targetButton, false));
-            }
-
-#ifndef UNIT_TEST
-            // Re-create timer
-            if (sequentialBlinkTimer != NULL) {
-                DeleteTimer();
-                CreateTimer();
-            }
-#endif
-
-            // Reset error flag
-            if (isIncorrectButton)
-            {
-                isIncorrectButton = false;
-            }
-
-#ifdef _WIN64
-            debug_println("Stage: " + std::to_string(CurrentStage.GetValue()));
-            for (uint8_t i = 0; i < sequence.size(); i++)
-            {
-                debug_println(map_COLOR_TYPE[sequence[i]]);
-            }
-#endif
-        }
-#ifndef UNIT_TEST
-    }
-#endif
-
-#ifndef UNIT_TEST
     if (sys_gui::SuccessState.GetState()) {
         if (sys_gui::SuccessState.GetValue() != INCORRECT)
         {
@@ -210,7 +150,6 @@ void AutoUpdate()
             DeleteTimer();
         }
     }
-#endif
 }
 
 void OnBrightnessChange(lv_event_t* e)
@@ -220,6 +159,9 @@ void OnBrightnessChange(lv_event_t* e)
 
 void OnButtonKeypadClick(lv_event_t* e)
 {
+    // Disable relay button
+    lv_obj_add_state(ui_btnReplay, LV_STATE_DISABLED);
+
     auto currentButton = reinterpret_cast<lv_obj_t*>(e->current_target);
     auto find = std::find_if(mapButton.begin(), mapButton.end(),
         [currentButton](const std::pair<COLOR_TYPE, std::tuple<lv_obj_t*, uint16_t>>& pair) {
@@ -243,18 +185,13 @@ void OnButtonKeypadClick(lv_event_t* e)
 #ifndef UNIT_TEST
         // Send error to Host
         CommonSendRequest(WM_STRIKESTATE_SET);
-
-#ifdef _WIN64
-        ::MessageBox(NULL, L"Turn off error message in HostTimer first", L"", MB_ICONERROR);
 #endif
-#endif
-
-        // Set error flag
-        isIncorrectButton = true;
 
         // Reset select button index
         currentSelectButtonIndex = 0;
 
+        // Show transparent window
+        lv_obj_remove_flag(ui_wndTransparent, LV_OBJ_FLAG_HIDDEN);
     }
 
 #ifndef UNIT_TEST
@@ -263,6 +200,9 @@ void OnButtonKeypadClick(lv_event_t* e)
     {
         auto stage = CurrentStage.GetValue();
 
+        // Update bar stage
+        lv_bar_set_value(ui_barStage, stage, LV_ANIM_OFF);
+
         if (stage < STAGE_NUM)
         {
             // Set to next stage
@@ -270,6 +210,9 @@ void OnButtonKeypadClick(lv_event_t* e)
 
             // Reset select button index
             currentSelectButtonIndex = 0;
+
+            // Show transparent window
+            lv_obj_remove_flag(ui_wndTransparent, LV_OBJ_FLAG_HIDDEN);
         }
         else
         {
@@ -289,4 +232,45 @@ void OnButtonKeypadClick(lv_event_t* e)
         }
     }
 #endif
+
+    // Enable relay button
+    lv_obj_remove_state(ui_btnReplay, LV_STATE_DISABLED);
+}
+
+void OnButtonReplayClick(lv_event_t * e)
+{
+    // Disable relay button
+    lv_obj_add_state(ui_btnReplay, LV_STATE_DISABLED);
+
+    // Reset button order list
+    listButtonOrder.clear();
+
+    // Create correct stage sequence
+    auto sequence = SequenceGenerator();
+
+    if (sequence.size())
+    {
+        // Set sequence order to button list
+        for (uint8_t i = 0; i < CurrentStage.GetValue(); i++)
+        {
+            auto targetButton = std::get<0>(mapButton[sequence[i]]);
+            listButtonOrder.push_back(std::make_tuple(sequence[i], targetButton, false));
+        }
+
+#ifndef UNIT_TEST
+        // Re-create timer
+        DeleteTimer();
+        CreateTimer();
+#endif
+
+#ifdef _WIN64
+        debug_println("Stage: " + std::to_string(CurrentStage.GetValue()));
+        debug_println("Strike num: " + std::to_string(sys_host::StrikeNum.GetValue()));
+
+        for (uint8_t i = 0; i < sequence.size(); i++)
+        {
+            debug_println(map_COLOR_TYPE[sequence[i]]);
+        }
+#endif
+    }
 }
