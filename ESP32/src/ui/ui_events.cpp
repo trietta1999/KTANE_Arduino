@@ -239,6 +239,9 @@ void OnButtonKeypadClick(lv_event_t* e)
 
 void OnButtonReplayClick(lv_event_t * e)
 {
+    // Reset select button index
+    currentSelectButtonIndex = 0;
+
     // Disable relay button
     lv_obj_add_state(ui_btnReplay, LV_STATE_DISABLED);
 
