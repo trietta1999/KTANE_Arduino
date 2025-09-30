@@ -20,13 +20,8 @@ bool NumberCheckInTimer(uint8_t);
 
 // Allow modification
 #pragma region Custom_function
-void CreateRandomWireList();
-void WireModule();
-void ThreeWiresModule();
-void FourWiresModule();
-void FiveWiresModule();
-void SixWiresModule();
-uint8_t CountElementOccurences(std::vector<WIRECOLOR_TYPE>, WIRECOLOR_TYPE);
+std::vector<bool> CreateRandomWireEnableList(uint8_t);
+std::vector<WIRECOLOR_TYPE> CreateRandomWireColorList(std::vector<bool>);
 #pragma endregion
 
 #endif // !_COMMON_LIBRARY_H

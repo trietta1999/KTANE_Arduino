@@ -11,8 +11,115 @@
 #include "../CommonLibrary.h"
 #include "../CommonService.h"
 
+struct wire_data_t
+{
+    uint8_t panelIndex;
+    std::string name;
+    lv_obj_t* obj;
+    WIRE_IN_ORDER port;
+    WIRECOLOR_TYPE color;
+    bool visible;
+    bool canCut;
+    bool isCut;
+
+    void ShowCutState()
+    {
+        if (isCut)
+        {
+            lv_obj_add_state(this->obj, LV_STATE_CHECKED);
+            lv_obj_remove_state(this->obj, LV_STATE_FOCUSED);
+            lv_obj_remove_flag(this->obj, LV_OBJ_FLAG_CLICKABLE);
+        }
+    }
+
+    void UnshowCutState()
+    {
+        lv_obj_remove_state(this->obj, LV_STATE_CHECKED);
+        lv_obj_remove_state(this->obj, LV_STATE_FOCUSED);
+        lv_obj_add_flag(this->obj, LV_OBJ_FLAG_CLICKABLE);
+    }
+};
+
 std::vector<lv_obj_t*> listWire;
-std::vector<lv_obj_t*> listSelect;
+std::vector<std::vector<wire_data_t>> listPanel;
+std::vector<std::pair<uint8_t, bool>> listPanelValidSum; // Valid sum - Resolve state
+uint8_t currentValidSum = 0;
+uint8_t currentPanelValidSum = 0;
+uint8_t validSum = 0;
+
+bool CheckAllWireState(lv_state_t check)
+{
+    for (const auto& wire : listWire)
+    {
+        if ((lv_obj_get_state(wire) & check) == check)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+lv_obj_t* GetFocusWire()
+{
+    for (const auto& wire : listWire)
+    {
+        if ((lv_obj_get_state(wire) & LV_STATE_FOCUSED) == LV_STATE_FOCUSED)
+        {
+            return wire;
+        }
+    }
+
+    return nullptr;
+}
+
+void SetCutValidation()
+{
+    std::vector<std::string> listLog = { };
+    uint8_t colorIndex = 0;
+    auto colorList = WireColorList.GetValue();
+
+    // Loop each subpanel
+    for (auto& subPanel : listPanel)
+    {
+        uint8_t panelValidSum = 0;
+
+        // Loop each wire
+        for (auto& wireData : subPanel)
+        {
+            if (wireData.visible)
+            {
+                auto color = wireData.color;
+                const auto& listOrderRule = mapColorRule[color]; // Get rule list by color
+                auto colorCount = std::count(colorList.begin(), colorList.begin() + colorIndex + 1, color); // Color list start from 0 to current checking wire
+                auto orderRule = listOrderRule[colorCount]; // Get order list from rule list
+
+                // Loop order
+                for (const auto& order : orderRule)
+                {
+                    // Port matching
+                    if (wireData.port == order)
+                    {
+                        wireData.canCut = true;
+
+                        // Set log data
+                        listLog.push_back("Panel " + std::to_string(wireData.panelIndex) + ": " + wireData.name);
+
+                        // Update valid sum
+                        validSum++;
+                        panelValidSum++;
+                    }
+                }
+
+                colorIndex++;
+            }
+        }
+
+        listPanelValidSum.push_back({ panelValidSum, false });
+    }
+
+    CorrectWireInfo.SetValue(listLog);
+}
 
 void Init()
 {
@@ -20,45 +127,181 @@ void Init()
     sys_gui::Brightness.SetValue(100);
     lv_slider_set_value(ui_sldBrightness, sys_gui::Brightness.GetValue(), LV_ANIM_OFF);
 
-    // Wire list
-    listWire = { ui_barWire1, ui_barWire2, ui_barWire3, ui_barWire4, ui_barWire5, ui_barWire6 };
-    listSelect = { ui_btnSelect1, ui_btnSelect2, ui_btnSelect3, ui_btnSelect4, ui_btnSelect5, ui_btnSelect6 };
+    // Init wire list
+    listWire = {
+        ui_bar1A, ui_bar1B, ui_bar1C,
+        ui_bar2A, ui_bar2B, ui_bar2C,
+        ui_bar3A, ui_bar3B, ui_bar3C,
+    };
 
-#ifndef UNIT_TEST
-    // Create random color wire list
-    CreateRandomWireList();
+    // Init panel data
+    listPanel = {
+        // Subpanel 1
+        {
+            { 1, STR(ui_bar1A), ui_bar1A, WIRE_IN_ORDER::A, },
+            { 1, STR(ui_bar1B), ui_bar1B, WIRE_IN_ORDER::B, },
+            { 1, STR(ui_bar1C), ui_bar1C, WIRE_IN_ORDER::C, },
+            { 1, STR(ui_bar2A), ui_bar2A, WIRE_IN_ORDER::A, },
+            { 1, STR(ui_bar2B), ui_bar2B, WIRE_IN_ORDER::B, },
+            { 1, STR(ui_bar2C), ui_bar2C, WIRE_IN_ORDER::C, },
+            { 1, STR(ui_bar3A), ui_bar3A, WIRE_IN_ORDER::A, },
+            { 1, STR(ui_bar3B), ui_bar3B, WIRE_IN_ORDER::B, },
+            { 1, STR(ui_bar3C), ui_bar3C, WIRE_IN_ORDER::C, },
+        },
+        // Subpanel 2
+        {
+            { 2, STR(ui_bar1A), ui_bar1A, WIRE_IN_ORDER::A, },
+            { 2, STR(ui_bar1B), ui_bar1B, WIRE_IN_ORDER::B, },
+            { 2, STR(ui_bar1C), ui_bar1C, WIRE_IN_ORDER::C, },
+            { 2, STR(ui_bar2A), ui_bar2A, WIRE_IN_ORDER::A, },
+            { 2, STR(ui_bar2B), ui_bar2B, WIRE_IN_ORDER::B, },
+            { 2, STR(ui_bar2C), ui_bar2C, WIRE_IN_ORDER::C, },
+            { 2, STR(ui_bar3A), ui_bar3A, WIRE_IN_ORDER::A, },
+            { 2, STR(ui_bar3B), ui_bar3B, WIRE_IN_ORDER::B, },
+            { 2, STR(ui_bar3C), ui_bar3C, WIRE_IN_ORDER::C, },
+        },
+        // Subpanel 3
+        {
+            { 3, STR(ui_bar1A), ui_bar1A, WIRE_IN_ORDER::A, },
+            { 3, STR(ui_bar1B), ui_bar1B, WIRE_IN_ORDER::B, },
+            { 3, STR(ui_bar1C), ui_bar1C, WIRE_IN_ORDER::C, },
+            { 3, STR(ui_bar2A), ui_bar2A, WIRE_IN_ORDER::A, },
+            { 3, STR(ui_bar2B), ui_bar2B, WIRE_IN_ORDER::B, },
+            { 3, STR(ui_bar2C), ui_bar2C, WIRE_IN_ORDER::C, },
+            { 3, STR(ui_bar3A), ui_bar3A, WIRE_IN_ORDER::A, },
+            { 3, STR(ui_bar3B), ui_bar3B, WIRE_IN_ORDER::B, },
+            { 3, STR(ui_bar3C), ui_bar3C, WIRE_IN_ORDER::C, },
+        },
+        // Subpanel 4
+        {
+            { 4, STR(ui_bar1A), ui_bar1A, WIRE_IN_ORDER::A, },
+            { 4, STR(ui_bar1B), ui_bar1B, WIRE_IN_ORDER::B, },
+            { 4, STR(ui_bar1C), ui_bar1C, WIRE_IN_ORDER::C, },
+            { 4, STR(ui_bar2A), ui_bar2A, WIRE_IN_ORDER::A, },
+            { 4, STR(ui_bar2B), ui_bar2B, WIRE_IN_ORDER::B, },
+            { 4, STR(ui_bar2C), ui_bar2C, WIRE_IN_ORDER::C, },
+            { 4, STR(ui_bar3A), ui_bar3A, WIRE_IN_ORDER::A, },
+            { 4, STR(ui_bar3B), ui_bar3B, WIRE_IN_ORDER::B, },
+            { 4, STR(ui_bar3C), ui_bar3C, WIRE_IN_ORDER::C, },
+        },
+    };
 
-    // Calculate correct wire
-    WireModule();
-
-    // Set color to GUI wires
-    auto listWireColor = WireColorList.GetValue();
-    auto mumOfWire = listWireColor.size();
-
-    for (uint8_t i = 0; i < listWire.size(); i++)
+    // Set visible state of wire in each subpanel
+    for (auto& subPanel : listPanel)
     {
-        if (i < mumOfWire)
+        auto enableList = CreateRandomWireEnableList(subPanel.size());
+        auto colorList = CreateRandomWireColorList(enableList);
+
+        // Set wire list state
+        for (uint8_t i = 0; i < subPanel.size(); i++)
         {
-            // Set color to wire
-            lv_obj_set_style_bg_color(listWire.at(i), lv_color_hex(mapColor[listWireColor.at(i)]), LV_PART_INDICATOR | LV_STATE_DEFAULT);
-        }
-        else
-        {
-            // Hide/disable unuse wire
-            lv_obj_add_state(listWire.at(i), LV_STATE_DISABLED);
-            lv_obj_add_state(listSelect.at(i), LV_STATE_DISABLED);
-            lv_obj_clear_state(listSelect.at(i), LV_STATE_CHECKED);
+            subPanel[i].visible = enableList[i];
+            subPanel[i].color = colorList[i];
         }
     }
 
+    // Calculate all wire
+    SetCutValidation();
+
+    // Init current panel index
+    CurrentPanelIndex.SetValue(MIN_PANEL_NUM);
+
 #ifdef _WIN64
-    debug_println("Correct wire index: " + std::to_string((uint8_t)CorrectWireIndex.GetValue()));
-#endif
+    auto listLog = CorrectWireInfo.GetValue();
+
+    for (const auto& log : listLog)
+    {
+        debug_println(log);
+    }
 #endif
 }
 
 void AutoUpdate()
 {
+    if (CheckAllWireState(LV_STATE_FOCUSED))
+    {
+        lv_obj_remove_state(ui_btnCut, LV_STATE_DISABLED);
+    }
+    else
+    {
+        lv_obj_add_state(ui_btnCut, LV_STATE_DISABLED);
+    }
+
+    if (CurrentPanelIndex.GetState())
+    {
+        auto panelIndex = CurrentPanelIndex.GetValue();
+        uint8_t startIndex = (panelIndex - 1) * LABELS_PER_PANEL + 1;
+
+        // Update button Up
+        if (panelIndex == MAX_PANEL_NUM)
+        {
+            lv_obj_add_state(ui_btnPanelUp, LV_STATE_DISABLED);
+
+            // All wire are resolved
+            if (currentValidSum == validSum)
+            {
+                sys_gui::SuccessState.SetValue(STATE_CHECKED);
+
+#ifndef UNIT_TEST
+                // Send success to Host
+                JsonDocument jsonDocIn;
+#ifdef _WIN64
+                jsonDocIn["module"] = CLIENT_NAME_FOR_JSON;
+#else
+                jsonDocIn["module"] = CLIENT_NAME;
+#endif
+                CommonSendRequestWithData(WM_SUCCESSSTATE_SET, jsonDocIn);
+#endif
+            }
+        }
+        else
+        {
+            lv_obj_remove_state(ui_btnPanelUp, LV_STATE_DISABLED);
+        }
+
+        // Update button Down
+        if (panelIndex == MIN_PANEL_NUM)
+        {
+            lv_obj_add_state(ui_btnPanelDown, LV_STATE_DISABLED);
+        }
+        else
+        {
+            lv_obj_remove_state(ui_btnPanelDown, LV_STATE_DISABLED);
+        }
+
+        if (panelIndex < MAX_PANEL_NUM)
+        {
+            // Update number label
+            lv_label_set_text(ui_lblNumber1, std::to_string(startIndex).c_str());
+            lv_label_set_text(ui_lblNumber2, std::to_string(startIndex + 1).c_str());
+            lv_label_set_text(ui_lblNumber3, std::to_string(startIndex + 2).c_str());
+
+            // Show wire in subpanel
+            for (auto& wireData : listPanel[panelIndex - 1])
+            {
+                if (wireData.visible)
+                {
+                    // Update cut state
+                    wireData.UnshowCutState();
+                    wireData.ShowCutState();
+
+                    // Update visible and color
+                    lv_obj_remove_flag(wireData.obj, LV_OBJ_FLAG_HIDDEN);
+                    lv_obj_set_style_bg_color(wireData.obj, lv_color_hex(mapColor[wireData.color]), LV_PART_INDICATOR | LV_STATE_DEFAULT);
+                }
+                else
+                {
+                    lv_obj_add_flag(wireData.obj, LV_OBJ_FLAG_HIDDEN);
+                }
+            }
+        }
+    }
+
+    if (CurrentStage.GetState())
+    {
+        lv_bar_set_value(ui_barStage, CurrentStage.GetValue(), LV_ANIM_OFF);
+    }
+
     if (sys_gui::SuccessState.GetState())
     {
         if (sys_gui::SuccessState.GetValue() != INCORRECT)
@@ -82,28 +325,97 @@ void OnBrightnessChange(lv_event_t* e)
     sys_gui::Brightness.SetValue(lv_slider_get_value(ui_sldBrightness));
 }
 
-void OnWireSelect(lv_event_t* e)
+void OnPanelChange(lv_event_t* e)
 {
-    if (std::find(listSelect.begin(), listSelect.end(), e->current_target) - listSelect.begin() == (uint8_t)CorrectWireIndex.GetValue() - 1)
-    {
-        sys_gui::SuccessState.SetValue(STATE_CHECKED);
+    auto currentPanelIndex = CurrentPanelIndex.GetValue();
+    auto currentStage = CurrentStage.GetValue();
 
-#ifndef UNIT_TEST
-        // Send success to Host
-        JsonDocument jsonDocIn;
-#ifdef _WIN64
-        jsonDocIn["module"] = CLIENT_NAME_FOR_JSON;
-#else
-        jsonDocIn["module"] = CLIENT_NAME;
-#endif
-        CommonSendRequestWithData(WM_SUCCESSSTATE_SET, jsonDocIn);
-#endif
-    }
-    else
+    // Valid sum is match
+    if (currentPanelValidSum == listPanelValidSum[currentPanelIndex - 1].first)
     {
+        // Reset panel valid sum
+        currentPanelValidSum = 0;
+
+        // Set resolved
+        listPanelValidSum[currentPanelIndex - 1].second = true;
+    }
+
+    // Move to next panel
+    if (e->current_target == ui_btnPanelUp)
+    {
+        // Current panel is resolved
+        if (listPanelValidSum[currentPanelIndex - 1].second)
+        {
+            // Set current stage based on panel index
+            if (currentPanelIndex > currentStage)
+            {
+                CurrentStage.SetValue(currentPanelIndex);
+            }
+
+            currentPanelIndex++;
+
+            if (currentPanelIndex <= MAX_PANEL_NUM - 1)
+            {
+                // Next panel is resolved
+                if (listPanelValidSum[currentPanelIndex - 1].second)
+                {
+                    // Rollback panel valid sum
+                    currentPanelValidSum = listPanelValidSum[currentPanelIndex - 1].first;
+                }
+            }
+        }
+        else
+        {
 #ifndef UNIT_TEST
-        // Send error to Host
-        CommonSendRequest(WM_STRIKESTATE_SET);
+            // Send error to Host
+            CommonSendRequest(WM_STRIKESTATE_SET);
 #endif
+        }
+    }
+    // Move to previous panel
+    else if (e->current_target == ui_btnPanelDown)
+    {
+        currentPanelIndex--;
+
+        // Rollback panel valid sum
+        currentPanelValidSum = listPanelValidSum[currentPanelIndex - 1].first;
+    }
+
+    CurrentPanelIndex.SetValue(currentPanelIndex);
+}
+
+void OnButtonCutClick(lv_event_t* e)
+{
+    auto focusWire = GetFocusWire();
+
+    if (focusWire)
+    {
+        // Check wire
+        for (auto& wireData : listPanel[CurrentPanelIndex.GetValue() - 1])
+        {
+            // Current wire matching
+            if (wireData.obj == focusWire)
+            {
+                // Set cut state
+                wireData.isCut = true;
+                wireData.ShowCutState();
+
+                if (wireData.canCut)
+                {
+                    // Update current valid sum
+                    currentValidSum++;
+                    currentPanelValidSum++;
+                }
+                else
+                {
+#ifndef UNIT_TEST
+                    // Send error to Host
+                    CommonSendRequest(WM_STRIKESTATE_SET);
+#endif
+                }
+
+                break;
+            }
+        }
     }
 }

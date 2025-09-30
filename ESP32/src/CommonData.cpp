@@ -38,7 +38,9 @@ namespace sys_gui
 // Allow modification
 #pragma region Custom_data
 CData<std::vector<WIRECOLOR_TYPE>> WireColorList;
-CData<WIRE_IN_ORDER> CorrectWireIndex;
+CData<uint8_t> CurrentPanelIndex;
+CData< std::vector<std::string>> CorrectWireInfo;
+CData<uint8_t> CurrentStage;
 #pragma endregion
 
 // Add auto reset state for custom data only
@@ -47,5 +49,6 @@ void UpdateAll()
     sys_gui::Brightness.ResetState();
     sys_gui::SuccessState.ResetState();
     WireColorList.ResetState();
-    CorrectWireIndex.ResetState();
+    CurrentPanelIndex.ResetState();
+    CurrentStage.ResetState();
 }

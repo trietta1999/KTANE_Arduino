@@ -16,12 +16,54 @@ MAP_ENUM_WSTR(MODULE_NAME, DEF_MODULE_NAME)
 MAP_ENUM_STR(WIRECOLOR_TYPE, DEF_WIRECOLOR_TYPE)
 MAP_ENUM_STR(WIRE_IN_ORDER, DEF_WIRE_IN_ORDER)
 
-std::unordered_map<WIRECOLOR_TYPE, COLOR> mapColor =
+std::unordered_map<WIRECOLOR_TYPE, uint32_t> mapColor =
 {
     { WIRECOLOR_TYPE::RED, 0xFF0000 },
-    { WIRECOLOR_TYPE::WHITE, 0xFFFFFF },
     { WIRECOLOR_TYPE::BLUE, 0x0000FF },
-    { WIRECOLOR_TYPE::YELLOW, 0xE3EB09 },
     { WIRECOLOR_TYPE::BLACK, 0x000000 },
-    { WIRECOLOR_TYPE::PINK, 0xE80CAD },
+};
+
+std::vector<std::vector<WIRE_IN_ORDER>> listRedRule = {
+    { WIRE_IN_ORDER::MIN, },
+    { WIRE_IN_ORDER::C, },
+    { WIRE_IN_ORDER::B, },
+    { WIRE_IN_ORDER::A, },
+    { WIRE_IN_ORDER::A, WIRE_IN_ORDER::C, },
+    { WIRE_IN_ORDER::B, },
+    { WIRE_IN_ORDER::A, WIRE_IN_ORDER::C, },
+    { WIRE_IN_ORDER::A, WIRE_IN_ORDER::B, WIRE_IN_ORDER::C, },
+    { WIRE_IN_ORDER::A, WIRE_IN_ORDER::B, },
+    { WIRE_IN_ORDER::B, },
+};
+
+std::vector<std::vector<WIRE_IN_ORDER>> listBlueRule = {
+    { WIRE_IN_ORDER::MIN, },
+    { WIRE_IN_ORDER::B, },
+    { WIRE_IN_ORDER::A, WIRE_IN_ORDER::C, },
+    { WIRE_IN_ORDER::B, },
+    { WIRE_IN_ORDER::A, },
+    { WIRE_IN_ORDER::B, },
+    { WIRE_IN_ORDER::B, WIRE_IN_ORDER::C, },
+    { WIRE_IN_ORDER::C, },
+    { WIRE_IN_ORDER::A, WIRE_IN_ORDER::C, },
+    { WIRE_IN_ORDER::A, },
+};
+
+std::vector<std::vector<WIRE_IN_ORDER>> listBlackRule = {
+    { WIRE_IN_ORDER::MIN, },
+    { WIRE_IN_ORDER::A, WIRE_IN_ORDER::B, WIRE_IN_ORDER::C},
+    { WIRE_IN_ORDER::A, WIRE_IN_ORDER::C, },
+    { WIRE_IN_ORDER::B, },
+    { WIRE_IN_ORDER::A, WIRE_IN_ORDER::C, },
+    { WIRE_IN_ORDER::B, },
+    { WIRE_IN_ORDER::B, WIRE_IN_ORDER::C, },
+    { WIRE_IN_ORDER::A, WIRE_IN_ORDER::B, },
+    { WIRE_IN_ORDER::C, },
+    { WIRE_IN_ORDER::C, },
+};
+
+std::unordered_map<WIRECOLOR_TYPE, std::vector<std::vector<WIRE_IN_ORDER>>> mapColorRule = {
+    { WIRECOLOR_TYPE::RED, listRedRule },
+    { WIRECOLOR_TYPE::BLUE, listBlueRule },
+    { WIRECOLOR_TYPE::BLACK, listBlackRule },
 };

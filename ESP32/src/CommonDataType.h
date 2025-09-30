@@ -16,11 +16,11 @@
 
 #ifdef _WIN64
 #define HOST_NAME mapWstr_MODULE_NAME[MODULE_NAME::HostTimer].c_str()
-#define CLIENT_NAME mapWstr_MODULE_NAME[MODULE_NAME::Wires].c_str()
-#define CLIENT_NAME_FOR_JSON map_MODULE_NAME[MODULE_NAME::Wires].c_str()
+#define CLIENT_NAME mapWstr_MODULE_NAME[MODULE_NAME::WireSequences].c_str()
+#define CLIENT_NAME_FOR_JSON map_MODULE_NAME[MODULE_NAME::WireSequences].c_str()
 #else
 #define HOST_NAME map_MODULE_NAME[MODULE_NAME::HostTimer].c_str()
-#define CLIENT_NAME map_MODULE_NAME[MODULE_NAME::Wires].c_str()
+#define CLIENT_NAME map_MODULE_NAME[MODULE_NAME::WireSequences].c_str()
 #endif
 
 #define MAX_SIZE 1000
@@ -45,7 +45,7 @@
 #define IP_ADD_1 192
 #define IP_ADD_2 168
 #define IP_ADD_3 0
-#define IP_ADD_4 (uint8_t)MODULE_NAME::Wires
+#define IP_ADD_4 (uint8_t)MODULE_NAME::WireSequences
 
 #define NETMASK_1 255
 #define NETMASK_2 255
@@ -205,25 +205,21 @@ EXTERN_MAP_ENUM_WSTR(MODULE_NAME)
 
 // Allow modification
 #pragma region Custom_datatype
-#define MIN_WIRE_NUM 3
-#define MAX_WRIRE_NUM 6
-#define COLOR uint32_t
+#define MIN_PANEL_NUM 1
+#define MAX_PANEL_NUM 5 // Contain the latest empty panel
+#define LABELS_PER_PANEL 3
+#define WIRE_NUM_MIN 1
+#define WIRE_NUM_MAX 4
 
 #define DEF_WIRECOLOR_TYPE(e, CREATE) \
         CREATE(e, RED) \
-        CREATE(e, WHITE) \
         CREATE(e, BLUE) \
-        CREATE(e, YELLOW) \
         CREATE(e, BLACK) \
-        CREATE(e, PINK) \
 
 #define DEF_WIRE_IN_ORDER(e, CREATE) \
-        CREATE(e, FIRST_WIRE) \
-        CREATE(e, SECOND_WIRE) \
-        CREATE(e, THIRD_WIRE) \
-        CREATE(e, FOURTH_WIRE) \
-        CREATE(e, FIFTH_WIRE) \
-        CREATE(e, SIXTH_WIRE) \
+        CREATE(e, A) \
+        CREATE(e, B) \
+        CREATE(e, C) \
 
 enum class WIRECOLOR_TYPE
 {
@@ -241,7 +237,11 @@ enum class WIRE_IN_ORDER
 };
 EXTERN_MAP_ENUM_STR(WIRE_IN_ORDER)
 
-extern std::unordered_map<WIRECOLOR_TYPE, COLOR> mapColor;
+extern std::unordered_map<WIRECOLOR_TYPE, uint32_t> mapColor;
+extern std::vector<std::vector<WIRE_IN_ORDER>> listRedRule;
+extern std::vector<std::vector<WIRE_IN_ORDER>> listBlueRule;
+extern std::vector<std::vector<WIRE_IN_ORDER>> listBlackRule;
+extern std::unordered_map<WIRECOLOR_TYPE, std::vector<std::vector<WIRE_IN_ORDER>>> mapColorRule;
 #pragma endregion
 
 #endif // !_COMMON_DATATYPE_H
