@@ -18,6 +18,11 @@ public:
 
     }
 
+    TEST_METHOD_INITIALIZE(TESTMETHOD_Init)
+    {
+        WireColorList.SetValue({ });
+    }
+
     TEST_METHOD(TEST_RandomRange_1)
     {
         for (uint16_t i = 0; i < 1000; i++)
@@ -102,133 +107,28 @@ public:
         Assert::IsTrue(NumberCheckInTimer(2) == true);
     }
 
-#pragma region Test_3Wire
-    TEST_METHOD(TEST_WireModule_3wire_1)
+    TEST_METHOD(TEST_CreateRandomWireEnableList)
     {
-        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::BLUE });
-        WireModule();
-        Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::SECOND_WIRE);
+        uint8_t size = 10;
+        auto result = CreateRandomWireEnableList(10);
+
+        Assert::IsTrue(result.size() == size);
+        Assert::IsTrue(std::count(result.begin(), result.end(), true) >= WIRE_NUM_MIN);
+        Assert::IsTrue(std::count(result.begin(), result.end(), true) < WIRE_NUM_MAX + 1);
     }
 
-    TEST_METHOD(TEST_WireModule_3wire_2)
+    TEST_METHOD(TEST_CreateRandomWireColorList)
     {
-        WireColorList.SetValue({ WIRECOLOR_TYPE::RED, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::WHITE });
-        WireModule();
-        Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::THIRD_WIRE);
-    }
+        std::vector<bool> listEnable = { true, false, true, true, false, false, };
+        auto result = CreateRandomWireColorList(listEnable);
+        auto colorList = WireColorList.GetValue();
 
-    TEST_METHOD(TEST_WireModule_3wire_3)
-    {
-        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::RED });
-        WireModule();
-        Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::SECOND_WIRE);
+        Assert::IsTrue(result.size() == listEnable.size());
+        Assert::IsTrue(
+            std::count(result.begin(), result.end(), WIRECOLOR_TYPE::MIN) == std::count(listEnable.begin(), listEnable.end(), false)
+        );
+        Assert::IsTrue(
+            colorList.size() == (result.size() - (uint8_t)std::count(result.begin(), result.end(), WIRECOLOR_TYPE::MIN))
+        );
     }
-
-    TEST_METHOD(TEST_WireModule_3wire_4)
-    {
-        WireColorList.SetValue({ WIRECOLOR_TYPE::RED, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::PINK });
-        WireModule();
-        Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::THIRD_WIRE);
-    }
-#pragma endregion
-
-#pragma region Test_4Wire
-    TEST_METHOD(TEST_WireModule_4wire_1)
-    {
-        sys_host::SerialNum.SetValue("ABCDEF5");
-        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::RED, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::RED });
-        WireModule();
-        Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::FOURTH_WIRE);
-    }
-
-    TEST_METHOD(TEST_WireModule_4wire_2)
-    {
-        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::YELLOW });
-        WireModule();
-        Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::SECOND_WIRE);
-    }
-
-    TEST_METHOD(TEST_WireModule_4wire_3)
-    {
-        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::YELLOW });
-        WireModule();
-        Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::FIRST_WIRE);
-    }
-
-    TEST_METHOD(TEST_WireModule_4wire_4)
-    {
-        WireColorList.SetValue({ WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::YELLOW });
-        WireModule();
-        Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::FOURTH_WIRE);
-    }
-
-    TEST_METHOD(TEST_WireModule_4wire_5)
-    {
-        WireColorList.SetValue({ WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::BLACK });
-        WireModule();
-        Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::SECOND_WIRE);
-    }
-#pragma endregion
-
-#pragma region Test_5Wire
-    TEST_METHOD(TEST_WireModule_5wire_1)
-    {
-        sys_host::SerialNum.SetValue("ABCDEF5");
-        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::RED, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::RED, WIRECOLOR_TYPE::BLACK });
-        WireModule();
-        Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::FOURTH_WIRE);
-    }
-
-    TEST_METHOD(TEST_WireModule_5wire_2)
-    {
-        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::RED });
-        WireModule();
-        Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::FIRST_WIRE);
-    }
-
-    TEST_METHOD(TEST_WireModule_5wire_3)
-    {
-        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::RED });
-        WireModule();
-        Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::SECOND_WIRE);
-    }
-
-    TEST_METHOD(TEST_WireModule_5wire_4)
-    {
-        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::BLACK, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::RED });
-        WireModule();
-        Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::FIRST_WIRE);
-    }
-#pragma endregion
-
-#pragma region Test_6Wire
-    TEST_METHOD(TEST_WireModule_6wire_1)
-    {
-        sys_host::SerialNum.SetValue("ABCDEF5");
-        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::BLACK, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::WHITE });
-        WireModule();
-        Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::THIRD_WIRE);
-    }
-
-    TEST_METHOD(TEST_WireModule_6wire_2)
-    {
-        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::RED, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::BLACK, WIRECOLOR_TYPE::WHITE, WIRECOLOR_TYPE::WHITE });
-        WireModule();
-        Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::FOURTH_WIRE);
-    }
-
-    TEST_METHOD(TEST_WireModule_6wire_3)
-    {
-        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::BLACK, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::BLACK, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::WHITE });
-        WireModule();
-        Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::SIXTH_WIRE);
-    }
-
-    TEST_METHOD(TEST_WireModule_6wire_4)
-    {
-        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::WHITE, WIRECOLOR_TYPE::BLACK, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::WHITE });
-        WireModule();
-        Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::FOURTH_WIRE);
-    }
-#pragma endregion
 };

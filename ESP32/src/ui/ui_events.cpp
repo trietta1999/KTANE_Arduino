@@ -134,6 +134,7 @@ void Init()
         ui_bar3A, ui_bar3B, ui_bar3C,
     };
 
+#ifndef UNIT_TEST
     // Init panel data
     listPanel = {
         // Subpanel 1
@@ -199,6 +200,7 @@ void Init()
             subPanel[i].color = colorList[i];
         }
     }
+#endif
 
     // Calculate all wire
     SetCutValidation();
@@ -386,7 +388,11 @@ void OnPanelChange(lv_event_t* e)
 
 void OnButtonCutClick(lv_event_t* e)
 {
+#ifdef UNIT_TEST
+    auto focusWire = reinterpret_cast<lv_obj_t*>(e->current_target);
+#else
     auto focusWire = GetFocusWire();
+#endif
 
     if (focusWire)
     {
