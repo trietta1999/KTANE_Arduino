@@ -15,9 +15,15 @@
 #define STR(a) #a
 
 #ifdef _WIN64
+#ifndef UNIT_TEST
 #define HOST_NAME mapWstr_MODULE_NAME[MODULE_NAME::HostTimer].c_str()
 #define CLIENT_NAME mapWstr_MODULE_NAME[MODULE_NAME::ComplicatedWires].c_str()
 #define CLIENT_NAME_FOR_JSON map_MODULE_NAME[MODULE_NAME::ComplicatedWires].c_str()
+#else
+#define HOST_NAME mapWstr_MODULE_NAME[MODULE_NAME::HostTimer].c_str()
+#define CLIENT_NAME mapWstr_MODULE_NAME[MODULE_NAME::HostTimer].c_str()
+#define CLIENT_NAME_FOR_JSON map_MODULE_NAME[MODULE_NAME::HostTimer].c_str()
+#endif
 #else
 #define HOST_NAME map_MODULE_NAME[MODULE_NAME::HostTimer].c_str()
 #define CLIENT_NAME map_MODULE_NAME[MODULE_NAME::ComplicatedWires].c_str()
