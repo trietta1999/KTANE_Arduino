@@ -281,7 +281,7 @@ JsonDocument CommonSendRequest(uint32_t msg)
 
     HWND hwnd = ::FindWindow(NULL, HOST_NAME);
 
-    ::SendMessage(hwnd, WM_SET_CLIENT_HANDLE, NULL, NULL);
+    ::SendMessage(hwnd, WM_SET_CLIENT_HANDLE, msg, NULL);
     ::SendMessage(hwnd, WM_REQUEST, msg, NULL);
 #else
     data_pack_t byteData = { 0 };
