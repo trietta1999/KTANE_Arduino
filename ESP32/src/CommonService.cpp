@@ -176,6 +176,7 @@ void CommonServiceProcess()
     WiFiReconnect();
 #endif
 #endif
+#endif
 }
 
 JsonDocument ProcessRequest(HWND hwnd, uint32_t msg, JsonDocument jsonDocIn)
