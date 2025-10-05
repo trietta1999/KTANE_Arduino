@@ -25,6 +25,9 @@ namespace sys_host {
     CData<JsonDocument> JsonResponse;
     CData<bool> ModuleStatus;
     CData<std::string> ClientName;
+#ifdef _WIN64
+    CData<std::vector<std::string>> InputParamList;
+#endif
 }
 
 namespace sys_gui
