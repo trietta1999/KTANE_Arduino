@@ -9,6 +9,7 @@
 #include <iostream>
 #include <iomanip>
 #include <thread>
+#include <sstream>
 #else
 #include <esp_random.h>
 #include "../Hardware.h"
@@ -21,13 +22,39 @@ void AttachConsoleWindow()
     FILE* fp;
     freopen_s(&fp, "CONOUT$", "w", stdout);
     freopen_s(&fp, "CONOUT$", "w", stderr);
+    freopen_s(&fp, "CONIN$", "r", stdin);
+}
+
+void DebugConsoleProcess()
+{
+    // Debug console
+    if (sys_host::InputParamList.GetState())
+    {
+        try {
+            auto inputParams = sys_host::InputParamList.GetValue();
+
+            // Test show message box
+            if (inputParams.at(0) == "test")
+            {
+                ::MessageBox(NULL, L"Test show message box", L"Test", MB_OK);
+            }
+
+            debug_println("Process debug data done!");
+        }
+        catch (...)
+        {
+            debug_println("Process debug data fail! Try again!");
+        }
+
+        sys_host::InputParamList.ResetState();
+    }
 }
 #endif
 
 void CommonBeep(uint16_t frequency, uint16_t duration)
 {
 #ifdef _WIN64
-    std::thread([=]() { ::Beep(frequency, duration); }).detach();
+    ::Beep(frequency, duration);
 #else
     HardwareBeep(frequency, duration);
 #endif
@@ -98,8 +125,37 @@ void InitData()
 
 void CommonServiceProcess()
 {
-#ifndef _WIN64
-    // Read data from serial bluetooth
+#ifndef UNIT_TEST
+#ifdef _WIN64
+    std::thread([] {
+        std::string inputConsole;
+
+        try
+        {
+            std::getline(std::cin, inputConsole);
+
+            if (!inputConsole.empty())
+            {
+                std::istringstream iss(inputConsole);
+                std::string param;
+                std::vector<std::string> inputParams;
+
+                while (iss >> param) {
+                    inputParams.push_back(param);
+                }
+
+                sys_host::InputParamList.SetValue(inputParams);
+
+                DebugConsoleProcess();
+            }
+        }
+        catch (...)
+        {
+            debug_println("Process debug data fail! Try again!");
+        }
+        }).detach();
+#else
+    // Read data from serial
     if (Serial.available()) {
         String read = Serial.readStringUntil('\n');
 
@@ -122,6 +178,7 @@ void CommonServiceProcess()
 
     // Re-connect WiFi if disconnected
     WiFiReconnect();
+#endif
 #endif
 }
 

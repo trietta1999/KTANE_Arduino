@@ -31,6 +31,9 @@ namespace sys_host // GUI read only, received from HOST
     extern CData<JsonDocument> JsonResponse;
     extern CData<bool> ModuleStatus;
     extern CData<std::string> ClientName;
+#ifdef _WIN64
+    extern CData<std::vector<std::string>> InputParamList;
+#endif
 }
 
 namespace sys_gui // GUI read/write -> Send data to HOST
