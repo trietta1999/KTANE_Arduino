@@ -8,17 +8,16 @@
 #include "../CommonLibrary.h"
 #include "../CommonService.h"
 
-struct e_timer_t
+struct timer_t
 {
     uint8_t minute;
     uint8_t second;
     uint64_t startTime;
-} countdownTimer, endlessTimer;
+} countdownTimer, endlessTimer, settingTimer;
 
 std::unordered_map<MODULE_NAME, lv_obj_t*> mapCbSettingModule = { };
 std::string strikeValue = "";
 JsonDocument moduleStatusMapJson;
-std::pair<uint8_t, uint8_t> timerSetting = { };
 uint8_t moduleCount = 0;
 std::unordered_map<lv_obj_t*, void(*)(void)> mapCurrentScreen = {};
 lv_obj_t* currentScreen = nullptr;
@@ -72,9 +71,13 @@ void CalculateCountdownTimer()
         // Check success state
         if (sys_gui::SuccessState.GetValue() != STATE_CHECKED)
         {
+#ifndef UNIT_TEST
             CommonSendRequest(WM_STOP_ALL);
+#endif
+
             sys_host::ModuleStatus.SetValue(false);
-#ifdef _WIN64
+
+#if defined(_WIN64) && !defined(UINT_TEST)
             CommonSendRequest(WM_STOP_COMPLETE);
 #endif
         }
@@ -229,10 +232,13 @@ void AutoUpdate()
 
 #ifndef UNIT_TEST
                 CommonBeep(SUCCESS_FRE, TIMECYCLE_0);
+
 #ifndef _WIN64
                 delay(TIMECYCLE_0);
 #endif
 #endif
+
+#ifndef UNIT_TEST
                 // Blink timer time 4 times
                 lv_timer_create([](lv_timer_t*) {
                     if (lv_obj_get_style_text_opa(ui_lblTimer, LV_PART_MAIN) == LV_OPA_TRANSP) {
@@ -245,16 +251,19 @@ void AutoUpdate()
                         lv_obj_set_style_text_opa(ui_lblTimer, LV_OPA_TRANSP, LV_PART_MAIN);
                     }
                     }, TIMECYCLE_1, nullptr)->repeat_count = 8;
+#endif
             }
 
+#ifndef UNIT_TEST
             // Wait for changing to result screen
             lv_timer_create([](lv_timer_t*) {
                 _ui_screen_change(&ui_Result, LV_SCR_LOAD_ANIM_OVER_BOTTOM, 500, 0, &ui_Result_screen_init);
                 currentScreen = ui_Result;
                 }, BEEP_TIMEOUT * 2, nullptr)->repeat_count = 1;
+#endif
         }
 
-#ifdef _WIN64
+#if defined(_WIN64) && !defined(UNIT_TEST)
         sys_gui::SuccessState.ResetState();
 #endif
     }
@@ -278,12 +287,14 @@ void Login_OnTextAreaEdit(lv_event_t* e)
             // Change green background
             lv_obj_set_style_bg_color(ui_TextArea, lv_color_hex(COLOR_GREEN), LV_PART_MAIN | LV_STATE_DEFAULT);
 
+#ifndef UNIT_TEST
             // Press OK
             if (lv_event_get_code(e) == LV_EVENT_READY)
             {
                 // Change to main screen
                 _ui_screen_change(&ui_ModuleSelect, LV_SCR_LOAD_ANIM_MOVE_LEFT, 100, 0, &ui_ModuleSelect_screen_init);
             }
+#endif
         }
         // Incorrect verify code
         else
@@ -371,7 +382,8 @@ void TimerSelect_OnButtonNextClick(lv_event_t* e)
     sys_host::TimeClock.SetValue(std::make_pair(std::stoi(bufMinute), std::stoi(bufSecond)));
 
     // Update timer setting
-    timerSetting = std::make_pair(std::stoi(bufMinute), std::stoi(bufSecond));
+    settingTimer.minute = std::stoi(bufMinute);
+    settingTimer.second = std::stoi(bufSecond);
 
     // Update countdown timer
     countdownTimer.minute = std::stoi(bufMinute);
@@ -413,12 +425,11 @@ void Score_OnClickBack(lv_event_t* e)
 
 void Main_OnLabelStrike(lv_event_t* e)
 {
+#ifndef UNIT_TEST
     if (e->code == LV_EVENT_SHORT_CLICKED)
     {
 #ifdef _WIN64
-#ifndef UNIT_TEST
         CommonBeep(BEEP_FRE, BEEP_TIMEOUT);
-#endif
         // Random result
         sys_gui::SuccessState.SetValue(RandomRange(STATE_CHECKED, STATE_CHECKED + 1));
 #endif
@@ -438,6 +449,7 @@ void Main_OnLabelStrike(lv_event_t* e)
     {
         longPressedCount = 0;
     }
+#endif
 }
 
 void Score_OnLoaded(lv_event_t* e)
@@ -449,18 +461,13 @@ void Score_OnLoaded(lv_event_t* e)
 #endif
 }
 
-void OrderPlay_OnLoaded(lv_event_t* e)
-{
-    // Your code here
-}
-
 void Result_OnLoaded(lv_event_t* e)
 {
     auto endlessTimer = sys_host::EndlessTimeClock.GetValue();
     auto coundownTimer = sys_host::TimeClock.GetValue();
 
     /* 1. Bomb configuration */
-    lv_label_set_text_fmt(ui_lblTimerSetting, "%02d:%02d", timerSetting.first, timerSetting.second);
+    lv_label_set_text_fmt(ui_lblTimerSetting, "%02d:%02d", settingTimer.minute, settingTimer.second);
     lv_label_set_text_fmt(ui_lblModuleCount, "%d Modules", moduleCount);
     lv_label_set_text_fmt(ui_lblStrikeCount, "%d Strikes", sys_host::StrikeNum.GetValue());
 
