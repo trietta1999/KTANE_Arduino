@@ -85,191 +85,103 @@ void CreateRandomWireList()
     WireColorList.SetValue(listColor);
 }
 
-/*
- * Function name: WireModule()
- * Brief: The body of feature wire
- */
-void WireModule()
+void DetectComplicatedWire(complicatedWire &wireInfo)
 {
-    /* Get common data */
-    auto mumOfWire = WireColorList.GetValue().size();
-
-    switch (mumOfWire)
+    /* Determine the wire has 1 or 2 color */
+    //2 colors 
+    if ((wireInfo.color1 != WIRECOLOR_TYPE::MIN) && (wireInfo.color2 != WIRECOLOR_TYPE::MIN))
     {
-    case 3:
-    {
-        ThreeWiresModule();
-    }
-    break;
-
-    case 4:
-    {
-        FourWiresModule();
-    }
-    break;
-
-    case 5:
-    {
-        FiveWiresModule();
-    }
-    break;
-
-    case 6:
-    {
-        SixWiresModule();
-    }
-    break;
-
-    default:
-        break;
-    }
-}
-
-/*
-* Function name: ThreeWiresModule()
-* Brief: Handle in case of this module has 3 wires
-*/
-void ThreeWiresModule()
-{
-    /* Get common data */
-    auto wireColorList = WireColorList.GetValue();
-
-    /* If there is no red wire, then the target is the 2nd wire */
-    if (CountElementOccurences(wireColorList, WIRECOLOR_TYPE::RED) == 0)
-    {
-        CorrectWireIndex.SetValue(WIRE_IN_ORDER::SECOND_WIRE);
-    }
-    /* If the last wire is white, let cut it */
-    else if (WIRECOLOR_TYPE::WHITE == wireColorList.back())
-    {
-        CorrectWireIndex.SetValue((WIRE_IN_ORDER)wireColorList.size());
-    }
-    /* If there are more than a blue-wire, let cut the-last-blue-wire */
-    else if (CountElementOccurences(wireColorList, WIRECOLOR_TYPE::BLUE) > 1)
-    {
-        for (int8_t i = wireColorList.size() - 1; i >= 0; i--)
+        // CheckBothColor()
+        if (wireInfo.led && wireInfo.star)
         {
-            if (wireColorList[i] == WIRECOLOR_TYPE::BLUE)
+            wireInfo.can_cut = false;
+        }
+        else if (wireInfo.star)
+        {
+            if (COMPORT_TYPE::Parallel == sys_host::ComPortType.GetValue())
             {
-                CorrectWireIndex.SetValue((WIRE_IN_ORDER)(i + 1));
-                break;
+                wireInfo.can_cut = true;
+            }
+        }
+        /* (led == true) || ((led is false) && (star is false) */
+        else
+        {
+            /* EvenNumber is true */
+            if (!OddCheckAtLast(sys_host::SerialNum.GetValue()))
+            {
+                wireInfo.can_cut = true;
             }
         }
     }
-    /* Others */
-    else
+    else if ((wireInfo.color1 == WIRECOLOR_TYPE::WHITE) || (wireInfo.color2 == WIRECOLOR_TYPE::WHITE))
     {
-        CorrectWireIndex.SetValue((WIRE_IN_ORDER)wireColorList.size());
-    }
-}
-
-/*
-* Function name: FourWiresModule()
-* Brief: Handle in case of this module has 4 wires
-*/
-void FourWiresModule()
-{
-    /* Get common data */
-    auto wireColorList = WireColorList.GetValue();
-    std::string seriNumber = sys_host::SerialNum.GetValue();
-
-    /* If there are more than a red-wire
-    * and the-end-number of serial-number-string is an odd number, let cut the-last-blue-wire */
-    if ((CountElementOccurences(wireColorList, WIRECOLOR_TYPE::RED) > 1) && OddCheckAtLast(seriNumber))
-    {
-        for (int8_t i = wireColorList.size() - 1; i >= 0; i--)
+        //CheckWhite()
+        if (wireInfo.led && wireInfo.star)
         {
-            if (wireColorList[i] == WIRECOLOR_TYPE::RED)
+            if (sys_host::BatteryNum.GetValue() >= 2)
             {
-                // The order of a wire = Index + 1
-                CorrectWireIndex.SetValue((WIRE_IN_ORDER)(i + 1));
-                break;
+                wireInfo.can_cut = true;
+            }
+        }
+        else if (wireInfo.led)
+        {
+            wireInfo.can_cut = false;
+        }
+        /* (star == true) || ((led is false) && (star is false) */
+        else
+        {
+            if (!OddCheckAtLast(sys_host::SerialNum.GetValue()))
+            {
+                wireInfo.can_cut = true;
             }
         }
     }
-    /* If the number of blue-wire is equal to 1, let cut the-first-wire */
-    else if (CountElementOccurences(wireColorList, WIRECOLOR_TYPE::BLUE) == 1)
+    else if ((wireInfo.color1 == WIRECOLOR_TYPE::RED) || (wireInfo.color2 == WIRECOLOR_TYPE::RED))
     {
-        CorrectWireIndex.SetValue(WIRE_IN_ORDER::FIRST_WIRE);
+        //CheckRed()
+        if (wireInfo.led)
+        {
+            if (sys_host::BatteryNum.GetValue() >= 2)
+            {
+                wireInfo.can_cut = true;
+            }
+        }
+        else if (wireInfo.star)
+        {
+            wireInfo.can_cut = true;
+        }
+        /* (led is false) && (star is false) */
+        else
+        {
+            if (!OddCheckAtLast(sys_host::SerialNum.GetValue()))
+            {
+                wireInfo.can_cut = true;
+            }
+        }
     }
-    /* More than a yellow-wire, let cut the-last-wire */
-    else if (CountElementOccurences(wireColorList, WIRECOLOR_TYPE::YELLOW) > 1)
+    else if ((wireInfo.color1 == WIRECOLOR_TYPE::BLUE) || (wireInfo.color2 == WIRECOLOR_TYPE::BLUE))
     {
-        CorrectWireIndex.SetValue((WIRE_IN_ORDER)wireColorList.size());
-    }
-    /* Others */
-    else
-    {
-        CorrectWireIndex.SetValue(WIRE_IN_ORDER::SECOND_WIRE);
-    }
-}
-
-/*
-* Function name: FiveWiresModule()
-* Brief: Handle in case of this module has 5 wires
-*/
-void FiveWiresModule()
-{
-    /* Get common data */
-    auto wireColorList = WireColorList.GetValue();
-    std::string seriNumber = sys_host::SerialNum.GetValue();
-
-    /* If the-last-wire is black
-    * and the-end-number of serial-number-string is an odd number, then cutting the-fourth-wire */
-    if ((wireColorList.back() == WIRECOLOR_TYPE::BLACK) && OddCheckAtLast(seriNumber))
-    {
-        CorrectWireIndex.SetValue(WIRE_IN_ORDER::FOURTH_WIRE);
-    }
-    /* Red is 1 and yellow is more than 1 --> Then cutting the-first-wire */
-    else if ((CountElementOccurences(wireColorList, WIRECOLOR_TYPE::RED) == 1) && (CountElementOccurences(wireColorList, WIRECOLOR_TYPE::YELLOW) > 1))
-    {
-        CorrectWireIndex.SetValue(WIRE_IN_ORDER::FIRST_WIRE);
-    }
-    /* Black is zero --> then cutting the-second-wire */
-    else if (CountElementOccurences(wireColorList, WIRECOLOR_TYPE::BLACK) == 0)
-    {
-        CorrectWireIndex.SetValue(WIRE_IN_ORDER::SECOND_WIRE);
-    }
-    /* Others */
-    else
-    {
-        CorrectWireIndex.SetValue(WIRE_IN_ORDER::FIRST_WIRE);
+        //CheckBlue()
+        if (wireInfo.led)
+        {
+            if (COMPORT_TYPE::Parallel == sys_host::ComPortType.GetValue())
+            {
+                wireInfo.can_cut = true;
+            }
+        }
+        else if (wireInfo.star)
+        {
+            wireInfo.can_cut = false;
+        }
+        /* (led is false) && (star is false) */
+        else
+        {
+            if (!OddCheckAtLast(sys_host::SerialNum.GetValue()))
+            {
+                wireInfo.can_cut = true;
+            }
+        }
     }
 }
 
-/*
-* Function name: SixWiresModule()
-* Brief: Handle in case of this module has 6 wires
-*/
-void SixWiresModule()
-{
-    /* Get common data */
-    auto wireColorList = WireColorList.GetValue();
-    std::string seriNumber = sys_host::SerialNum.GetValue();
-
-    /* Yellow is 0 and the-end-number in serial-number-string is odd, then cutting the-third-wire */
-    if ((CountElementOccurences(wireColorList, WIRECOLOR_TYPE::YELLOW) == 0) && OddCheckAtLast(seriNumber))
-    {
-        CorrectWireIndex.SetValue(WIRE_IN_ORDER::THIRD_WIRE);
-    }
-    /* Red is 1 and yellow is more than 1 --> Then cutting the-first-wire */
-    else if ((CountElementOccurences(wireColorList, WIRECOLOR_TYPE::YELLOW) == 1) && (CountElementOccurences(wireColorList, WIRECOLOR_TYPE::WHITE) > 1))
-    {
-        CorrectWireIndex.SetValue(WIRE_IN_ORDER::FOURTH_WIRE);
-    }
-    else if (CountElementOccurences(wireColorList, WIRECOLOR_TYPE::RED) == 0)
-    {
-        CorrectWireIndex.SetValue((WIRE_IN_ORDER)wireColorList.size());
-    }
-    /* Others */
-    else
-    {
-        CorrectWireIndex.SetValue(WIRE_IN_ORDER::FOURTH_WIRE);
-    }
-}
-
-uint8_t CountElementOccurences(std::vector<WIRECOLOR_TYPE> wireColorList, WIRECOLOR_TYPE color)
-{
-    return std::count(wireColorList.begin(), wireColorList.end(), color);
-}
 #pragma endregion

@@ -216,13 +216,9 @@ EXTERN_MAP_ENUM_WSTR(MODULE_NAME)
 #define COLOR uint32_t
 
 #define DEF_WIRECOLOR_TYPE(e, CREATE) \
-        CREATE(e, NONE) \
         CREATE(e, RED) \
         CREATE(e, WHITE) \
         CREATE(e, BLUE) \
-        CREATE(e, YELLOW) \
-        CREATE(e, BLACK) \
-        CREATE(e, PINK) \
 
 #define DEF_WIRE_IN_ORDER(e, CREATE) \
         CREATE(e, FIRST_WIRE) \
@@ -254,6 +250,17 @@ EXTERN_MAP_ENUM_STR(WIRE_IN_ORDER)
 #define KEYPAD_POS 0
 #define IMAGE_POS 1
 #define INDEX_POS 2
+
+typedef struct complicatedWire_t
+{
+    WIRECOLOR_TYPE color1;
+    WIRECOLOR_TYPE color2;
+    bool led;
+    bool star;
+    bool can_cut;
+}
+complicatedWire;
+
 #pragma endregion
 
 #endif // !_COMMON_DATATYPE_H
