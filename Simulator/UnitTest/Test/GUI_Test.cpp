@@ -2,11 +2,8 @@
 #include "ui/ui.h"
 #include "ui/ui_events.cpp"
 #include "CommonData.h"
-#include "Library_Test.cpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
-
-static Library_Test* libraryTest;
 
 TEST_CLASS(GUI_Test)
 {
@@ -18,14 +15,11 @@ public:
         ui_init();
 
         Init();
-
-        libraryTest = new Library_Test();
     }
 
     TEST_CLASS_CLEANUP(TESTCLASS_Cleanup)
     {
         lv_deinit();
-        delete libraryTest;
     }
 
     TEST_METHOD_CLEANUP(TESTMETHOD_Cleanup)
@@ -36,7 +30,8 @@ public:
 #pragma region Test_3Wire
     TEST_METHOD(TEST_OnWireSelect_3wire_1)
     {
-        libraryTest->TEST_WireModule_3wire_1();
+        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::BLUE });
+        WireModule();
 
         lv_event_t e = { 0 };
         e.current_target = ui_btnSelect2;
@@ -48,7 +43,8 @@ public:
 
     TEST_METHOD(TEST_OnWireSelect_3wire_2)
     {
-        libraryTest->TEST_WireModule_3wire_2();
+        WireColorList.SetValue({ WIRECOLOR_TYPE::RED, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::WHITE });
+        WireModule();
 
         lv_event_t e = { 0 };
         e.current_target = ui_btnSelect3;
@@ -60,7 +56,8 @@ public:
 
     TEST_METHOD(TEST_OnWireSelect_3wire_3)
     {
-        libraryTest->TEST_WireModule_3wire_3();
+        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::RED });
+        WireModule();
 
         lv_event_t e = { 0 };
         e.current_target = ui_btnSelect2;
@@ -72,7 +69,8 @@ public:
 
     TEST_METHOD(TEST_OnWireSelect_3wire_4)
     {
-        libraryTest->TEST_WireModule_3wire_4();
+        WireColorList.SetValue({ WIRECOLOR_TYPE::RED, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::PINK });
+        WireModule();
 
         lv_event_t e = { 0 };
         e.current_target = ui_btnSelect3;
@@ -86,7 +84,9 @@ public:
 #pragma region Test_4Wire
     TEST_METHOD(TEST_OnWireSelect_4wire_1)
     {
-        libraryTest->TEST_WireModule_4wire_1();
+        sys_host::SerialNum.SetValue("ABCDEF5");
+        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::RED, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::RED });
+        WireModule();
 
         lv_event_t e = { 0 };
         e.current_target = ui_btnSelect4;
@@ -98,7 +98,8 @@ public:
 
     TEST_METHOD(TEST_OnWireSelect_4wire_2)
     {
-        libraryTest->TEST_WireModule_4wire_2();
+        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::YELLOW });
+        WireModule();
 
         lv_event_t e = { 0 };
         e.current_target = ui_btnSelect2;
@@ -110,7 +111,8 @@ public:
 
     TEST_METHOD(TEST_OnWireSelect_4wire_3)
     {
-        libraryTest->TEST_WireModule_4wire_3();
+        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::YELLOW });
+        WireModule();
 
         lv_event_t e = { 0 };
         e.current_target = ui_btnSelect1;
@@ -122,7 +124,8 @@ public:
 
     TEST_METHOD(TEST_OnWireSelect_4wire_4)
     {
-        libraryTest->TEST_WireModule_4wire_4();
+        WireColorList.SetValue({ WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::YELLOW });
+        WireModule();
 
         lv_event_t e = { 0 };
         e.current_target = ui_btnSelect4;
@@ -134,7 +137,8 @@ public:
 
     TEST_METHOD(TEST_OnWireSelect_4wire_5)
     {
-        libraryTest->TEST_WireModule_4wire_5();
+        WireColorList.SetValue({ WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::BLACK });
+        WireModule();
 
         lv_event_t e = { 0 };
         e.current_target = ui_btnSelect2;
@@ -148,7 +152,9 @@ public:
 #pragma region Test_5Wire
     TEST_METHOD(TEST_OnWireSelect_5wire_1)
     {
-        libraryTest->TEST_WireModule_5wire_1();
+        sys_host::SerialNum.SetValue("ABCDEF5");
+        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::RED, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::RED, WIRECOLOR_TYPE::BLACK });
+        WireModule();
 
         lv_event_t e = { 0 };
         e.current_target = ui_btnSelect4;
@@ -160,7 +166,8 @@ public:
 
     TEST_METHOD(TEST_OnWireSelect_5wire_2)
     {
-        libraryTest->TEST_WireModule_5wire_2();
+        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::RED });
+        WireModule();
 
         lv_event_t e = { 0 };
         e.current_target = ui_btnSelect1;
@@ -172,7 +179,8 @@ public:
 
     TEST_METHOD(TEST_OnWireSelect_5wire_3)
     {
-        libraryTest->TEST_WireModule_5wire_3();
+        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::RED });
+        WireModule();
 
         lv_event_t e = { 0 };
         e.current_target = ui_btnSelect2;
@@ -184,7 +192,8 @@ public:
 
     TEST_METHOD(TEST_OnWireSelect_5wire_4)
     {
-        libraryTest->TEST_WireModule_5wire_4();
+        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::BLACK, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::RED });
+        WireModule();
 
         lv_event_t e = { 0 };
         e.current_target = ui_btnSelect1;
@@ -198,7 +207,9 @@ public:
 #pragma region Test_6Wire
     TEST_METHOD(TEST_OnWireSelect_6wire_1)
     {
-        libraryTest->TEST_WireModule_6wire_1();
+        sys_host::SerialNum.SetValue("ABCDEF5");
+        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::BLACK, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::WHITE });
+        WireModule();
 
         lv_event_t e = { 0 };
         e.current_target = ui_btnSelect3;
@@ -210,7 +221,8 @@ public:
 
     TEST_METHOD(TEST_OnWireSelect_6wire_2)
     {
-        libraryTest->TEST_WireModule_6wire_2();
+        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::RED, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::BLACK, WIRECOLOR_TYPE::WHITE, WIRECOLOR_TYPE::WHITE });
+        WireModule();
 
         lv_event_t e = { 0 };
         e.current_target = ui_btnSelect4;
@@ -222,7 +234,8 @@ public:
 
     TEST_METHOD(TEST_OnWireSelect_6wire_3)
     {
-        libraryTest->TEST_WireModule_6wire_3();
+        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::BLACK, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::BLACK, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::WHITE });
+        WireModule();
 
         lv_event_t e = { 0 };
         e.current_target = ui_btnSelect6;
@@ -234,7 +247,8 @@ public:
 
     TEST_METHOD(TEST_OnWireSelect_6wire_4)
     {
-        libraryTest->TEST_WireModule_6wire_4();
+        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::WHITE, WIRECOLOR_TYPE::BLACK, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::WHITE });
+        WireModule();
 
         lv_event_t e = { 0 };
         e.current_target = ui_btnSelect4;

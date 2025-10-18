@@ -107,6 +107,7 @@ public:
     {
         WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::BLUE });
         WireModule();
+
         Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::SECOND_WIRE);
     }
 
@@ -114,6 +115,7 @@ public:
     {
         WireColorList.SetValue({ WIRECOLOR_TYPE::RED, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::WHITE });
         WireModule();
+
         Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::THIRD_WIRE);
     }
 
@@ -121,6 +123,7 @@ public:
     {
         WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::RED });
         WireModule();
+
         Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::SECOND_WIRE);
     }
 
@@ -128,6 +131,7 @@ public:
     {
         WireColorList.SetValue({ WIRECOLOR_TYPE::RED, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::PINK });
         WireModule();
+
         Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::THIRD_WIRE);
     }
 #pragma endregion
@@ -138,6 +142,7 @@ public:
         sys_host::SerialNum.SetValue("ABCDEF5");
         WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::RED, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::RED });
         WireModule();
+
         Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::FOURTH_WIRE);
     }
 
@@ -145,6 +150,7 @@ public:
     {
         WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::YELLOW });
         WireModule();
+
         Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::SECOND_WIRE);
     }
 
@@ -152,6 +158,7 @@ public:
     {
         WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::YELLOW });
         WireModule();
+
         Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::FIRST_WIRE);
     }
 
@@ -159,6 +166,7 @@ public:
     {
         WireColorList.SetValue({ WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::YELLOW });
         WireModule();
+
         Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::FOURTH_WIRE);
     }
 
@@ -166,6 +174,7 @@ public:
     {
         WireColorList.SetValue({ WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::BLACK });
         WireModule();
+
         Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::SECOND_WIRE);
     }
 #pragma endregion
@@ -176,6 +185,7 @@ public:
         sys_host::SerialNum.SetValue("ABCDEF5");
         WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::RED, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::RED, WIRECOLOR_TYPE::BLACK });
         WireModule();
+
         Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::FOURTH_WIRE);
     }
 
@@ -183,6 +193,7 @@ public:
     {
         WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::RED });
         WireModule();
+
         Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::FIRST_WIRE);
     }
 
@@ -190,6 +201,7 @@ public:
     {
         WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::RED });
         WireModule();
+
         Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::SECOND_WIRE);
     }
 
@@ -197,6 +209,7 @@ public:
     {
         WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::BLACK, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::RED });
         WireModule();
+
         Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::FIRST_WIRE);
     }
 #pragma endregion
@@ -207,6 +220,7 @@ public:
         sys_host::SerialNum.SetValue("ABCDEF5");
         WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::BLACK, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::WHITE });
         WireModule();
+
         Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::THIRD_WIRE);
     }
 
@@ -214,6 +228,7 @@ public:
     {
         WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::RED, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::BLACK, WIRECOLOR_TYPE::WHITE, WIRECOLOR_TYPE::WHITE });
         WireModule();
+
         Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::FOURTH_WIRE);
     }
 
@@ -221,6 +236,7 @@ public:
     {
         WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::BLACK, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::BLACK, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::WHITE });
         WireModule();
+
         Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::SIXTH_WIRE);
     }
 
@@ -228,6 +244,7 @@ public:
     {
         WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::WHITE, WIRECOLOR_TYPE::BLACK, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::WHITE });
         WireModule();
+
         Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::FOURTH_WIRE);
     }
 #pragma endregion
