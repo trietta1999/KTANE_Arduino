@@ -85,100 +85,96 @@ void CreateRandomWireList()
     WireColorList.SetValue(listColor);
 }
 
-void DetectComplicatedWire(complicatedWire &wireInfo)
+// Solution referd to https://ktane.fandom.com/wiki/Complicated_Wires#Optimized_(LeGeND/Lebossle)
+void CheckWire(wire_t& wire)
 {
-    /* Determine the wire has 1 or 2 color */
-    //2 colors 
-    if ((wireInfo.color1 != WIRECOLOR_TYPE::MIN) && (wireInfo.color2 != WIRECOLOR_TYPE::MIN))
+    // Check both 2 colors
+    if ((wire.color1 != WIRECOLOR_TYPE::MIN) && (wire.color2 != WIRECOLOR_TYPE::MIN))
     {
-        // CheckBothColor()
-        if (wireInfo.led && wireInfo.star)
+        if (wire.led && wire.star)
         {
-            wireInfo.can_cut = false;
+            wire.canCut = false;
         }
-        else if (wireInfo.star)
+        else if (wire.star)
         {
-            if (COMPORT_TYPE::Parallel == sys_host::ComPortType.GetValue())
+            if (sys_host::ComPortType.GetValue() == COMPORT_TYPE::Parallel)
             {
-                wireInfo.can_cut = true;
+                wire.canCut = true;
             }
         }
-        /* (led == true) || ((led is false) && (star is false) */
+        // Led is ON
+        // or
+        // Both led and star are OFF
         else
         {
-            /* EvenNumber is true */
             if (!OddCheckAtLast(sys_host::SerialNum.GetValue()))
             {
-                wireInfo.can_cut = true;
+                wire.canCut = true;
             }
         }
     }
-    else if ((wireInfo.color1 == WIRECOLOR_TYPE::WHITE) || (wireInfo.color2 == WIRECOLOR_TYPE::WHITE))
+    else if ((wire.color1 == WIRECOLOR_TYPE::WHITE) || (wire.color2 == WIRECOLOR_TYPE::WHITE))
     {
-        //CheckWhite()
-        if (wireInfo.led && wireInfo.star)
+        if (wire.led && wire.star)
         {
             if (sys_host::BatteryNum.GetValue() >= 2)
             {
-                wireInfo.can_cut = true;
+                wire.canCut = true;
             }
         }
-        else if (wireInfo.led)
+        else if (wire.led)
         {
-            wireInfo.can_cut = false;
+            wire.canCut = false;
         }
-        /* (star == true) || ((led is false) && (star is false) */
+        // Star is ON
+        // or
+        // Both led and star is OFF
         else
         {
-            if (!OddCheckAtLast(sys_host::SerialNum.GetValue()))
-            {
-                wireInfo.can_cut = true;
-            }
+            wire.canCut = true;
         }
     }
-    else if ((wireInfo.color1 == WIRECOLOR_TYPE::RED) || (wireInfo.color2 == WIRECOLOR_TYPE::RED))
+    else if ((wire.color1 == WIRECOLOR_TYPE::RED) || (wire.color2 == WIRECOLOR_TYPE::RED))
     {
-        //CheckRed()
-        if (wireInfo.led)
+        if (wire.led)
         {
             if (sys_host::BatteryNum.GetValue() >= 2)
             {
-                wireInfo.can_cut = true;
+                wire.canCut = true;
             }
         }
-        else if (wireInfo.star)
+        else if (wire.star)
         {
-            wireInfo.can_cut = true;
+            wire.canCut = true;
         }
-        /* (led is false) && (star is false) */
+        // Both led and star is OFF
         else
         {
             if (!OddCheckAtLast(sys_host::SerialNum.GetValue()))
             {
-                wireInfo.can_cut = true;
+                wire.canCut = true;
             }
         }
     }
-    else if ((wireInfo.color1 == WIRECOLOR_TYPE::BLUE) || (wireInfo.color2 == WIRECOLOR_TYPE::BLUE))
+    else if ((wire.color1 == WIRECOLOR_TYPE::BLUE) || (wire.color2 == WIRECOLOR_TYPE::BLUE))
     {
-        //CheckBlue()
-        if (wireInfo.led)
+        if (wire.led)
         {
-            if (COMPORT_TYPE::Parallel == sys_host::ComPortType.GetValue())
+            if (sys_host::ComPortType.GetValue() == COMPORT_TYPE::Parallel)
             {
-                wireInfo.can_cut = true;
+                wire.canCut = true;
             }
         }
-        else if (wireInfo.star)
+        else if (wire.star)
         {
-            wireInfo.can_cut = false;
+            wire.canCut = false;
         }
-        /* (led is false) && (star is false) */
+        // Both led and star is OFF
         else
         {
             if (!OddCheckAtLast(sys_host::SerialNum.GetValue()))
             {
-                wireInfo.can_cut = true;
+                wire.canCut = true;
             }
         }
     }

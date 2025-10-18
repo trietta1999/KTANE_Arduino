@@ -171,7 +171,10 @@
     <ClCompile Include="..\..\ESP32\src\ui\ui.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_comp_hook.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_helpers.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_cut_png.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_img_fail_png.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_star_png.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_stripe_png.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_img_success_png.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_Main.c" />
     <ClCompile Include="Test\GUI_Test.cpp" />
@@ -528,6 +531,7 @@
     <ClInclude Include="..\..\ESP32\src\ui\ui.h" />
     <ClInclude Include="..\..\ESP32\src\ui\ui_events.h" />
     <ClInclude Include="..\..\ESP32\src\ui\ui_helpers.h" />
+    <ClInclude Include="..\..\ESP32\src\ui\ui_Main.h" />
     <ClInclude Include="..\LvglPlatform\lvgl\src\core\lv_global.h" />
     <ClInclude Include="..\LvglPlatform\lvgl\src\core\lv_group.h" />
     <ClInclude Include="..\LvglPlatform\lvgl\src\core\lv_obj.h" />

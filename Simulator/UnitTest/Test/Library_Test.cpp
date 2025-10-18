@@ -102,133 +102,414 @@ public:
         Assert::IsTrue(NumberCheckInTimer(2) == true);
     }
 
-#pragma region Test_3Wire
-    TEST_METHOD(TEST_WireModule_3wire_1)
+/* Test case referd to https://ktane.fandom.com/wiki/Complicated_Wires#Optimized_(LeGeND/Lebossle) */
+
+#pragma region Test_White
+    TEST_METHOD(TEST_White_1)
     {
-        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::BLUE });
-        WireModule();
-        Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::SECOND_WIRE);
+        wire_t wire = {
+            .color1 = WIRECOLOR_TYPE::WHITE,
+            .color2 = WIRECOLOR_TYPE::MIN,
+            .led = false,
+            .star = false,
+        };
+
+        CheckWire(wire);
+
+        Assert::AreEqual(wire.canCut, true);
     }
 
-    TEST_METHOD(TEST_WireModule_3wire_2)
+    TEST_METHOD(TEST_White_2)
     {
-        WireColorList.SetValue({ WIRECOLOR_TYPE::RED, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::WHITE });
-        WireModule();
-        Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::THIRD_WIRE);
+        wire_t wire = {
+            .color1 = WIRECOLOR_TYPE::WHITE,
+            .color2 = WIRECOLOR_TYPE::MIN,
+            .led = false,
+            .star = true,
+        };
+
+        CheckWire(wire);
+
+        Assert::AreEqual(wire.canCut, true);
     }
 
-    TEST_METHOD(TEST_WireModule_3wire_3)
+    TEST_METHOD(TEST_White_3)
     {
-        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::RED });
-        WireModule();
-        Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::SECOND_WIRE);
+        wire_t wire = {
+            .color1 = WIRECOLOR_TYPE::WHITE,
+            .color2 = WIRECOLOR_TYPE::MIN,
+            .led = true,
+            .star = false,
+        };
+
+        CheckWire(wire);
+
+        Assert::AreEqual(wire.canCut, false);
     }
 
-    TEST_METHOD(TEST_WireModule_3wire_4)
+    TEST_METHOD(TEST_White_4_1)
     {
-        WireColorList.SetValue({ WIRECOLOR_TYPE::RED, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::PINK });
-        WireModule();
-        Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::THIRD_WIRE);
-    }
-#pragma endregion
+        wire_t wire = {
+            .color1 = WIRECOLOR_TYPE::WHITE,
+            .color2 = WIRECOLOR_TYPE::MIN,
+            .led = true,
+            .star = true,
+        };
 
-#pragma region Test_4Wire
-    TEST_METHOD(TEST_WireModule_4wire_1)
-    {
-        sys_host::SerialNum.SetValue("ABCDEF5");
-        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::RED, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::RED });
-        WireModule();
-        Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::FOURTH_WIRE);
-    }
+        sys_host::BatteryNum.SetValue(2);
 
-    TEST_METHOD(TEST_WireModule_4wire_2)
-    {
-        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::YELLOW });
-        WireModule();
-        Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::SECOND_WIRE);
+        CheckWire(wire);
+
+        Assert::AreEqual(wire.canCut, true);
     }
 
-    TEST_METHOD(TEST_WireModule_4wire_3)
+    TEST_METHOD(TEST_White_4_2)
     {
-        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::YELLOW });
-        WireModule();
-        Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::FIRST_WIRE);
-    }
+        wire_t wire = {
+            .color1 = WIRECOLOR_TYPE::WHITE,
+            .color2 = WIRECOLOR_TYPE::MIN,
+            .led = true,
+            .star = true,
+        };
 
-    TEST_METHOD(TEST_WireModule_4wire_4)
-    {
-        WireColorList.SetValue({ WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::YELLOW });
-        WireModule();
-        Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::FOURTH_WIRE);
-    }
+        sys_host::BatteryNum.SetValue(1);
 
-    TEST_METHOD(TEST_WireModule_4wire_5)
-    {
-        WireColorList.SetValue({ WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::BLACK });
-        WireModule();
-        Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::SECOND_WIRE);
-    }
-#pragma endregion
+        CheckWire(wire);
 
-#pragma region Test_5Wire
-    TEST_METHOD(TEST_WireModule_5wire_1)
-    {
-        sys_host::SerialNum.SetValue("ABCDEF5");
-        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::RED, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::RED, WIRECOLOR_TYPE::BLACK });
-        WireModule();
-        Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::FOURTH_WIRE);
-    }
-
-    TEST_METHOD(TEST_WireModule_5wire_2)
-    {
-        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::RED });
-        WireModule();
-        Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::FIRST_WIRE);
-    }
-
-    TEST_METHOD(TEST_WireModule_5wire_3)
-    {
-        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::RED });
-        WireModule();
-        Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::SECOND_WIRE);
-    }
-
-    TEST_METHOD(TEST_WireModule_5wire_4)
-    {
-        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::BLACK, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::RED });
-        WireModule();
-        Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::FIRST_WIRE);
+        Assert::AreEqual(wire.canCut, false);
     }
 #pragma endregion
 
-#pragma region Test_6Wire
-    TEST_METHOD(TEST_WireModule_6wire_1)
+#pragma region Test_Red
+    TEST_METHOD(TEST_Red_1_1)
     {
-        sys_host::SerialNum.SetValue("ABCDEF5");
-        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::BLACK, WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::WHITE });
-        WireModule();
-        Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::THIRD_WIRE);
+        wire_t wire = {
+            .color1 = WIRECOLOR_TYPE::RED,
+            .color2 = WIRECOLOR_TYPE::MIN,
+            .led = false,
+            .star = false,
+        };
+
+        sys_host::SerialNum.SetValue("A2");
+
+        CheckWire(wire);
+
+        Assert::AreEqual(wire.canCut, true);
+    }
+    TEST_METHOD(TEST_Red_1_2)
+    {
+        wire_t wire = {
+            .color1 = WIRECOLOR_TYPE::RED,
+            .color2 = WIRECOLOR_TYPE::MIN,
+            .led = false,
+            .star = false,
+        };
+
+        sys_host::SerialNum.SetValue("A3");
+
+        CheckWire(wire);
+
+        Assert::AreEqual(wire.canCut, false);
     }
 
-    TEST_METHOD(TEST_WireModule_6wire_2)
+    TEST_METHOD(TEST_Red_2)
     {
-        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::RED, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::BLACK, WIRECOLOR_TYPE::WHITE, WIRECOLOR_TYPE::WHITE });
-        WireModule();
-        Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::FOURTH_WIRE);
+        wire_t wire = {
+            .color1 = WIRECOLOR_TYPE::RED,
+            .color2 = WIRECOLOR_TYPE::MIN,
+            .led = false,
+            .star = true,
+        };
+
+        CheckWire(wire);
+
+        Assert::AreEqual(wire.canCut, true);
     }
 
-    TEST_METHOD(TEST_WireModule_6wire_3)
+    TEST_METHOD(TEST_Red_3_1)
     {
-        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::BLACK, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::BLACK, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::WHITE });
-        WireModule();
-        Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::SIXTH_WIRE);
+        wire_t wire = {
+            .color1 = WIRECOLOR_TYPE::RED,
+            .color2 = WIRECOLOR_TYPE::MIN,
+            .led = true,
+            .star = false,
+        };
+
+        sys_host::BatteryNum.SetValue(2);
+
+        CheckWire(wire);
+
+        Assert::AreEqual(wire.canCut, true);
     }
 
-    TEST_METHOD(TEST_WireModule_6wire_4)
+    TEST_METHOD(TEST_Red_3_2)
     {
-        WireColorList.SetValue({ WIRECOLOR_TYPE::BLUE, WIRECOLOR_TYPE::PINK, WIRECOLOR_TYPE::WHITE, WIRECOLOR_TYPE::BLACK, WIRECOLOR_TYPE::YELLOW, WIRECOLOR_TYPE::WHITE });
-        WireModule();
-        Assert::IsTrue(CorrectWireIndex.GetValue() == WIRE_IN_ORDER::FOURTH_WIRE);
+        wire_t wire = {
+            .color1 = WIRECOLOR_TYPE::RED,
+            .color2 = WIRECOLOR_TYPE::MIN,
+            .led = true,
+            .star = false,
+        };
+
+        sys_host::BatteryNum.SetValue(1);
+
+        CheckWire(wire);
+
+        Assert::AreEqual(wire.canCut, false);
+    }
+
+    TEST_METHOD(TEST_Red_4_1)
+    {
+        wire_t wire = {
+            .color1 = WIRECOLOR_TYPE::RED,
+            .color2 = WIRECOLOR_TYPE::MIN,
+            .led = true,
+            .star = true,
+        };
+
+        sys_host::BatteryNum.SetValue(2);
+
+        CheckWire(wire);
+
+        Assert::AreEqual(wire.canCut, true);
+    }
+
+    TEST_METHOD(TEST_Red_4_2)
+    {
+        wire_t wire = {
+            .color1 = WIRECOLOR_TYPE::RED,
+            .color2 = WIRECOLOR_TYPE::MIN,
+            .led = true,
+            .star = true,
+        };
+
+        sys_host::BatteryNum.SetValue(1);
+
+        CheckWire(wire);
+
+        Assert::AreEqual(wire.canCut, false);
+    }
+#pragma endregion
+
+#pragma region Test_Blue
+    TEST_METHOD(TEST_Blue_1_1)
+    {
+        wire_t wire = {
+            .color1 = WIRECOLOR_TYPE::BLUE,
+            .color2 = WIRECOLOR_TYPE::MIN,
+            .led = false,
+            .star = false,
+        };
+
+        sys_host::SerialNum.SetValue("A2");
+
+        CheckWire(wire);
+
+        Assert::AreEqual(wire.canCut, true);
+    }
+    TEST_METHOD(TEST_Blue_1_2)
+    {
+        wire_t wire = {
+            .color1 = WIRECOLOR_TYPE::BLUE,
+            .color2 = WIRECOLOR_TYPE::MIN,
+            .led = false,
+            .star = false,
+        };
+
+        sys_host::SerialNum.SetValue("A3");
+
+        CheckWire(wire);
+
+        Assert::AreEqual(wire.canCut, false);
+    }
+
+    TEST_METHOD(TEST_Blue_2)
+    {
+        wire_t wire = {
+            .color1 = WIRECOLOR_TYPE::BLUE,
+            .color2 = WIRECOLOR_TYPE::MIN,
+            .led = false,
+            .star = true,
+        };
+
+        CheckWire(wire);
+
+        Assert::AreEqual(wire.canCut, false);
+    }
+
+    TEST_METHOD(TEST_Blue_3_1)
+    {
+        wire_t wire = {
+            .color1 = WIRECOLOR_TYPE::BLUE,
+            .color2 = WIRECOLOR_TYPE::MIN,
+            .led = true,
+            .star = false,
+        };
+
+        sys_host::ComPortType.SetValue(COMPORT_TYPE::Parallel);
+
+        CheckWire(wire);
+
+        Assert::AreEqual(wire.canCut, true);
+    }
+
+    TEST_METHOD(TEST_Blue_3_2)
+    {
+        wire_t wire = {
+            .color1 = WIRECOLOR_TYPE::BLUE,
+            .color2 = WIRECOLOR_TYPE::MIN,
+            .led = true,
+            .star = false,
+        };
+
+        sys_host::ComPortType.SetValue(COMPORT_TYPE::PS2);
+
+        CheckWire(wire);
+
+        Assert::AreEqual(wire.canCut, false);
+    }
+
+    TEST_METHOD(TEST_Blue_4_1)
+    {
+        wire_t wire = {
+            .color1 = WIRECOLOR_TYPE::BLUE,
+            .color2 = WIRECOLOR_TYPE::MIN,
+            .led = true,
+            .star = true,
+        };
+
+        sys_host::ComPortType.SetValue(COMPORT_TYPE::Parallel);
+
+        CheckWire(wire);
+
+        Assert::AreEqual(wire.canCut, true);
+    }
+
+    TEST_METHOD(TEST_Blue_4_2)
+    {
+        wire_t wire = {
+            .color1 = WIRECOLOR_TYPE::BLUE,
+            .color2 = WIRECOLOR_TYPE::MIN,
+            .led = true,
+            .star = true,
+        };
+
+        sys_host::ComPortType.SetValue(COMPORT_TYPE::PS2);
+
+        CheckWire(wire);
+
+        Assert::AreEqual(wire.canCut, false);
+    }
+#pragma endregion
+
+#pragma region Test_2Colors
+    TEST_METHOD(TEST_2Colors_1_1)
+    {
+        wire_t wire = {
+            .color1 = WIRECOLOR_TYPE::BLUE,
+            .color2 = WIRECOLOR_TYPE::RED,
+            .led = false,
+            .star = false,
+        };
+
+        sys_host::SerialNum.SetValue("A2");
+
+        CheckWire(wire);
+
+        Assert::AreEqual(wire.canCut, true);
+    }
+    TEST_METHOD(TEST_2Colors_1_2)
+    {
+        wire_t wire = {
+            .color1 = WIRECOLOR_TYPE::BLUE,
+            .color2 = WIRECOLOR_TYPE::RED,
+            .led = false,
+            .star = false,
+        };
+
+        sys_host::SerialNum.SetValue("A3");
+
+        CheckWire(wire);
+
+        Assert::AreEqual(wire.canCut, false);
+    }
+
+    TEST_METHOD(TEST_2Colors_2_1)
+    {
+        wire_t wire = {
+            .color1 = WIRECOLOR_TYPE::BLUE,
+            .color2 = WIRECOLOR_TYPE::RED,
+            .led = false,
+            .star = true,
+        };
+
+        sys_host::ComPortType.SetValue(COMPORT_TYPE::Parallel);
+
+        CheckWire(wire);
+
+        Assert::AreEqual(wire.canCut, true);
+    }
+
+    TEST_METHOD(TEST_2Colors_2_2)
+    {
+        wire_t wire = {
+            .color1 = WIRECOLOR_TYPE::BLUE,
+            .color2 = WIRECOLOR_TYPE::RED,
+            .led = false,
+            .star = true,
+        };
+
+        sys_host::ComPortType.SetValue(COMPORT_TYPE::PS2);
+
+        CheckWire(wire);
+
+        Assert::AreEqual(wire.canCut, false);
+    }
+
+    TEST_METHOD(TEST_2Colors_3_1)
+    {
+        wire_t wire = {
+            .color1 = WIRECOLOR_TYPE::BLUE,
+            .color2 = WIRECOLOR_TYPE::RED,
+            .led = true,
+            .star = false,
+        };
+
+        sys_host::SerialNum.SetValue("A2");
+
+        CheckWire(wire);
+
+        Assert::AreEqual(wire.canCut, true);
+    }
+
+    TEST_METHOD(TEST_2Colors_3_2)
+    {
+        wire_t wire = {
+            .color1 = WIRECOLOR_TYPE::BLUE,
+            .color2 = WIRECOLOR_TYPE::RED,
+            .led = true,
+            .star = false,
+        };
+
+        sys_host::SerialNum.SetValue("A3");
+
+        CheckWire(wire);
+
+        Assert::AreEqual(wire.canCut, false);
+    }
+
+    TEST_METHOD(TEST_2Colors_4)
+    {
+        wire_t wire = {
+            .color1 = WIRECOLOR_TYPE::BLUE,
+            .color2 = WIRECOLOR_TYPE::RED,
+            .led = true,
+            .star = true,
+        };
+
+        CheckWire(wire);
+
+        Assert::AreEqual(wire.canCut, false);
     }
 #pragma endregion
 };

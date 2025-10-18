@@ -34,7 +34,7 @@ void Init()
     //}
 
 #ifdef _WIN64
-    debug_println("Correct wire index: " + std::to_string((uint8_t)CorrectWireIndex.GetValue()));
+    //debug_println("Correct wire index: " + std::to_string((uint8_t)CorrectWireIndex.GetValue()));
 #endif
 }
 

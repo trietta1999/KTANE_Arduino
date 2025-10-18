@@ -211,22 +211,13 @@ EXTERN_MAP_ENUM_WSTR(MODULE_NAME)
 
 // Allow modification
 #pragma region Custom_datatype
-#define MIN_WIRE_NUM 3
+#define MIN_WIRE_NUM 2
 #define MAX_WRIRE_NUM 6
-#define COLOR uint32_t
 
 #define DEF_WIRECOLOR_TYPE(e, CREATE) \
         CREATE(e, RED) \
         CREATE(e, WHITE) \
         CREATE(e, BLUE) \
-
-#define DEF_WIRE_IN_ORDER(e, CREATE) \
-        CREATE(e, FIRST_WIRE) \
-        CREATE(e, SECOND_WIRE) \
-        CREATE(e, THIRD_WIRE) \
-        CREATE(e, FOURTH_WIRE) \
-        CREATE(e, FIFTH_WIRE) \
-        CREATE(e, SIXTH_WIRE) \
 
 enum class WIRECOLOR_TYPE
 {
@@ -236,30 +227,16 @@ enum class WIRECOLOR_TYPE
 };
 EXTERN_MAP_ENUM_STR(WIRECOLOR_TYPE)
 
-enum class WIRE_IN_ORDER
-{
-    MIN,
-    DEF_WIRE_IN_ORDER(WIRE_IN_ORDER, TO_ENUM)
-    MAX
-};
-EXTERN_MAP_ENUM_STR(WIRE_IN_ORDER)
-
-#define KEYPAD_MAX_NUM 4
-#define MAX_COL 6
-#define MAX_ITEM 7
-#define KEYPAD_POS 0
-#define IMAGE_POS 1
-#define INDEX_POS 2
-
-typedef struct complicatedWire_t
+struct wire_t
 {
     WIRECOLOR_TYPE color1;
     WIRECOLOR_TYPE color2;
     bool led;
     bool star;
-    bool can_cut;
-}
-complicatedWire;
+    bool canCut;
+};
+
+extern std::unordered_map<WIRECOLOR_TYPE, uint32_t> mapColor;
 
 #pragma endregion
 

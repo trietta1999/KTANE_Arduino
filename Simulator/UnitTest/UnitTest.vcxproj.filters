@@ -1359,32 +1359,38 @@
     <ClCompile Include="Test\Library_Test.cpp">
       <Filter>Test</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\CommonService.cpp">
+      <Filter>Library</Filter>
+    </ClCompile>
+    <ClCompile Include="Test\Service_Test.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\ESP32\src\ui\ui.c">
       <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ESP32\src\ui\ui_comp_hook.c">
       <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ESP32\src\ui\ui_events.cpp">
-      <Filter>UI</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ESP32\src\ui\ui_helpers.c">
       <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ESP32\src\ui\ui_Main.c">
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_cut_png.c">
       <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ESP32\src\ui\ui_img_fail_png.c">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_star_png.c">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_stripe_png.c">
+      <Filter>UI</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\ESP32\src\ui\ui_img_success_png.c">
       <Filter>UI</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ESP32\src\CommonService.cpp">
-      <Filter>Library</Filter>
-    </ClCompile>
-    <ClCompile Include="Test\Service_Test.cpp">
-      <Filter>Test</Filter>
+    <ClCompile Include="..\..\ESP32\src\ui\ui_Main.c">
+      <Filter>UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -2187,6 +2193,12 @@
     <ClInclude Include="..\..\ESP32\src\CommonDataType.h">
       <Filter>Library\CommonData</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\ESP32\src\CommonService.h">
+      <Filter>Library</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ESP32\src\ArduinoJson-v7.4.1.h">
+      <Filter>Library</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\ESP32\src\ui\ui.h">
       <Filter>UI</Filter>
     </ClInclude>
@@ -2196,11 +2208,8 @@
     <ClInclude Include="..\..\ESP32\src\ui\ui_helpers.h">
       <Filter>UI</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\ESP32\src\CommonService.h">
-      <Filter>Library</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ESP32\src\ArduinoJson-v7.4.1.h">
-      <Filter>Library</Filter>
+    <ClInclude Include="..\..\ESP32\src\ui\ui_Main.h">
+      <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
