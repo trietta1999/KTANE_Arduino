@@ -171,7 +171,11 @@ void CommonServiceProcess()
             debug_println("==================================");
         }
         else if (read == "gui_correct") {
-            debug_println("Correct wire index: " + std::to_string((uint8_t)CorrectWireIndex.GetValue()));
+            debug_println("Correct wire index: ");
+            for (const auto& index : CutIndexList.GetValue())
+            {
+                debug_println(std::to_string(index));
+            }
         }
     }
 

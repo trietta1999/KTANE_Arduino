@@ -3,6 +3,7 @@
  */
 
 #include <algorithm>
+#include <random>
 #include "CommonLibrary.h"
 #include "CommonData.h"
 
@@ -71,21 +72,54 @@ bool NumberCheckInTimer(uint8_t num)
 
 // Allow modification
 #pragma region Custom_function
-void CreateRandomWireList()
+wire_t CreateWire()
 {
-    std::vector<WIRECOLOR_TYPE> listColor;
-    uint8_t wireNum = RandomRange(MIN_WIRE_NUM, MAX_WRIRE_NUM + 1);
+    wire_t wire = { };
+    uint8_t randomNum = 0;
 
-    for (uint8_t i = 0; i < wireNum; i++)
+    memset(&wire, 0, sizeof(wire));
+
+    // Create led
+    randomNum = RandomRange(0, 100);
+
+    if (randomNum % 2 == 0)
     {
-        auto randomColorType = (WIRECOLOR_TYPE)RandomRange((uint8_t)WIRECOLOR_TYPE::MIN + 1, (uint8_t)WIRECOLOR_TYPE::MAX);
-        listColor.push_back(randomColorType);
+        wire.led = true;
     }
 
-    WireColorList.SetValue(listColor);
+    // Create star
+    randomNum = RandomRange(0, 100);
+
+    if (randomNum % 2 == 0)
+    {
+        wire.star = true;
+    }
+
+    // Create color
+    randomNum = RandomRange(0, 100);
+
+    // 2 colors
+    if (randomNum % 2 == 0)
+    {
+        wire.color1 = (WIRECOLOR_TYPE)RandomRange((uint8_t)WIRECOLOR_TYPE::MIN + 1, (uint8_t)WIRECOLOR_TYPE::MAX);
+
+        // Make sure color2 is not same with color1
+        do
+        {
+            wire.color2 = (WIRECOLOR_TYPE)RandomRange((uint8_t)WIRECOLOR_TYPE::MIN + 1, (uint8_t)WIRECOLOR_TYPE::MAX);
+        } while (wire.color2 == wire.color1);
+    }
+    // 1 color
+    else
+    {
+        wire.color1 = (WIRECOLOR_TYPE)RandomRange((uint8_t)WIRECOLOR_TYPE::MIN + 1, (uint8_t)WIRECOLOR_TYPE::MAX);
+        wire.color2 = WIRECOLOR_TYPE::MIN;
+    }
+
+    return wire;
 }
 
-// Solution referd to https://ktane.fandom.com/wiki/Complicated_Wires#Optimized_(LeGeND/Lebossle)
+// Solution refered to https://ktane.fandom.com/wiki/Complicated_Wires#Optimized_(LeGeND/Lebossle)
 void CheckWire(wire_t& wire)
 {
     // Check both 2 colors
@@ -101,6 +135,10 @@ void CheckWire(wire_t& wire)
             {
                 wire.canCut = true;
             }
+            else
+            {
+                wire.canCut = false;
+            }
         }
         // Led is ON
         // or
@@ -111,6 +149,10 @@ void CheckWire(wire_t& wire)
             {
                 wire.canCut = true;
             }
+            else
+            {
+                wire.canCut = false;
+            }
         }
     }
     else if ((wire.color1 == WIRECOLOR_TYPE::WHITE) || (wire.color2 == WIRECOLOR_TYPE::WHITE))
@@ -120,6 +162,10 @@ void CheckWire(wire_t& wire)
             if (sys_host::BatteryNum.GetValue() >= 2)
             {
                 wire.canCut = true;
+            }
+            else
+            {
+                wire.canCut = false;
             }
         }
         else if (wire.led)
@@ -154,6 +200,10 @@ void CheckWire(wire_t& wire)
             {
                 wire.canCut = true;
             }
+            else
+            {
+                wire.canCut = false;
+            }
         }
     }
     else if ((wire.color1 == WIRECOLOR_TYPE::BLUE) || (wire.color2 == WIRECOLOR_TYPE::BLUE))
@@ -163,6 +213,10 @@ void CheckWire(wire_t& wire)
             if (sys_host::ComPortType.GetValue() == COMPORT_TYPE::Parallel)
             {
                 wire.canCut = true;
+            }
+            else
+            {
+                wire.canCut = false;
             }
         }
         else if (wire.star)
@@ -176,8 +230,30 @@ void CheckWire(wire_t& wire)
             {
                 wire.canCut = true;
             }
+            else
+            {
+                wire.canCut = false;
+            }
         }
     }
+}
+
+std::vector<bool> CreateValidWireIndexList(uint8_t minValidNum, uint8_t maxWireNum)
+{
+    std::vector<bool> sample(maxWireNum);
+
+    // Get number of True value
+    uint8_t trueCount = RandomRange(minValidNum, maxWireNum + 1);
+
+    // Assign True value to first element range
+    for (uint8_t i = 0; i < trueCount; i++) {
+        sample[i] = true;
+    }
+
+    std::mt19937 gen(sys_host::RandomSeed.GetValue());
+    std::shuffle(sample.begin(), sample.end(), gen); // Random shuffle
+
+    return sample;
 }
 
 #pragma endregion

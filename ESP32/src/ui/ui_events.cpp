@@ -11,30 +11,143 @@
 #include "../CommonLibrary.h"
 #include "../CommonService.h"
 
+struct gui_wire_t
+{
+    lv_obj_t* mainWire;
+    lv_obj_t* stripWire;
+    lv_obj_t* led;
+    lv_obj_t* star;
+    wire_t wireInfo;
+
+    void SetWire()
+    {
+        if (this->wireInfo.color1 != WIRECOLOR_TYPE::MIN)
+        {
+            lv_obj_set_style_bg_color(this->mainWire, lv_color_hex(mapColor[this->wireInfo.color1]), LV_PART_INDICATOR | LV_STATE_DEFAULT);
+        }
+
+        if (this->wireInfo.color2 != WIRECOLOR_TYPE::MIN)
+        {
+            lv_obj_set_style_bg_image_recolor(this->stripWire, lv_color_hex(mapColor[this->wireInfo.color2]), LV_PART_MAIN | LV_STATE_DEFAULT);
+        }
+        else
+        {
+            lv_obj_add_flag(this->stripWire, LV_OBJ_FLAG_HIDDEN);
+        }
+
+        if (this->wireInfo.led)
+        {
+            lv_obj_add_state(this->led, LV_STATE_CHECKED);
+        }
+
+        if (this->wireInfo.star)
+        {
+            lv_obj_add_state(this->star, LV_STATE_CHECKED);
+        }
+    }
+};
+
+std::vector<std::pair<lv_obj_t*, gui_wire_t>> listButtonSelectWire = { };
+uint8_t validSum = 0;
+uint8_t currentValidSum = 0;
+
 void Init()
 {
     // Brightness
     sys_gui::Brightness.SetValue(100);
     lv_slider_set_value(ui_sldBrightness, sys_gui::Brightness.GetValue(), LV_ANIM_OFF);
 
-    //// Set color to GUI wires
-    //auto mumOfWire = WireColorList.GetValue().size();
-    //for (uint8_t i = 0; i < listWire.size(); i++)
-    //{
-    //    if (i < mumOfWire)
-    //    {
-    //        lv_obj_set_style_bg_color(listWire.at(i), lv_color_hex(mapColor[WireColorList.GetValue().at(i)]), LV_PART_INDICATOR | LV_STATE_DEFAULT);
-    //    }
-    //    else
-    //    {
-    //        lv_obj_add_state(listWire.at(i), LV_STATE_DISABLED);
-    //        lv_obj_add_state(listSelect.at(i), LV_STATE_DISABLED);
-    //        lv_obj_clear_state(listSelect.at(i), LV_STATE_CHECKED);
-    //    }
-    //}
+    // Init button map with wire info
+    listButtonSelectWire = {
+        { ui_btnSelect1, { ui_barWire1, ui_lblWireStripe1, ui_lblLed1, ui_lblStar1 } },
+        { ui_btnSelect2, { ui_barWire2, ui_lblWireStripe2, ui_lblLed2, ui_lblStar2 } },
+        { ui_btnSelect3, { ui_barWire3, ui_lblWireStripe3, ui_lblLed3, ui_lblStar3 } },
+        { ui_btnSelect4, { ui_barWire4, ui_lblWireStripe4, ui_lblLed4, ui_lblStar4 } },
+        { ui_btnSelect5, { ui_barWire5, ui_lblWireStripe5, ui_lblLed5, ui_lblStar5 } },
+        { ui_btnSelect6, { ui_barWire6, ui_lblWireStripe6, ui_lblLed6, ui_lblStar6 } },
+    };
+
+    auto listValidWireIndex = CreateValidWireIndexList(MIN_VALID_WIRE_SUM, MAX_WIRE_NUM);
+    std::vector<wire_t> listWire = { };
+    std::vector<uint8_t> listCutIndex = { };
+    uint8_t wireIndex = 0;
+
+    for (auto& buttonSelectWireitem : listButtonSelectWire)
+    {
+#ifdef _WIN64
+        debug_println("Wire " + std::to_string(wireIndex));
+#endif
+
+        auto guiWire = &buttonSelectWireitem.second;
+        wire_t wire = { };
+        uint8_t loopCount = 0;
+
+        // Ensure that the newly created element cannot be identical to the remaining elements
+        while (true)
+        {
+            loopCount++;
+
+            // Create wire
+            wire = CreateWire();
+            CheckWire(wire);
+
+            // No similarity found
+            if (std::find(listWire.begin(), listWire.end(), wire) == listWire.end())
+            {
+                // Check valid wire
+                if (wire.canCut == listValidWireIndex[wireIndex])
+                {
+                    // Check if wire can be cut
+                    if (wire.canCut)
+                    {
+                        validSum++;
+                        listCutIndex.push_back(wireIndex + 1);
+                    }
+
+                    listWire.push_back(wire);
 
 #ifdef _WIN64
-    //debug_println("Correct wire index: " + std::to_string((uint8_t)CorrectWireIndex.GetValue()));
+                    debug_println("Loop count " + std::to_string(loopCount));
+#endif
+
+                    break;
+                }
+            }
+            // Exceptional case
+            else if (loopCount >= 255)
+            {
+                // Check if wire can be cut
+                if (wire.canCut)
+                {
+                    validSum++;
+                    listCutIndex.push_back(wireIndex + 1);
+                }
+
+                listWire.push_back(wire);
+
+#ifdef _WIN64
+                debug_println("Loop count " + std::to_string(loopCount));
+#endif
+
+                break;
+            }
+        }
+
+        // Update GUI wire
+        guiWire->wireInfo = wire;
+        guiWire->SetWire();
+
+        wireIndex++;
+    }
+
+    CutIndexList.SetValue(listCutIndex);
+
+#ifdef _WIN64
+    debug_println("Correct wire index: ");
+    for (const auto& index : CutIndexList.GetValue())
+    {
+        debug_println(std::to_string(index));
+    }
 #endif
 }
 
@@ -65,26 +178,41 @@ void OnBrightnessChange(lv_event_t* e)
 
 void OnWireSelect(lv_event_t* e)
 {
-//    if (std::find(listSelect.begin(), listSelect.end(), e->current_target) - listSelect.begin() == (uint8_t)CorrectWireIndex.GetValue() - 1)
-//    {
-//        sys_gui::SuccessState.SetValue(STATE_CHECKED);
-//
-//#ifndef UNIT_TEST
-//        // Send success to Host
-//        JsonDocument jsonDocIn;
-//#ifdef _WIN64
-//        jsonDocIn["module"] = CLIENT_NAME_FOR_JSON;
-//#else
-//        jsonDocIn["module"] = CLIENT_NAME;
-//#endif
-//        CommonSendRequestWithData(WM_SUCCESSSTATE_SET, jsonDocIn);
-//#endif
-//    }
-//    else
-//    {
-//#ifndef UNIT_TEST
-//        // Send error to Host
-//        CommonSendRequest(WM_STRIKESTATE_SET);
-//#endif
-//    }
+    auto currentButton = (lv_obj_t*)(e->current_target);
+
+    auto resultWireInfo = std::find_if(listButtonSelectWire.begin(), listButtonSelectWire.end(),
+        [currentButton](const std::pair<lv_obj_t*, gui_wire_t>& item) {
+            return (item.first == currentButton);
+        });
+
+    auto wireInfo = (*resultWireInfo).second.wireInfo;
+
+    if (wireInfo.canCut)
+    {
+        currentValidSum++;
+    }
+    else
+    {
+#ifndef UNIT_TEST
+        // Send error to Host
+        CommonSendRequest(WM_STRIKESTATE_SET);
+        debug_println("error");
+#endif
+    }
+
+    if (currentValidSum == validSum)
+    {
+        sys_gui::SuccessState.SetValue(STATE_CHECKED);
+
+#ifndef UNIT_TEST
+        // Send success to Host
+        JsonDocument jsonDocIn;
+#ifdef _WIN64
+        jsonDocIn["module"] = CLIENT_NAME_FOR_JSON;
+#else
+        jsonDocIn["module"] = CLIENT_NAME;
+#endif
+        CommonSendRequestWithData(WM_SUCCESSSTATE_SET, jsonDocIn);
+#endif
+    }
 }

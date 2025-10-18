@@ -119,7 +119,7 @@ enum
 #define EXTERN_MAP_ENUM_WSTR(enum_name) extern std::unordered_map<enum_name, std::wstring> mapWstr_##enum_name;
 #endif
 
- // Do not modify
+// Do not modify
 #pragma region System_datatype
 #define DEF_LABEL_INDICATOR(e, CREATE) \
         CREATE(e, SND) \
@@ -211,8 +211,8 @@ EXTERN_MAP_ENUM_WSTR(MODULE_NAME)
 
 // Allow modification
 #pragma region Custom_datatype
-#define MIN_WIRE_NUM 2
-#define MAX_WRIRE_NUM 6
+#define MIN_VALID_WIRE_SUM 3
+#define MAX_WIRE_NUM 6
 
 #define DEF_WIRECOLOR_TYPE(e, CREATE) \
         CREATE(e, RED) \
@@ -234,6 +234,15 @@ struct wire_t
     bool led;
     bool star;
     bool canCut;
+
+    bool operator==(const wire_t& other)
+    {
+        return ((this->color1 == other.color1)
+            && (this->color2 == other.color2)
+            && (this->led == other.led)
+            && (this->star == other.star)
+            );
+    }
 };
 
 extern std::unordered_map<WIRECOLOR_TYPE, uint32_t> mapColor;

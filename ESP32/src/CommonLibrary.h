@@ -20,8 +20,9 @@ bool NumberCheckInTimer(uint8_t);
 
 // Allow modification
 #pragma region Custom_function
-void CreateRandomWireList();
+wire_t CreateWire();
 void CheckWire(wire_t&);
+std::vector<bool> CreateValidWireIndexList(uint8_t minValidNum, uint8_t maxWireNum);
 #pragma endregion
 
 #endif // !_COMMON_LIBRARY_H

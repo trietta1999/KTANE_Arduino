@@ -335,7 +335,6 @@
                       },
                       {
                         "nid": 90,
-                        "flags": 1048576,
                         "strtype": "OBJECT/Flags",
                         "InheritedType": 1
                       },
@@ -460,7 +459,7 @@
                                   0,
                                   67,
                                   232,
-                                  255
+                                  0
                                 ],
                                 "InheritedType": 7
                               },
@@ -475,11 +474,17 @@
                                 "strtype": "_style/Bg_Image_Recolor",
                                 "intarray": [
                                   255,
-                                  23,
+                                  0,
                                   0,
                                   255
                                 ],
                                 "InheritedType": 7
+                              },
+                              {
+                                "nid": 10640,
+                                "strtype": "_style/Bg_Image_Tiled",
+                                "strval": "True",
+                                "InheritedType": 2
                               },
                               {
                                 "nid": 10710,
@@ -607,9 +612,32 @@
                   },
                   {
                     "nid": 225,
-                    "flags": 1048576,
                     "strtype": "OBJECT/Scrolling",
                     "InheritedType": 1
+                  },
+                  {
+                    "nid": 230,
+                    "strtype": "OBJECT/Scrollable",
+                    "strval": "False",
+                    "InheritedType": 2
+                  },
+                  {
+                    "nid": 240,
+                    "strtype": "OBJECT/Scroll_elastic",
+                    "strval": "False",
+                    "InheritedType": 2
+                  },
+                  {
+                    "nid": 250,
+                    "strtype": "OBJECT/Scroll_momentum",
+                    "strval": "False",
+                    "InheritedType": 2
+                  },
+                  {
+                    "nid": 270,
+                    "strtype": "OBJECT/Scroll_chain",
+                    "strval": "False",
+                    "InheritedType": 2
                   },
                   {
                     "nid": 300,
@@ -811,8 +839,7 @@
                     "InheritedType": 11
                   }
                 ],
-                "saved_objtypeKey": "BAR",
-                "tree_closed": true
+                "saved_objtypeKey": "BAR"
               },
               {
                 "guid": "GUID73250284-11257S368634207",
@@ -1823,7 +1850,7 @@
                                   0,
                                   67,
                                   232,
-                                  255
+                                  0
                                 ],
                                 "InheritedType": 7
                               },
@@ -1838,11 +1865,17 @@
                                 "strtype": "_style/Bg_Image_Recolor",
                                 "intarray": [
                                   255,
-                                  23,
+                                  0,
                                   0,
                                   255
                                 ],
                                 "InheritedType": 7
+                              },
+                              {
+                                "nid": 10640,
+                                "strtype": "_style/Bg_Image_Tiled",
+                                "strval": "True",
+                                "InheritedType": 2
                               },
                               {
                                 "nid": 10710,
@@ -1970,9 +2003,32 @@
                   },
                   {
                     "nid": 225,
-                    "flags": 1048576,
                     "strtype": "OBJECT/Scrolling",
                     "InheritedType": 1
+                  },
+                  {
+                    "nid": 230,
+                    "strtype": "OBJECT/Scrollable",
+                    "strval": "False",
+                    "InheritedType": 2
+                  },
+                  {
+                    "nid": 240,
+                    "strtype": "OBJECT/Scroll_elastic",
+                    "strval": "False",
+                    "InheritedType": 2
+                  },
+                  {
+                    "nid": 250,
+                    "strtype": "OBJECT/Scroll_momentum",
+                    "strval": "False",
+                    "InheritedType": 2
+                  },
+                  {
+                    "nid": 270,
+                    "strtype": "OBJECT/Scroll_chain",
+                    "strval": "False",
+                    "InheritedType": 2
                   },
                   {
                     "nid": 300,
@@ -2174,8 +2230,7 @@
                     "InheritedType": 11
                   }
                 ],
-                "saved_objtypeKey": "BAR",
-                "tree_closed": true
+                "saved_objtypeKey": "BAR"
               },
               {
                 "guid": "GUID54371301-11316S93394207",
@@ -3187,7 +3242,7 @@
                                   0,
                                   67,
                                   232,
-                                  255
+                                  0
                                 ],
                                 "InheritedType": 7
                               },
@@ -3202,11 +3257,17 @@
                                 "strtype": "_style/Bg_Image_Recolor",
                                 "intarray": [
                                   255,
-                                  23,
+                                  0,
                                   0,
                                   255
                                 ],
                                 "InheritedType": 7
+                              },
+                              {
+                                "nid": 10640,
+                                "strtype": "_style/Bg_Image_Tiled",
+                                "strval": "True",
+                                "InheritedType": 2
                               },
                               {
                                 "nid": 10710,
@@ -3334,9 +3395,26 @@
                   },
                   {
                     "nid": 225,
-                    "flags": 1048576,
                     "strtype": "OBJECT/Scrolling",
                     "InheritedType": 1
+                  },
+                  {
+                    "nid": 230,
+                    "strtype": "OBJECT/Scrollable",
+                    "strval": "False",
+                    "InheritedType": 2
+                  },
+                  {
+                    "nid": 240,
+                    "strtype": "OBJECT/Scroll_elastic",
+                    "strval": "False",
+                    "InheritedType": 2
+                  },
+                  {
+                    "nid": 250,
+                    "strtype": "OBJECT/Scroll_momentum",
+                    "strval": "False",
+                    "InheritedType": 2
                   },
                   {
                     "nid": 300,
@@ -3538,8 +3616,7 @@
                     "InheritedType": 11
                   }
                 ],
-                "saved_objtypeKey": "BAR",
-                "tree_closed": true
+                "saved_objtypeKey": "BAR"
               },
               {
                 "guid": "GUID19020330-11317S115094207",
@@ -4551,7 +4628,7 @@
                                   0,
                                   67,
                                   232,
-                                  255
+                                  0
                                 ],
                                 "InheritedType": 7
                               },
@@ -4566,11 +4643,17 @@
                                 "strtype": "_style/Bg_Image_Recolor",
                                 "intarray": [
                                   255,
-                                  23,
+                                  0,
                                   0,
                                   255
                                 ],
                                 "InheritedType": 7
+                              },
+                              {
+                                "nid": 10640,
+                                "strtype": "_style/Bg_Image_Tiled",
+                                "strval": "True",
+                                "InheritedType": 2
                               },
                               {
                                 "nid": 10710,
@@ -4698,9 +4781,32 @@
                   },
                   {
                     "nid": 225,
-                    "flags": 1048576,
                     "strtype": "OBJECT/Scrolling",
                     "InheritedType": 1
+                  },
+                  {
+                    "nid": 230,
+                    "strtype": "OBJECT/Scrollable",
+                    "strval": "False",
+                    "InheritedType": 2
+                  },
+                  {
+                    "nid": 240,
+                    "strtype": "OBJECT/Scroll_elastic",
+                    "strval": "False",
+                    "InheritedType": 2
+                  },
+                  {
+                    "nid": 250,
+                    "strtype": "OBJECT/Scroll_momentum",
+                    "strval": "False",
+                    "InheritedType": 2
+                  },
+                  {
+                    "nid": 270,
+                    "strtype": "OBJECT/Scroll_chain",
+                    "strval": "False",
+                    "InheritedType": 2
                   },
                   {
                     "nid": 300,
@@ -4902,8 +5008,7 @@
                     "InheritedType": 11
                   }
                 ],
-                "saved_objtypeKey": "BAR",
-                "tree_closed": true
+                "saved_objtypeKey": "BAR"
               },
               {
                 "guid": "GUID89705220-11318S128814207",
@@ -5916,7 +6021,7 @@
                                   0,
                                   67,
                                   232,
-                                  255
+                                  0
                                 ],
                                 "InheritedType": 7
                               },
@@ -5931,11 +6036,17 @@
                                 "strtype": "_style/Bg_Image_Recolor",
                                 "intarray": [
                                   255,
-                                  23,
+                                  0,
                                   0,
                                   255
                                 ],
                                 "InheritedType": 7
+                              },
+                              {
+                                "nid": 10640,
+                                "strtype": "_style/Bg_Image_Tiled",
+                                "strval": "True",
+                                "InheritedType": 2
                               },
                               {
                                 "nid": 10710,
@@ -6063,9 +6174,32 @@
                   },
                   {
                     "nid": 225,
-                    "flags": 1048576,
                     "strtype": "OBJECT/Scrolling",
                     "InheritedType": 1
+                  },
+                  {
+                    "nid": 230,
+                    "strtype": "OBJECT/Scrollable",
+                    "strval": "False",
+                    "InheritedType": 2
+                  },
+                  {
+                    "nid": 240,
+                    "strtype": "OBJECT/Scroll_elastic",
+                    "strval": "False",
+                    "InheritedType": 2
+                  },
+                  {
+                    "nid": 250,
+                    "strtype": "OBJECT/Scroll_momentum",
+                    "strval": "False",
+                    "InheritedType": 2
+                  },
+                  {
+                    "nid": 270,
+                    "strtype": "OBJECT/Scroll_chain",
+                    "strval": "False",
+                    "InheritedType": 2
                   },
                   {
                     "nid": 300,
@@ -6267,8 +6401,7 @@
                     "InheritedType": 11
                   }
                 ],
-                "saved_objtypeKey": "BAR",
-                "tree_closed": true
+                "saved_objtypeKey": "BAR"
               },
               {
                 "guid": "GUID39362331-11319S144024207",
@@ -7281,7 +7414,7 @@
                                   0,
                                   67,
                                   232,
-                                  255
+                                  0
                                 ],
                                 "InheritedType": 7
                               },
@@ -7296,11 +7429,17 @@
                                 "strtype": "_style/Bg_Image_Recolor",
                                 "intarray": [
                                   255,
-                                  23,
+                                  0,
                                   0,
                                   255
                                 ],
                                 "InheritedType": 7
+                              },
+                              {
+                                "nid": 10640,
+                                "strtype": "_style/Bg_Image_Tiled",
+                                "strval": "True",
+                                "InheritedType": 2
                               },
                               {
                                 "nid": 10710,
@@ -7428,9 +7567,32 @@
                   },
                   {
                     "nid": 225,
-                    "flags": 1048576,
                     "strtype": "OBJECT/Scrolling",
                     "InheritedType": 1
+                  },
+                  {
+                    "nid": 230,
+                    "strtype": "OBJECT/Scrollable",
+                    "strval": "False",
+                    "InheritedType": 2
+                  },
+                  {
+                    "nid": 240,
+                    "strtype": "OBJECT/Scroll_elastic",
+                    "strval": "False",
+                    "InheritedType": 2
+                  },
+                  {
+                    "nid": 250,
+                    "strtype": "OBJECT/Scroll_momentum",
+                    "strval": "False",
+                    "InheritedType": 2
+                  },
+                  {
+                    "nid": 270,
+                    "strtype": "OBJECT/Scroll_chain",
+                    "strval": "False",
+                    "InheritedType": 2
                   },
                   {
                     "nid": 300,
@@ -7632,8 +7794,7 @@
                     "InheritedType": 11
                   }
                 ],
-                "saved_objtypeKey": "BAR",
-                "tree_closed": true
+                "saved_objtypeKey": "BAR"
               },
               {
                 "guid": "GUID98000227-11320S159684207",
@@ -9104,7 +9265,7 @@
     "uiExportFolderPath": "D:\\Git\\KTANE_Arduino\\feature_ComplicatedWires\\ESP32\\src\\ui",
     "projectExportFolderPath": "D:\\Git\\KTANE_Arduino\\feature_ComplicatedWires\\Project",
     "custom_variable_prefix": "uic",
-    "backup_cnt": 41,
+    "backup_cnt": 42,
     "autosave_cnt": 0,
     "group_color_cnt": 0,
     "lvgl_version": "9.1.0",
