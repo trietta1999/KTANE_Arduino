@@ -196,7 +196,6 @@ void OnWireSelect(lv_event_t* e)
 #ifndef UNIT_TEST
         // Send error to Host
         CommonSendRequest(WM_STRIKESTATE_SET);
-        debug_println("error");
 #endif
     }
 

@@ -102,7 +102,16 @@ public:
         Assert::IsTrue(NumberCheckInTimer(2) == true);
     }
 
-/* Test case referd to https://ktane.fandom.com/wiki/Complicated_Wires#Optimized_(LeGeND/Lebossle) */
+    TEST_METHOD(TEST_CreateValidWireIndexList)
+    {
+        auto result = CreateValidWireIndexList(5, 20);
+
+        Assert::IsTrue(result.size() == 20);
+        Assert::IsTrue(std::count(result.begin(), result.end(), true) >= 5);
+        Assert::IsTrue(std::count(result.begin(), result.end(), true) <= 20);
+    }
+
+/* Test case refered to https://ktane.fandom.com/wiki/Complicated_Wires#Optimized_(LeGeND/Lebossle) */
 
 #pragma region Test_White
     TEST_METHOD(TEST_White_1)
