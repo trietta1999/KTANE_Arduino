@@ -10,6 +10,7 @@
 extern "C" {
 #endif
 
+void LoadScreen_OnLoaded(lv_event_t * e);
 void Login_OnTextAreaEdit(lv_event_t * e);
 void Main_OnLabelStrike(lv_event_t * e);
 void Main_OnButtonPlayClick(lv_event_t * e);

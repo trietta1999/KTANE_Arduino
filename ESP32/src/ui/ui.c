@@ -30,6 +30,7 @@ void ui_init(void)
     lv_theme_t * theme = lv_theme_default_init(dispp, lv_palette_main(LV_PALETTE_BLUE), lv_palette_main(LV_PALETTE_RED),
                                                false, LV_FONT_DEFAULT);
     lv_disp_set_theme(dispp, theme);
+    ui_LoadScreen_screen_init();
     ui_Login_screen_init();
     ui_Main_screen_init();
     ui_ModuleSelect_screen_init();
@@ -38,11 +39,12 @@ void ui_init(void)
     ui_Information_screen_init();
     ui_Result_screen_init();
     ui____initial_actions0 = lv_obj_create(NULL);
-    lv_disp_load_scr(ui_Login);
+    lv_disp_load_scr(ui_LoadScreen);
 }
 
 void ui_destroy(void)
 {
+    ui_LoadScreen_screen_destroy();
     ui_Login_screen_destroy();
     ui_Main_screen_destroy();
     ui_ModuleSelect_screen_destroy();

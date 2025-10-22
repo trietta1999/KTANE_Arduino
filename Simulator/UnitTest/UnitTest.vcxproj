@@ -181,12 +181,14 @@
     <ClCompile Include="..\..\ESP32\src\ui\ui_img_info_i_png.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_img_leaderboard_45_png.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_img_leaderboard_png.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_load_screen_png.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_img_play_png.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_img_prohibit_png.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_img_stamp_defused_png.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_img_stamp_exploded_png.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_img_success_png.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_Information.c" />
+    <ClCompile Include="..\..\ESP32\src\ui\ui_LoadScreen.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_Login.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_Main.c" />
     <ClCompile Include="..\..\ESP32\src\ui\ui_ModuleSelect.c" />
@@ -548,6 +550,7 @@
     <ClInclude Include="..\..\ESP32\src\ui\ui_events.h" />
     <ClInclude Include="..\..\ESP32\src\ui\ui_helpers.h" />
     <ClInclude Include="..\..\ESP32\src\ui\ui_Information.h" />
+    <ClInclude Include="..\..\ESP32\src\ui\ui_LoadScreen.h" />
     <ClInclude Include="..\..\ESP32\src\ui\ui_Login.h" />
     <ClInclude Include="..\..\ESP32\src\ui\ui_Main.h" />
     <ClInclude Include="..\..\ESP32\src\ui\ui_ModuleSelect.h" />

@@ -8,7 +8,7 @@
 #include "../CommonLibrary.h"
 #include "../CommonService.h"
 
-struct timer_t
+struct timer_st
 {
     uint8_t minute;
     uint8_t second;
@@ -229,6 +229,8 @@ void AutoUpdate()
             }
             else if (sys_gui::SuccessState.GetValue() == STATE_CHECKED)
             {
+                // Enable transparent screen
+                lv_obj_remove_flag(ui_lblTransparent, LV_OBJ_FLAG_HIDDEN);
 
 #ifndef UNIT_TEST
                 CommonBeep(SUCCESS_FRE, TIMECYCLE_0);
@@ -429,9 +431,7 @@ void Main_OnLabelStrike(lv_event_t* e)
     if (e->code == LV_EVENT_SHORT_CLICKED)
     {
 #ifdef _WIN64
-        CommonBeep(BEEP_FRE, BEEP_TIMEOUT);
-        // Random result
-        sys_gui::SuccessState.SetValue(RandomRange(STATE_CHECKED, STATE_CHECKED + 1));
+        sys_gui::SuccessState.SetValue(STATE_CHECKED);
 #endif
     }
     else if (e->code == LV_EVENT_LONG_PRESSED_REPEAT)
@@ -491,4 +491,29 @@ void Result_OnLoaded(lv_event_t* e)
         lv_obj_remove_flag(ui_lblExpCause, LV_OBJ_FLAG_HIDDEN);
         lv_label_set_text_fmt(ui_lblExpCause, "%s", sys_host::ClientName.GetValue().c_str());
     }
+}
+
+void LoadScreen_OnLoaded(lv_event_t* e)
+{
+    lv_bar_set_range(ui_barLoadProgress, 0, TIMECYCLE_0 * 10); // 10s
+
+#ifndef UNIT_TEST
+    // Wait for changing to login screen
+    lv_timer_create([](lv_timer_t* timer) {
+        // Update progress bar
+        auto progress = lv_bar_get_value(ui_barLoadProgress);
+        lv_bar_set_value(ui_barLoadProgress, progress + 100, LV_ANIM_ON);
+        progress = lv_bar_get_value(ui_barLoadProgress);
+
+        if (progress >= lv_bar_get_max_value(ui_barLoadProgress))
+        {
+            // Delete timer
+            lv_timer_del(timer);
+            timer = nullptr;
+
+            // Change to login screen
+            _ui_screen_change(&ui_Login, LV_SCR_LOAD_ANIM_FADE_IN, 500, 0, &ui_Login_screen_init);
+        }
+        }, 100, nullptr);
+#endif
 }

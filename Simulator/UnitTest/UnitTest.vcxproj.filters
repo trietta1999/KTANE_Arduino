@@ -1440,6 +1440,12 @@
     <ClCompile Include="..\..\ESP32\src\ui\ui_img_prohibit_png.c">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\ui\ui_img_load_screen_png.c">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ESP32\src\ui\ui_LoadScreen.c">
+      <Filter>UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\LvglPlatform\lvgl\lvgl.h">
@@ -2275,6 +2281,9 @@
       <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ESP32\src\ui\ui_TimerSelect.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ESP32\src\ui\ui_LoadScreen.h">
       <Filter>UI</Filter>
     </ClInclude>
   </ItemGroup>

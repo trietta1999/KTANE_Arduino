@@ -288,6 +288,7 @@ void ui_Result_screen_init(void)
     lv_obj_set_x(ui_btnResultToScore, 130);
     lv_obj_set_y(ui_btnResultToScore, -39);
     lv_obj_set_align(ui_btnResultToScore, LV_ALIGN_CENTER);
+    lv_obj_add_state(ui_btnResultToScore, LV_STATE_DISABLED);       /// States
     lv_obj_add_flag(ui_btnResultToScore, LV_OBJ_FLAG_FLOATING | LV_OBJ_FLAG_SCROLL_ON_FOCUS);     /// Flags
     lv_obj_remove_flag(ui_btnResultToScore, LV_OBJ_FLAG_SCROLLABLE);      /// Flags
     lv_obj_set_style_bg_color(ui_btnResultToScore, lv_color_hex(0x007800), LV_PART_MAIN | LV_STATE_DEFAULT);

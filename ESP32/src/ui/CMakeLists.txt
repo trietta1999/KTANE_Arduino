@@ -1,4 +1,5 @@
-SET(SOURCES ui_Login.c
+SET(SOURCES ui_LoadScreen.c
+    ui_Login.c
     ui_Main.c
     ui_ModuleSelect.c
     ui_TimerSelect.c
@@ -9,6 +10,7 @@ SET(SOURCES ui_Login.c
     ui_comp_hook.c
     ui_helpers.c
     ui_events.cpp
+    ui_img_load_screen_png.c
     ui_img_prohibit_png.c
     ui_img_play_png.c
     ui_img_leaderboard_png.c
