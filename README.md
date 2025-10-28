@@ -2,7 +2,7 @@
 ## 1.1. Keep Talking and Nobody Explodes
 Keep Talking and Nobody Explodes (viết tắt là KTANE) là một tựa game giải đố hợp tác độc đáo và đầy kịch tính, thách thức khả năng giao tiếp và làm việc nhóm của bạn dưới áp lực cao. Trò chơi đặt người chơi vào một tình huống căng thẳng: một người bị nhốt trong phòng với một quả bom phức tạp đang đếm ngược, trong khi những người chơi còn lại là "chuyên gia" sở hữu một cuốn sách hướng dẫn dày đặc thông tin về cách gỡ bom – nhưng họ lại không thể nhìn thấy quả bom! Để thành công, người gỡ bom phải mô tả chính xác những gì họ thấy trên bom (các module, dây nhợ, nút bấm, màn hình...) cho các chuyên gia nghe qua giao tiếp bằng lời nói, và các chuyên gia phải nhanh chóng tìm thông tin trong cuốn sách "Cẩm nang Gỡ bom" để hướng dẫn lại từng bước vô hiệu hóa từng module trước khi hết giờ. Mỗi màn chơi là một cuộc đua nghẹt thở với thời gian, đòi hỏi sự lắng nghe cẩn thận, truyền đạt rõ ràng và phối hợp nhịp nhàng, biến những khoảnh khắc căng thẳng tột độ thành những tràng cười sảng khoái hoặc những tiếng hét đáng nhớ khi bom (có thể) phát nổ.
 
-![](https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/341800/ss_55f22f9996c327c281d241ed09d43c74337d7e30.1920x1080.jpg)
+![](img/ktane_steam.jpg)
 
 Trang web chính thức của trò chơi: [https://keeptalkinggame.com/](https://keeptalkinggame.com/)
 
@@ -23,7 +23,7 @@ Cuốn cẩm nang bao gồm các phần chi tiết cho từng loại module, t�
 
 Chính sự phân tách thông tin (bom trên màn hình - quy tắc trong sách) và yêu cầu giao tiếp không ngừng nghỉ với cuốn Cẩm nang Gỡ bom đã tạo nên trải nghiệm độc đáo, căng thẳng và đầy tính phối hợp của tựa game này. Nó biến một trò chơi giải đố cá nhân thành một bài kiểm tra tuyệt vời về khả năng làm việc nhóm, lắng nghe và xử lý thông tin dưới áp lực.
 
-![](https://keeptalkinggame.com/wp-content/uploads/2019/12/3_manualpages_600x338.jpg)
+![](img/ktane_manual.jpg)
 
 **Cẩm nang Tiếng Anh:** [Bomb Defusal Manual](https://www.bombmanual.com/)\
 **Cẩm nang Tiếng Việt, được Việt hóa bởi Teefan:** [https://github.com/teefan/keep-talking-and-nobody-explodes-vi](https://github.com/teefan/keep-talking-and-nobody-explodes-vi)
@@ -32,10 +32,12 @@ Chính sự phân tách thông tin (bom trên màn hình - quy tắc trong sách
 Lấy cảm hứng mạnh mẽ từ tựa game giải đố hợp tác kịch tính "Keep Talking and Nobody Explodes", chúng tôi đang phát triển một dự án độc đáo nhằm đưa trải nghiệm gỡ bom căng thẳng và hấp dẫn này ra khỏi màn hình máy tính để trở thành một thiết bị vật lý tương tác. Trọng tâm của dự án là mang các module gỡ bom đặc trưng của game lên nền tảng phần cứng phổ biến và linh hoạt: vi điều khiển ESP32 kết hợp với màn hình cảm ứng. Trên màn hình cảm ứng này, các module quen thuộc như cắt dây điện, giải mã nút nhấn, xử lý bảng ký hiệu, hay tương tác với màn hình hiển thị sẽ được tái hiện một cách trực quan, cho phép người chơi (đóng vai trò người gỡ bom) tương tác trực tiếp bằng cách chạm, vuốt hoặc nhập liệu. Thiết bị ESP32 này sẽ đóng vai trò là "quả bom" vật lý, hiển thị ngẫu nhiên các module cần xử lý, đòi hỏi người chơi phải mô tả chính xác tình trạng của bom cho "chuyên gia" (người giữ cuốn cẩm nang hướng dẫn, ở bên ngoài) để nhận được chỉ thị giải quyết. Dự án không chỉ là một bài tập kỹ thuật về lập trình nhúng, xử lý giao diện đồ họa trên phần cứng và tương tác cảm ứng, mà còn hướng tới việc tạo ra một trò chơi giải trí tương tác tuyệt vời cho các hoạt động team-building, thử thách bạn bè hoặc đơn giản là một sản phẩm DIY độc đáo dành cho những người yêu thích cả game lẫn điện tử.
 
 > Màn hình cảm ứng điện trở
-![](https://i0.wp.com/randomnerdtutorials.com/wp-content/uploads/2024/03/ESP32-Cheap-Yellow-Display-CYD-Board-ESP32-2432S028R-front.jpg)
+
+![](img/ESP32-Cheap-Yellow-Display-CYD-Board-ESP32-2432S028R-front.jpg)
 
 > Vi điều khiển ESP32 và các cổng ngoại vi
-![](https://i0.wp.com/randomnerdtutorials.com/wp-content/uploads/2024/03/ESP32-Cheap-Yellow-Display-CYD-Board-ESP32-2432S028R-back-labeled.jpg)
+
+![](img/ESP32-Cheap-Yellow-Display-CYD-Board-ESP32-2432S028R-back-labeled.jpg)
 
 Tìm hiểu thêm: [ESP32 Cheap Yellow Display (CYD) Pinout (ESP32-2432S028R)](https://randomnerdtutorials.com/esp32-cheap-yellow-display-cyd-pinout-esp32-2432s028r/)
 
@@ -50,7 +52,7 @@ LVGL (viết tắt của Light and Versatile Graphics Library) là một thư vi
 LVGL cung cấp một bộ sưu tập phong phú các đối tượng giao diện dựng sẵn (gọi là widget) như nút, nhãn, thanh trượt, biểu đồ, danh sách, vùng văn bản..., cùng với hệ thống styling mạnh mẽ cho phép tùy chỉnh giao diện theo ý muốn.
 Hơn nữa, LVGL hoạt động độc lập với phần cứng và hệ điều hành, cho phép dễ dàng tích hợp vào nhiều nền tảng vi điều khiển khác nhau (như ESP32, STM32, RP2040, v.v.) và chạy trên cả môi trường bare-metal hoặc cùng với các hệ điều hành thời gian thực (RTOS) phổ biến. Sự hỗ trợ từ cộng đồng lớn mạnh và khả năng tương thích với các công cụ thiết kế GUI trực quan như Squareline Studio càng làm tăng tốc độ và hiệu quả trong quá trình phát triển.
 
-![](https://docs.lvgl.io/master/_static/images/gh-header.webp)
+![](img/lvgl_home_banner.jpg)
 
 # 2. Phần mềm
 Dự án được xây dựng dựa trên kiến trúc phần mềm phân lớp, được thiết kế để tách biệt rõ ràng các trách nhiệm (separation of concerns) giữa hiển thị, logic xử lý, thư viện dùng chung và môi trường phát triển mô phỏng. Cấu trúc này bao gồm bốn thành phần chính: **GUI, LIB, SER,** và **SIM**.
@@ -81,3 +83,6 @@ Dự án được xây dựng dựa trên kiến trúc phần mềm phân lớp,
 * **Tái sử dụng code:** Logic cốt lõi trong LIB được sử dụng ở cả SER và SIM, tránh trùng lặp code.
 * **Phát triển song song:** Có thể phát triển lớp GUI/SIM và lớp SER/Hardware một cách song song, tăng tốc độ dự án.
 * **Dễ kiểm thử:** Việc tách biệt logic vào LIB giúp dễ dàng viết các unit test cho từng quy tắc gỡ bom. Môi trường SIM giúp kiểm thử GUI và luồng xử lý mà không phụ thuộc vào phần cứng.
+
+# 3. Sản phẩm hoàn thiện
+Chi tiết về sản phẩm đã hoàn thiện, xem tại [PRODUCT.md](PRODUCT.md)
