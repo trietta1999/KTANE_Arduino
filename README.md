@@ -57,27 +57,27 @@ Hơn nữa, LVGL hoạt động độc lập với phần cứng và hệ điề
 # 2. Phần mềm
 Dự án được xây dựng dựa trên kiến trúc phần mềm phân lớp, được thiết kế để tách biệt rõ ràng các trách nhiệm (separation of concerns) giữa hiển thị, logic xử lý, thư viện dùng chung và môi trường phát triển mô phỏng. Cấu trúc này bao gồm bốn thành phần chính: **GUI, LIB, SER,** và **SIM**.
 
-1. **GUI (Graphical User Interface)**
-    * **Trách nhiệm:** **GUI** chịu trách nhiệm hoàn toàn về khía cạnh hiển thị và tương tác với người dùng trên màn hình cảm ứng.
-    - **Chức năng:** Sử dụng thư viện đồ họa **LVGL** để vẽ và quản lý tất cả các yếu tố hình ảnh của các module bom (nút, dây, màn hình, hiệu ứng...). Lắng nghe và xử lý các sự kiện đầu vào từ màn hình cảm ứng (chạm, vuốt, nhấn giữ...).
-    - **Tương tác:** Khi người dùng thực hiện một thao tác (ví dụ: chạm vào nút, cắt dây ảo), **GUI** sẽ thu nhận sự kiện này và gửi một yêu cầu xử lý tương ứng đến lớp xử lý (thông qua **LIB** đến **SER** trên phần cứng hoặc **SIM** cho môi trường mô phỏng). **GUI** cũng nhận dữ liệu trạng thái cập nhật từ lớp xử lý để cập nhật lại hiển thị trên màn hình.
+## *1. GUI (Graphical User Interface)**
+- **Trách nhiệm:** **GUI** chịu trách nhiệm hoàn toàn về khía cạnh hiển thị và tương tác với người dùng trên màn hình cảm ứng.
+- **Chức năng:** Sử dụng thư viện đồ họa **LVGL** để vẽ và quản lý tất cả các yếu tố hình ảnh của các module bom (nút, dây, màn hình, hiệu ứng...). Lắng nghe và xử lý các sự kiện đầu vào từ màn hình cảm ứng (chạm, vuốt, nhấn giữ...).
+- **Tương tác:** Khi người dùng thực hiện một thao tác (ví dụ: chạm vào nút, cắt dây ảo), **GUI** sẽ thu nhận sự kiện này và gửi một yêu cầu xử lý tương ứng đến lớp xử lý (thông qua **LIB** đến **SER** trên phần cứng hoặc **SIM** cho môi trường mô phỏng). **GUI** cũng nhận dữ liệu trạng thái cập nhật từ lớp xử lý để cập nhật lại hiển thị trên màn hình.
 
-2. **LIB (Library)**
-    - **Trách nhiệm:** **LIB** là thư viện chứa các hàm và cấu trúc dữ liệu cốt lõi, được thiết kế để dùng chung giữa lớp xử lý chính (**SER**) và môi trường mô phỏng (**SIM**), và có thể được sử dụng bởi **GUI** để định nghĩa cấu trúc dữ liệu.
-    - **Chức năng:** Nơi tạo ra hệ thống câu đố, đáp án của trò chơi, đồng thời cũng chứa các xử lý kiểm tra quy tắc cho từng loại module gỡ bom. Các xử lý này sẽ nhận đầu vào là thao tác của người dùng và trạng thái hiện tại của module, trả về kết quả (ví dụ: thành công, thất bại, cần thao tác tiếp theo, ...).
-    - **Tương tác:** Cả **SER** và **SIM** đều gọi các hàm trong **LIB** để xác định kết quả của một thao tác gỡ bom dựa trên các quy tắc đã định sẵn. **LIB** đóng vai trò như bộ não chứa luật chơi, tách biệt khỏi việc xử lý sự kiện (**SER/SIM**) và hiển thị (**GUI**).
+## **2. LIB (Library)**
+- **Trách nhiệm:** **LIB** là thư viện chứa các hàm và cấu trúc dữ liệu cốt lõi, được thiết kế để dùng chung giữa lớp xử lý chính (**SER**) và môi trường mô phỏng (**SIM**), và có thể được sử dụng bởi **GUI** để định nghĩa cấu trúc dữ liệu.
+- **Chức năng:** Nơi tạo ra hệ thống câu đố, đáp án của trò chơi, đồng thời cũng chứa các xử lý kiểm tra quy tắc cho từng loại module gỡ bom. Các xử lý này sẽ nhận đầu vào là thao tác của người dùng và trạng thái hiện tại của module, trả về kết quả (ví dụ: thành công, thất bại, cần thao tác tiếp theo, ...).
+- **Tương tác:** Cả **SER** và **SIM** đều gọi các hàm trong **LIB** để xác định kết quả của một thao tác gỡ bom dựa trên các quy tắc đã định sẵn. **LIB** đóng vai trò như bộ não chứa luật chơi, tách biệt khỏi việc xử lý sự kiện (**SER/SIM**) và hiển thị (**GUI**).
 
-3. **SER (Service)**
-    - **Trách nhiệm:** **SER** là trung tâm xử lý dành cho phần cứng khi dự án chạy trên phần cứng **ESP32** thực tế.
-    - **Chức năng:** Nhận các yêu cầu xử lý thao tác từ **GUI**. Lớp này không tự kiểm tra quy tắc gỡ bom, mà sẽ gọi các hàm kiểm tra tương ứng trong **LIB** để xác định kết quả của thao tác đó. Dựa trên kết quả từ **LIB**, **SER** sẽ cập nhật trạng thái nội bộ của quả bom và các module (ví dụ: đánh dấu module đã gỡ thành công, kích hoạt hiệu ứng nổ...).
-    - **Tương tác:** Nhận yêu cầu từ **GUI**, gọi hàm trong **LIB**, cập nhật trạng thái nội bộ, và gửi dữ liệu trạng thái cập nhật trở lại cho GUI để hiển thị. **SER** chịu trách nhiệm tương tác với các tài nguyên phần cứng nếu cần (ví dụ: điều khiển đèn LED, âm thanh, mạng, ...).
+## **3. SER (Service)**
+- **Trách nhiệm:** **SER** là trung tâm xử lý dành cho phần cứng khi dự án chạy trên phần cứng **ESP32** thực tế.
+- **Chức năng:** Nhận các yêu cầu xử lý thao tác từ **GUI**. Lớp này không tự kiểm tra quy tắc gỡ bom, mà sẽ gọi các hàm kiểm tra tương ứng trong **LIB** để xác định kết quả của thao tác đó. Dựa trên kết quả từ **LIB**, **SER** sẽ cập nhật trạng thái nội bộ của quả bom và các module (ví dụ: đánh dấu module đã gỡ thành công, kích hoạt hiệu ứng nổ...).
+- **Tương tác:** Nhận yêu cầu từ **GUI**, gọi hàm trong **LIB**, cập nhật trạng thái nội bộ, và gửi dữ liệu trạng thái cập nhật trở lại cho GUI để hiển thị. **SER** chịu trách nhiệm tương tác với các tài nguyên phần cứng nếu cần (ví dụ: điều khiển đèn LED, âm thanh, mạng, ...).
 
-4.  **SIM (Simulator)**
-    - **Trách nhiệm:** **SIM** là môi trường mô phỏng hoàn chỉnh chạy trên máy tính (ví dụ: Visual Studio), được thiết kế để hỗ trợ phát triển **GUI** và các xử lý mà không cần phần cứng ESP32.
-    - **Chức năng:** **SIM** thay thế hoàn toàn vai trò của **SER** trong môi trường phát triển. Nó hiển thị giao diện **GUI** (sử dụng **LVGL** được port cho PC) và nhận các yêu cầu thao tác từ **GUI** giống hệt như **SER** thật sẽ làm. Tuy nhiên, thay vì xử lý trên phần cứng ESP32, **SIM** sẽ giả lập quá trình xử lý bằng cách cũng gọi các hàm kiểm tra quy tắc trong **LIB**.
-    - **Tương tác:** Giao tiếp với lớp **GUI** và sử dụng **LIB** tương tự như **SER**, nhưng hoàn toàn trong môi trường phần mềm trên máy tính. Giúp lập trình viên phát triển và debug **GUI** cũng như các xử lý của **LIB** một cách nhanh chóng, hiệu quả trước khi triển khai lên phần cứng ESP32.
+## **4. SIM (Simulator)**
+- **Trách nhiệm:** **SIM** là môi trường mô phỏng hoàn chỉnh chạy trên máy tính (ví dụ: Visual Studio), được thiết kế để hỗ trợ phát triển **GUI** và các xử lý mà không cần phần cứng ESP32.
+- **Chức năng:** **SIM** thay thế hoàn toàn vai trò của **SER** trong môi trường phát triển. Nó hiển thị giao diện **GUI** (sử dụng **LVGL** được port cho PC) và nhận các yêu cầu thao tác từ **GUI** giống hệt như **SER** thật sẽ làm. Tuy nhiên, thay vì xử lý trên phần cứng ESP32, **SIM** sẽ giả lập quá trình xử lý bằng cách cũng gọi các hàm kiểm tra quy tắc trong **LIB**.
+- **Tương tác:** Giao tiếp với lớp **GUI** và sử dụng **LIB** tương tự như **SER**, nhưng hoàn toàn trong môi trường phần mềm trên máy tính. Giúp lập trình viên phát triển và debug **GUI** cũng như các xử lý của **LIB** một cách nhanh chóng, hiệu quả trước khi triển khai lên phần cứng ESP32.
 
-**Lợi ích của Kiến trúc này:**
+## **Lợi ích của Kiến trúc này:**
 
 * **Phân tách trách nhiệm:** Mỗi lớp có một nhiệm vụ rõ ràng, giúp code sạch sẽ, dễ đọc và bảo trì.
 * **Tái sử dụng code:** Logic cốt lõi trong LIB được sử dụng ở cả SER và SIM, tránh trùng lặp code.
